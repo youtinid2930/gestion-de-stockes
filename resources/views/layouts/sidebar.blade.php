@@ -1,0 +1,66 @@
+<!-- resources/views/layouts/sidebar.blade.php -->
+<div class="sidebar hidden-print">
+    @csrf
+    <ul class="nav-links">
+        <li>
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="bx bx-grid-alt"></i>
+                <span class="links_name">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('vente') }}" class="{{ request()->routeIs('vente') ? 'active' : '' }}">
+                <i class='bx bx-shopping-bag'></i>
+                <span class="links_name">Vente</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('client') }}" class="{{ request()->routeIs('client') ? 'active' : '' }}">
+                <i class="bx bx-user"></i>
+                <span class="links_name">Client</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('article') }}" class="{{ request()->routeIs('article') ? 'active' : '' }}">
+                <i class="bx bx-box"></i>
+                <span class="links_name">Article</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('fournisseur') }}" class="{{ request()->routeIs('fournisseur') ? 'active' : '' }}">
+                <i class="bx bx-user"></i>
+                <span class="links_name">Fournisseur</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('commande') }}" class="{{ request()->routeIs('commande') ? 'active' : '' }}">
+                <i class="bx bx-list-ul"></i>
+                <span class="links_name">Commandes</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('categorie') }}" class="{{ request()->routeIs('categorie') ? 'active' : '' }}">
+                <i class="bx bx-list-ul"></i>
+                <span class="links_name">Catégorie</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('magasin') }}">
+                <i class="bx bx-user"></i>
+                <span class="links_name">Magasin</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('configuration') }}">
+                <i class="bx bx-cog"></i>
+                <span class="links_name">Configuration</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('logout') }}">
+                <i class="bx bx-log-out"></i>
+                <span class="links_name">Déconnexion</span>
+            </a>
+        </li>
+    </ul>
+</div>
