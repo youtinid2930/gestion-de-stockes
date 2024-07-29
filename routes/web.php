@@ -33,8 +33,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 */
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
-Route::get('/vente', [VenteController::class, 'index'])->name('vente')->middleware('auth');
-Route::get('/client', [ClientController::class, 'index'])->name('client')->middleware('auth');
+Route::get('/utilisateur', [UtilisateurController::class, 'index'])->name('utilisateur')->middleware('auth');
+Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 // route fournisseur
 Route::get('/fournisseur', [FournisseurController::class, 'index'])->name('fournisseur.index')->middleware('auth');
@@ -54,8 +54,9 @@ Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('
 
 
 Route::get('/categorie', [CategorieController::class, 'index'])->name('categorie')->middleware('auth');
-Route::get('/magasin', [MagasinController::class, 'index'])->name('magasin')->middleware('auth');
+Route::get('/bondelivraison', [BonDeLivraisonController::class, 'index'])->name('bondelivraison')->middleware('auth');
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
+Route::get('/report', [ConfigurationController::class, 'index'])->name('report')->middleware('auth');
 /*
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/admin', function () {

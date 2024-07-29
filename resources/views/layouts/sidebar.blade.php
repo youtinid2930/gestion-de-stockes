@@ -9,15 +9,15 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('vente') }}" class="{{ request()->routeIs('vente') ? 'active' : '' }}">
+            <a href="{{ route('utilisateur') }}" class="{{ request()->routeIs('utilisateur') ? 'active' : '' }}">
                 <i class='bx bx-shopping-bag'></i>
-                <span class="links_name">Vente</span>
+                <span class="links_name">Utilisateur</span>
             </a>
         </li>
         <li>
-            <a href="{{ route('client') }}" class="{{ request()->routeIs('client') ? 'active' : '' }}">
+            <a href="{{ route('demande') }}" class="{{ request()->routeIs('demande') ? 'active' : '' }}">
                 <i class="bx bx-user"></i>
-                <span class="links_name">Client</span>
+                <span class="links_name">Demande</span>
             </a>
         </li>
         <li>
@@ -45,9 +45,15 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('magasin') }}">
+            <a href="{{ route('bondelivraison') }}">
                 <i class="bx bx-user"></i>
-                <span class="links_name">Magasin</span>
+                <span class="links_name">Bon de livraison</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('report') }}">
+                <i class="bx bx-cog"></i>
+                <span class="links_name">Report</span>
             </a>
         </li>
         <li>
