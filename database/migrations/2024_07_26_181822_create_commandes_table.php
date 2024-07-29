@@ -15,9 +15,16 @@ return new class extends Migration
     {
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->constrained('users');
-            $table->foreignId('fournisseur_id')->constrained();
+            $table->unsignedBigInteger('admin_id');
+            $table->unsignedBigInteger('fournisseur_id');
+            $table->integer('quantite');
+            $table->decimal('prix', 8, 2);
+            $table->timestamp('date_commande')->nullable();
             $table->timestamps();
+
+            // Foreign key constraints (if needed)
+            $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('cascade');
         });
     }
 

@@ -4,31 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateDemandeDetailsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('demande_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('demande_id')->constrained('demandes')->onDelete('cascade');
-            $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
-            $table->integer('quantite');
-            $table->timestamps();
+            $table->id(); // Auto-incrementing primary key
+            $table->unsignedBigInteger('demande_id'); // Foreign key to demandes
+            $table->unsignedBigInteger('article_id'); // Foreign key to articles
+            $table->timestamps(); // Timestamps for created_at and updated_at
+
+            // Foreign key constraints
+            $table->foreign('demande_id')->references('id')->on('demandes')->onDelete('cascade');
+            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('demande_details');
     }
-};
+}

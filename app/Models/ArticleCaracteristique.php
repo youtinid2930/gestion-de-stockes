@@ -8,7 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class ArticleCaracteristique extends Model
 {
     use HasFactory;
-    protected $table = 'article_caracteristique'; 
 
-    protected $fillable = ['article_id', 'caracteristique_id', 'valeur'];
+    protected $fillable = [
+        'article_id', 'caracteristique_id', 'valeur'
+    ];
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
+
+    public function caracteristique()
+    {
+        return $this->belongsTo(Caracteristique::class);
+    }
 }

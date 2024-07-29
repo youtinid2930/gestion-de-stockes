@@ -3,7 +3,7 @@
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
-        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
+    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
             <div class="box">
                 <div class="right-side">
                     <div class="box-topic">Commande</div>
@@ -15,9 +15,9 @@
                 </div>
                 <i class="bx bx-cart-alt cart"></i>
             </div>
-        @endif
-
-        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
+        
+            @endif
+        
             <div class="box">
                 <div class="right-side">
                     <div class="box-topic">Article</div>
@@ -29,24 +29,10 @@
                 </div>
                 <i class="bx bx-cart cart three"></i>
             </div>
-        @endif
-
-        @if (auth()->user()->role == 'admin')
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">CA</div>
-                    <div class="number">{{ number_format($data['ca']['prix'], 0, ',', ' ') }}</div>
-                    <div class="indicator">
-                        <i class="bx bx-down-arrow-alt down"></i>
-                        <span class="text">Aujourd'hui</span>
-                    </div>
-                </div>
-                <i class="bx bxs-cart-download cart four"></i>
-            </div>
-        @endif
+       
     </div>
 
-    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
+    
         <div class="sales-boxes">
             <div class="recent-sales box">
                 <div class="title">Commandes récentes</div>
@@ -83,6 +69,6 @@
                 </div>
             </div>
         </div>
-    @endif
+    
 </div>
 @endsection

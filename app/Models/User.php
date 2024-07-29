@@ -19,7 +19,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password', 'role', 'telephone', 'adresse', 'departement', 'warehouse_location'];
+    protected $fillable = [
+        'name', 'last_name', 'email', 'password', 'remember_token', 
+        'id_role', 'etat', 'telephone', 'adresse', 'derniere_login', 
+        'location'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,41 +42,45 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'derniere_login' => 'datetime',
     ];
 
-    // User can create many Demandes
-    public function demandes()
-    {
-        return $this->hasMany(Demande::class, 'gestionnaire_id');
-    }
+    
 
-    // User can create many BonsDeLivraison
-    public function bonsDeLivraison()
-    {
-        return $this->hasMany(BonDeLivraison::class, 'magasinier_id');
-    }
-
-    // User can create many Commandes
+    // Relationship with Commande (admin or gestionnaire creating the commande)
     public function commandes()
     {
         return $this->hasMany(Commande::class, 'admin_id');
     }
 
-    // Determine if the user is an admin
-    public function isAdmin()
+    // Relationship with Commande (admin or gestionnaire managing the commande)
+    public function commandesGestionnaire()
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Commande::class, 'gestionnaire_id');
     }
 
-    // Determine if the user is a gestionnaire
-    public function isGestionnaire()
+    // Relationship with Demande (gestionnaire making the demande)
+    public function demandes()
     {
-        return $this->role === 'gestionnaire';
+        return $this->hasMany(Demande::class, 'gestionnaire_id');
     }
 
-    // Determine if the user is a magasinier
-    public function isMagasinier()
+    // Relationship with Article through Commande (commande details)
+    public function articles()
     {
-        return $this->role === 'magasinier';
+        return $this->hasManyThrough(
+            Article::class,
+            Commande::class,
+            'admin_id', // Foreign key on Commande table
+            'id', // Foreign key on Article table
+            'id', // Local key on User table
+            'id_article' // Local key on Commande table
+        );
+    }
+
+    // Relationship with BonDeDemande (gestionnaire creating bon de demande)
+    public function bonDeDemandes()
+    {
+        return $this->hasMany(BonDeDemande::class, 'gestionnaire_id');
     }
 }

@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class fournisseur extends Model
+class Fournisseur extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'address', 'phone'];
 
-    // A fournisseur can provide many commandes
+    protected $fillable = [
+        'name', 'last_name', 'address', 'email', 'phone'
+    ];
+
     public function commandes()
     {
         return $this->hasMany(Commande::class);
     }
 
-    // A fournisseur can issue many factures
-    public function factures()
+    public function facteurs()
     {
-        return $this->hasMany(Facture::class);
+        return $this->hasMany(Facteur::class);
     }
 }

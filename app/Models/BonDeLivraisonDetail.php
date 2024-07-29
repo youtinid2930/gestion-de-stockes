@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DemandeDetail extends Model
+class BonDeLivraisonDetail extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'demande_id', 'article_id'
+        'bon_de_livraison_id', 'article_id', 'quantity', 'unit_price'
     ];
 
-    public function demande()
+    public function bonDeLivraison()
     {
-        return $this->belongsTo(Demande::class);
+        return $this->belongsTo(BonDeLivraison::class);
     }
 
     public function article()
@@ -23,3 +23,4 @@ class DemandeDetail extends Model
         return $this->belongsTo(Article::class);
     }
 }
+

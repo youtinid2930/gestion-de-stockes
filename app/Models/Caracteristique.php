@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Caracteristique extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
 
-    // A caracteristique can belong to many articles
-    public function articles()
+    protected $fillable = [
+        'name'
+    ];
+
+    public function articleCaracteristiques()
     {
-        return $this->belongsToMany(Article::class, 'article_caracteristique')->withPivot('valeur');
+        return $this->hasMany(ArticleCaracteristique::class);
     }
 }

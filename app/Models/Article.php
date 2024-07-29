@@ -8,23 +8,38 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'categorie_id'];
 
-    // An article belongs to a category
-    public function categorie()
+    protected $fillable = [
+        'name', 'description', 'unit_price', 'stock', 'category_id'
+    ];
+
+    public function category()
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(Category::class);
     }
 
-    // An article can have many caracteristiques
-    public function caracteristiques()
+    public function characteristics()
     {
-        return $this->belongsToMany(Caracteristique::class, 'article_caracteristique')->withPivot('valeur');
+        return $this->hasMany(ArticleCaracteristique::class);
     }
 
-    // An article can be part of many stocks
-    public function stocks()
+    public function commandeDetails()
     {
-        return $this->hasMany(Stock::class);
+        return $this->hasMany(CommandeDetail::class);
+    }
+
+    public function demandeDetails()
+    {
+        return $this->hasMany(DemandeDetail::class);
+    }
+
+    public function bonDeLivraisonDetails()
+    {
+        return $this->hasMany(BonDeLivraisonDetail::class);
+    }
+
+    public function facteurDetails()
+    {
+        return $this->hasMany(FacteurDetail::class);
     }
 }

@@ -27,7 +27,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('fournisseur') }}" class="{{ request()->routeIs('fournisseur') ? 'active' : '' }}">
+            <a href="{{ route('fournisseur.index') }}" class="{{ request()->routeIs('fournisseur.index') ? 'active' : '' }}">
                 <i class="bx bx-user"></i>
                 <span class="links_name">Fournisseur</span>
             </a>
