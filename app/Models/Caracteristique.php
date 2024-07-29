@@ -13,8 +13,15 @@ class Caracteristique extends Model
         'name'
     ];
 
-    public function articleCaracteristiques()
+    public function categories()
     {
-        return $this->hasMany(ArticleCaracteristique::class);
+        return $this->belongsToMany(Categorie::class, 'categorie_caracteristique')
+                    ->using(CategorieCaracteristique::class);
+    }
+
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'article_caracteristique')
+                    ->withPivot('value');
     }
 }

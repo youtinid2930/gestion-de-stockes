@@ -56,4 +56,20 @@ Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('
 Route::get('/categorie', [CategorieController::class, 'index'])->name('categorie')->middleware('auth');
 Route::get('/magasin', [MagasinController::class, 'index'])->name('magasin')->middleware('auth');
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
-
+/*
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('/admin', function () {
+        
+    });
+});
+Route::group(['middleware' => ['role:gestionnaire']], function () {
+    Route::get('/gestionnaire', function () {
+        
+    });
+});
+Route::group(['middleware' => ['role:magasinier']], function () {
+    Route::get('/magasinier', function () {
+        
+    });
+});
+*/
