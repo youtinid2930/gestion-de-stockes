@@ -6,7 +6,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\UserController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,6 +68,15 @@ Route::get('/categorie', [CategorieController::class, 'index'])->name('categorie
 Route::get('/bondelivraison', [BonDeLivraisonController::class, 'index'])->name('bondelivraison')->middleware('auth');
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
 Route::get('/report', [ConfigurationController::class, 'index'])->name('report')->middleware('auth');
+
+// route demande
+Route::get('/demandes', [DemandeController::class, 'showDemandes'])->name('demande.showDemandes');
+Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demande.create');
+Route::post('/demandes', [DemandeController::class, 'store'])->name('demande.store');
+Route::get('/demandes/{id}/edit', [DemandeController::class, 'edit'])->name('demande.edit');
+Route::put('/demandes/{id}', [DemandeController::class, 'update'])->name('demande.update');
+Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demande.Table');
+
 /*
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/admin', function () {
