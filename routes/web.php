@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,7 +34,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 */
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
-Route::get('/utilisateur', [UtilisateurController::class, 'index'])->name('utilisateur')->middleware('auth');
+Route::get('/utilisateur', [UserController::class, 'index'])->name('utilisateur.index')->middleware('auth');
+Route::get('utilisateur/create', [UserController::class, 'create'])->name('utilisateur.create');
+Route::post('utilisateur', [UserController::class, 'store'])->name('utilisateur.store');
+Route::get('utilisateur/{id}/edit', [UserController::class, 'edit'])->name('utilisateur.edit');
+Route::put('utilisateur/{id}', [UserController::class, 'update'])->name('utilisateur.update');
+Route::delete('utilisateur/{id}', [UserController::class, 'destroy'])->name('utilisateur.destroy');
+
+
 Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 // route fournisseur

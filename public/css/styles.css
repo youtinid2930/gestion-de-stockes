@@ -9,12 +9,12 @@
 .sidebar {
   position: fixed;
   height: 100%;
-  width: 240px;
+  width: 250px;
   background: #08450b;
   transition: all 0.5s ease;
 }
 .sidebar.active {
-  width: 60px;
+  width: 80px;
 }
 .sidebar .logo-details {
   height: 80px;
@@ -109,6 +109,7 @@
   font-weight: 500;
 }
 nav .sidebar-button i {
+  cursor: pointer;
   font-size: 35px;
   margin-right: 10px;
 }
@@ -182,8 +183,11 @@ nav .profile-details i {
 }
 .home-content .overview-boxes {
   display: flex;
+  flex-direction: column;
+  /*
   align-items: flex-start;
   justify-content: space-between;
+  */
   flex-wrap: nowrap;
   padding: 0 20px;
   margin-bottom: 26px;
@@ -197,8 +201,10 @@ nav .profile-details i {
   padding: 15px 14px;
   border-radius: 12px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  margin: 5px;
+  margin: 10px;
 }
+
+
 .overview-boxes .box-topic {
   font-size: 20px;
   font-weight: 500;
@@ -350,6 +356,36 @@ nav .profile-details i {
   font-weight: 400;
   color: #333;
 }
+
+.delete-button {
+  background-color: transparent; /* Remove default button background */
+  border: none; /* Remove default button border */
+  cursor: pointer; /* Change cursor to pointer */
+  color: red; /* Set the color of the icon (you can adjust as needed) */
+  font-size: 1.3em; /* Adjust the size of the icon */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  display: inline-flex; /* Align icon properly */
+  align-items: center; /* Center align the icon */
+  justify-content: center; /* Center align the icon */
+  width: 32px; /* Adjust the width */
+  height: 32px; /* Adjust the height */
+}
+
+
+
+.overview-boxes .btn {
+  background-color: #03be1c;
+  margin-left: 5%;
+  margin-right: 83%;
+  border-radius: 5%;
+  padding: 1%;
+}
+
+.overview-boxes .btn a{
+  text-decoration: none;
+  color: whitesmoke;
+}
 /* Responsive Media Query */
 /* CSS de base inchangé */
 
@@ -384,14 +420,19 @@ nav .profile-details i {
 
 @media only screen and (max-width: 768px) {
   .sidebar {
-    width: 60px; /* Réduire la barre latérale à une taille minimale */
+    width: 80px; /* Réduire la barre latérale à une taille minimale */
   }
   .sidebar.active {
-    width: 60px; /* La barre latérale reste minimale en mode actif */
+    width: 250px; /* La barre latérale reste minimale en mode actif */
   }
   .home-section {
     width: calc(100% - 60px); /* Ajuster la largeur du contenu principal */
     left: 60px;
+    margin-left: 80px;
+    transition: margin-left 0.3s;
+  }
+  .home-section.active {
+    margin-left: 250px;
   }
   nav .search-box {
     max-width: 350px; /* Réduire encore la largeur de la boîte de recherche */
@@ -464,11 +505,9 @@ form {
 
 /* Style Table  */
 
-/* table */
 table.mtable {
   width: 100%;
   border-collapse: collapse;
-  width: 100%;
   border: 1px solid #ddd;
 }
 
@@ -480,9 +519,6 @@ td {
 
 table.mtable tr:nth-child(even) {
   background: #f2f2f2;
-}
-table.mtable td {
-  padding: 10px;
 }
 
 /* list */
@@ -589,4 +625,21 @@ ol.mtable li:nth-child(even) {
   width:150px;
   height: auto;
   margin-left: 20px;
+}
+
+/* Animations */
+.sidebar {
+  transition: transform 0.3s ease;
+}
+
+.home-section {
+  transition: margin-left 0.3s ease;
+}
+
+.home-content .box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-content .box:hover {
+  transform: scale(1.02);
 }

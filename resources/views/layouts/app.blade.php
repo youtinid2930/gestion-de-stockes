@@ -11,8 +11,10 @@
 <body>
     @include('layouts.sidebar')
     <section class="home-section">
+        @include('layouts.navbar')
         @yield('content')
     </section>
-    <script src="{{ asset('js/script.js') }}"></script>
+    
+    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 </html>

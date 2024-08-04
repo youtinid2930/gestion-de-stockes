@@ -9,8 +9,8 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('utilisateur') }}" class="{{ request()->routeIs('utilisateur') ? 'active' : '' }}">
-                <i class='bx bx-shopping-bag'></i>
+            <a href="{{ route('utilisateur.index') }}" class="{{ request()->routeIs('utilisateur.index') ? 'active' : '' }}">
+                <i class='bx bx-user'></i>
                 <span class="links_name">Utilisateur</span>
             </a>
         </li>
