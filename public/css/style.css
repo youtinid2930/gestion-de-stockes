@@ -1,0 +1,163 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('../image/photo.jpg');
+    background-size: cover; /* Pour s'assurer que l'image couvre toute la zone */
+    background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Style du formulaire */
+form {
+    width: 400px;
+    margin: 40px auto;
+    background-color: #b9b9b9;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Style des labels */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #cc1818;
+    transition: color 0.2s ease;
+}
+/* Style des champs de saisie */
+input[type="password"] {
+    width:95%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid rgb(232, 225, 225);;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="password"]:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+input[type="password"]:hover {
+    border-color: #494848;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+input[type="text"] {
+    width:95%;
+    height: 40px;
+    margin-right:10px;
+    padding: 10px;
+    border: 1px solid rgb(232, 225, 225);
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+  
+}
+
+input[type="text"]:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+input[type="text"]:hover {
+    border-color: #494848;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
+input[type="Email"] {
+    width:95%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid rgb(232, 225, 225);;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="Email"]:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+input[type="Email"]:hover {
+    border-color: #494848;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+/* Style du bouton */
+button[type="submit"] {
+    width: 100%;
+    height: 40px;
+    background-color: #68d16c;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e8e41;
+}
+
+button[type="submit"]:active {
+    background-color: #2e6c31;
+}
+
+/* Style des éléments de formulaire */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form-group input[type="password"] {
+    width: calc(100% - 160px);
+}
+
+/* Media queries pour les écrans plus petits */
+@media (max-width: 768px) {
+    form {
+        padding: 20px;
+    }
+    .form-group label {
+        width: 100px;
+    }
+    .form-group input[type="password"] {
+        width: calc(100% - 110px);
+    }
+}
+.forgot-password {
+    font-size: 15px;
+    color: #666;
+    text-decoration: none;
+    margin-top: 10px;
+    display: block;
+
+}
+
+.forgot-password:hover {
+    color: #333;
+}
+.icon {
+    margin-left: 10px; /* Add space between the text and the icon */
+    color:#cc1818;;
+    font-size: 1.5em; /* Adjust the font-size to enlarge the icon if needed */
+}     
+.cls{
+    font-size:30px;
+    color:green;
+    font-family: 'Time New Romna';
+    margin-right: 4px;
+}

@@ -11,18 +11,18 @@
                 @endif
 
                 <label for="quantity">quantity</label>
-                <input value="{{ old('quantity', $demande->quantity ?? '') }}" type="text" name="name" id="quantity" placeholder="Veuillez saisir le quantity">
+                <input value="{{ old('quantity', $demande->quantity ?? '') }}" type="text" name="quantity" id="quantity" placeholder="Veuillez saisir le quantity">
                 
                 <input value="{{ old('id', $demande->id ?? '') }}" type="hidden" name="id" id="id">
                 
                 <label for="notes">Notes</label>
-                <input value="{{ old('notes', $demande->notes ?? '') }}" type="text" name="last_name" id="notes" placeholder="Veuillez saisir le Notes">
+                <input value="{{ old('notes', $demande->notes ?? '') }}" type="text" name="notes" id="notes" placeholder="Veuillez saisir le Notes">
                 
                 <label for="status">status</label>
-                <input value="{{ old('status', $demande->status ?? '') }}" type="text" name="phone" id="status" placeholder="Veuillez saisir le status">
+                <input value="{{ old('status', $demande->status ?? '') }}" type="text" name="status" id="status" placeholder="Veuillez saisir le status">
                 
-                <label for="delivery_address">delivery_address</label>
-                <input value="{{ old('delivery_address', $demande->delivery_address ?? '') }}" type="text" name="address" id="delivery_address" placeholder="Veuillez saisir l'delivery_address">
+                <label for="delivery_address">delivery address</label>
+                <input value="{{ old('delivery_address', $demande->delivery_address ?? '') }}" type="text" name="delivery_address" id="delivery_address" placeholder="Veuillez saisir l'delivery_address">
 
 
                 <button type="submit">Valider</button>
