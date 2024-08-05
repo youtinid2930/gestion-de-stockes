@@ -8,6 +8,7 @@ use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 
 
 /*
@@ -36,14 +37,15 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 */
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-
+Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id'])->middleware('auth');
+/*
 Route::get('/utilisateur', [UserController::class, 'index'])->name('utilisateur.index')->middleware('auth');
-Route::get('utilisateur/create', [UserController::class, 'create'])->name('utilisateur.create');
-Route::post('utilisateur', [UserController::class, 'store'])->name('utilisateur.store');
-Route::get('utilisateur/{id}/edit', [UserController::class, 'edit'])->name('utilisateur.edit');
-Route::put('utilisateur/{id}', [UserController::class, 'update'])->name('utilisateur.update');
+Route::get('/utilisateur/create', [UserController::class, 'create'])->name('utilisateur.create');
+Route::post('/utilisateur', [UserController::class, 'store'])->name('utilisateur.store');
+Route::get('/utilisateur/{id}/edit', [UserController::class, 'edit'])->name('utilisateur.edit');
+Route::put('/utilisateur/{id}', [UserController::class, 'update'])->name('utilisateur.update');
 Route::delete('utilisateur/{id}', [UserController::class, 'destroy'])->name('utilisateur.destroy');
-
+*/
 
 Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
@@ -63,8 +65,11 @@ Route::put('/commandes/{id}', [CommandeController::class, 'update'])->name('comm
 Route::get('/commandes/{id}', [CommandeController::class, 'show'])->name('commande.show');
 Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('commande.annuler');
 
+// categories routes
+Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
 
-Route::get('/categorie', [CategorieController::class, 'index'])->name('categorie')->middleware('auth');
+
+
 Route::get('/bondelivraison', [BonDeLivraisonController::class, 'index'])->name('bondelivraison')->middleware('auth');
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
 Route::get('/report', [ConfigurationController::class, 'index'])->name('report')->middleware('auth');

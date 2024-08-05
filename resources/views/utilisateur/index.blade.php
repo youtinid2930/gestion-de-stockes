@@ -9,9 +9,6 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Adresse</th>
-                    <th>État</th>
                     <th>Role</th> 
                     <th>Actions</th>
                 </tr>
@@ -20,9 +17,6 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->last_name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->telephone }}</td>
-                        <td>{{ $user->adresse }}</td>
-                        <td>{{ $user->etat }}</td>
                         <td>
                             @if ($user->hasRole('admin'))
                                 Admin
@@ -43,6 +37,7 @@
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </form>
+                            <button onclick="window.location.href='{{ route('utilisateur.show', $user->id) }}'">Voir plus</button>
                         </td>
                     </tr>
                 @endforeach

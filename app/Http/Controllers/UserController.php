@@ -55,6 +55,12 @@ class UserController extends Controller
 
         return redirect()->route('utilisateur.index')->with('success', 'User created successfully.');
     }
+    // Show all informations of one user
+
+    public function show($id) {
+        $utilisateur = User::with('roles')->find($id);
+        return view('utilisateur.show', compact('utilisateur'));
+    }
 
     // Show the form for editing the specified resource.
     public function edit($id)

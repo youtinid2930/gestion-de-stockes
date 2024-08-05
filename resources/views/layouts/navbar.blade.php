@@ -2,7 +2,7 @@
     <div class="sidebar-button">
         <i class="bx bx-menu sidebarBtn"></i>
         <span class="dashboard">
-            {{ ucfirst(str_replace('.php', '', basename($_SERVER['PHP_SELF']))) }}
+            @yield('title')
         </span>
     </div>
     <div class="search-box">

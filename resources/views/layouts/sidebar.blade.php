@@ -39,7 +39,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('categorie') }}" class="{{ request()->routeIs('categorie') ? 'active' : '' }}">
+            <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.index') ? 'active' : '' }}">
                 <i class="bx bx-list-ul"></i>
                 <span class="links_name">Catégorie</span>
             </a>
