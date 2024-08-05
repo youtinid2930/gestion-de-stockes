@@ -10,6 +10,8 @@ use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 
+use App\Http\Controllers\ArticleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +83,16 @@ Route::post('/demandes', [DemandeController::class, 'store'])->name('demande.sto
 Route::get('/demandes/{id}/edit', [DemandeController::class, 'edit'])->name('demande.edit');
 Route::put('/demandes/{id}', [DemandeController::class, 'update'])->name('demande.update');
 Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demande.Table');
+
+
+Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+
+
 
 /*
 Route::group(['middleware' => ['role:admin']], function () {
