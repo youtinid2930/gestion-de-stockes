@@ -180,6 +180,7 @@ nav .profile-details i {
 .home-section .home-content {
   position: relative;
   padding-top: 104px;
+  background-color: whitesmoke;
 }
 .home-content .overview-boxes {
   display: flex;
@@ -649,4 +650,60 @@ ol.mtable li:nth-child(even) {
 
 .home-content .box:hover {
   transform: scale(1.02);
+}
+
+/*style categories */
+.list-group {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.list-group-item {
+  background-color: #f8f9fa;
+  border: none;
+  padding: 10px 20px;
+
+}
+
+.list-group-item .btn {
+  margin-left: 5px;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: rgb(12, 9, 9);
+  font-size: 1em;
+}
+
+.card-body ul {
+  padding-left: 20px;
+}
+
+.card-body li {
+  margin-bottom: 10px;
+}
+
+.box {
+  background: #fff;
+ 
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  /*
+  align-items: center;
+  justify-content: center;
+  */
+  /* min-width: calc(100% / 4 - 15px); */
+  background: #fff;
+  padding: 15px 14px;
+  border-radius: 12px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
 }

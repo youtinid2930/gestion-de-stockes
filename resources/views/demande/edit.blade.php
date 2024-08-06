@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Demande')
+
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">

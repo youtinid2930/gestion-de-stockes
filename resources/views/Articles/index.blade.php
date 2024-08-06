@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Article')
+
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
@@ -25,9 +27,7 @@
                 <label for="category_id">Catégorie</label>
                 <select name="category_id" id="category_id">
                     <option value="">--Choisir une catégorie--</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ (old('category_id') ?? $article->category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                    @endforeach
+                    <x-category-dropdown :categories="$categories" :selected="old('parent_id')" />
                 </select>
 
                 <label for="images">Image</label>

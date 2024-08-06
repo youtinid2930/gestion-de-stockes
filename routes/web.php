@@ -69,6 +69,11 @@ Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('
 
 // categories routes
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
+Route::get('categories/{id}/characteristics', [CategoryController::class, 'characteristics'])->name('category.characteristics');
+Route::post('categories/{id}/characteristics', [CategoryController::class, 'StoreCharacteristics'])->name('characteristics.store');
+Route::delete('categories/{id_categorie}/characteristics/{id_charateristics}', [CategoryController::class, 'DestroyCharacteristics'])->name('characteristics.destroy');
+Route::get('/categories/{id_categorie}/characteristics', [CategoryController::class, 'getCharacteristics'])->name('characteristics.index');
+Route::get('/characteristics/search', [CategoryController::class, 'searchCharacteristics'])->name('characteristics.search');
 
 
 

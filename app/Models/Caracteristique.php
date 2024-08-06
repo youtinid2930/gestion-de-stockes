@@ -13,10 +13,8 @@ class Caracteristique extends Model
         'name'
     ];
 
-    public function categories()
-    {
-        return $this->belongsToMany(Categorie::class, 'categorie_caracteristique')
-                    ->using(CategorieCaracteristique::class);
+    public function categories() {
+        return $this->belongsToMany(Categorie::class, 'categorie_caracteristique', 'caracteristique_id', 'categorie_id');
     }
 
     public function articles()
