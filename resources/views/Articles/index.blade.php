@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Article')
-
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
@@ -27,7 +25,7 @@
                 <label for="category_id">Catégorie</label>
                 <select name="category_id" id="category_id">
                     <option value="">--Choisir une catégorie--</option>
-                    <x-category-dropdown :categories="$categories" :selected="old('parent_id')" />
+                    @include('components.category-options', ['categories' => $categories, 'selected' => old('category_id', $article->category_id ?? '')])
                 </select>
 
                 <label for="images">Image</label>
@@ -44,37 +42,8 @@
                 @endif
             </form>
         </div>
-
+        
         <div class="box" style="display: block;">
-            <form action="{{ route('articles.index') }}" method="get">
-                <table class="mtable">
-                    <tr>
-                        <th>Nom article</th>
-                        <th>Catégorie</th>
-                        <th>Quantité</th>
-                        <th>Prix unitaire</th>
-                        <th>Date fabrication</th>
-                        <th>Date expiration</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="name" id="name" placeholder="Veuillez saisir le nom"></td>
-                        <td>
-                            <select name="category_id" id="category_id">
-                                <option value="">--Choisir une catégorie--</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td><input type="number" name="stock" id="stock" placeholder="Veuillez saisir la quantité"></td>
-                        <td><input type="number" name="unit_price" id="unit_price" placeholder="Veuillez saisir le prix"></td>
-                        <td><input type="date" name="date_fabrication" id="date_fabrication"></td>
-                        <td><input type="date" name="date_expiration" id="date_expiration"></td>
-                    </tr>
-                </table>
-                <br>
-                <button type="submit">Valider</button>
-            </form>
             <br>
             <table class="mtable">
                 <tr>
