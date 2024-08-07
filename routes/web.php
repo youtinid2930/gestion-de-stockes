@@ -9,7 +9,7 @@ use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
-
+use App\Http\Controllers\CaracteristiqueController;
 use App\Http\Controllers\ArticleController;
 
 
@@ -69,11 +69,16 @@ Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('
 
 // categories routes
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
-Route::get('categories/{id}/characteristics', [CategoryController::class, 'characteristics'])->name('category.characteristics');
-Route::post('categories/{id}/characteristics', [CategoryController::class, 'StoreCharacteristics'])->name('characteristics.store');
-Route::delete('categories/{id_categorie}/characteristics/{id_charateristics}', [CategoryController::class, 'DestroyCharacteristics'])->name('characteristics.destroy');
-Route::get('/categories/{id_categorie}/characteristics', [CategoryController::class, 'getCharacteristics'])->name('characteristics.index');
-Route::get('/characteristics/search', [CategoryController::class, 'searchCharacteristics'])->name('characteristics.search');
+// caracteristiques routes
+Route::get('categories/{id}/characteristics', [CaracteristiqueController::class, 'characteristics'])->name('category.characteristics');
+Route::post('categories/{id}/characteristics', [CaracteristiqueController::class, 'StoreCharacteristicsByCategorie'])->name('characteristicsbycategorie.store');
+Route::delete('categories/{id_categorie}/characteristics/{id_charateristics}', [CaracteristiqueController::class, 'DestroyCharacteristics'])->name('characteristics.destroy');
+Route::get('/characteristics', [CaracteristiqueController::class, 'index'])->name('caracteristique.index');
+Route::post('/characteristics', [CaracteristiqueController::class, 'store'])->name('characteristics.store');
+Route::delete('/characteristics/{id_caracteristique}', [CaracteristiqueController::class, 'destroy'])->name('characteristics.destroy');
+Route::get('/characteristics/{id_caracteristique}/edit', [CaracteristiqueController::class, 'edit'])->name('characteristics.edit');
+Route::put('/characteristics/{id_caracteristique}', [CaracteristiqueController::class, 'update'])->name('characteristics.update');
+
 
 
 

@@ -75,68 +75,8 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
     }
 
-    public function characteristics($categorie_id)
-    {
-        $category = Categorie::findOrFail($categorie_id);
-        $characteristics = DB::table('categorie_caracteristique')
-            ->join('caracteristiques', 'categorie_caracteristique.caracteristique_id', '=', 'caracteristiques.id')
-            ->where('categorie_caracteristique.categorie_id', $categorie_id)
-            ->select('caracteristiques.*')
-            ->get();
-        return view('characteristics.ofcategorie', compact('characteristics','category'));
-    }
-
-    public function StoreCharacteristics(Request $request,$categorie_id) {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-        $exists = DB::table('caracteristiques')
-            ->where('name', $request->input('name'))
-            ->exists();
-
-        if ($exists) {
-            $caracteristique = DB::table('caracteristiques')
-            ->where('name', $request->input('name'))
-            ->select('id')
-            ->first();
-            DB::table('categorie_caracteristique')->insert([
-                'categorie_id' => $categorie_id,
-                'caracteristique_id' => $caracteristique->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-    
-            return redirect()->route('category.characteristics', $categorie_id)->with('success', 'Characteristic added successfully');
-        }
-
-        // Store the new characteristic
-        $caracteristique = new Caracteristique();
-        $caracteristique->name = $request->input('name');
-        $caracteristique->save();
-        
-        DB::table('categorie_caracteristique')->insert([
-            'categorie_id' => $categorie_id,
-            'caracteristique_id' => $caracteristique->id,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return redirect()->route('category.characteristics', $categorie_id)->with('success', 'Characteristic added successfully');
-    }
-
-    public function DestroyCharacteristics($categorie_id,$caracteristique_id) {
-
-        $deleted = DB::table('categorie_caracteristique')
-            ->where('categorie_id', $categorie_id)
-            ->where('caracteristique_id', $caracteristique_id)
-            ->delete();
-
-        if ($deleted) {
-            // Redirect back with success message if deletion was successful
-            return redirect()->back()->with('success', 'Characteristic removed successfully.');
-        } else {
-            // Redirect back with error message if deletion failed
-            return redirect()->back()->with('error', 'Failed to remove characteristic.');
-        }
+    public function show($id) {
+        $categorie = Categorie::findOrFail($id);
+        return view('categories.show','catergorie');
     }
 }

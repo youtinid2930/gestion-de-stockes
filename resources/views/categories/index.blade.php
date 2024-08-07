@@ -39,8 +39,10 @@
             </div>
         @endforeach
     </div>
-    <button onclick="window.location.href='{{ route('categories.create') }}'" style="margin: 1em; border-radius: 6px;">Ajouter Catégorie</button>
-    
+    <div class="mt-3 btns">
+        <a href="{{ route('categories.create') }}" class="btn btn-primary">Ajouter Catégorie</a>
+        <a href="{{ route('caracteristique.index') }}" class="btn btn-secondary">Gérer les caractéristiques</a>
+    </div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
      @endif

@@ -8,11 +8,18 @@
 <div class="box">
     <h2>Caracteristique de {{ $category->name }}</h2>
 
-    <form action="{{ route('characteristics.store', $category->id) }}" method="POST">
+    <form action="{{ route('characteristicsbycategorie.store', $category->id) }}" method="POST">
         @csrf
         <label for="name">nom de caracteristique</label>
-        <input type="text" name="name" id="name" class="form-control" required>
-        <button type="submit" style="border-radius: 6px; margin-top: 1em;">Ajouter</button>
+        <select name="name" id="name" required>
+            <option value="">Sélectionner une caractere</option>
+            @foreach($caracteristique as $character) 
+                <option value="{{ $character->name }}">{{ $character->name }}</option>
+            @endforeach
+        </select>
+        <div class="button-container">
+            <button type="submit" style="border-radius: 5%;">Ajouter</button>
+        </div>
     </form>
 
     <div class="list-group mt-4">
@@ -31,8 +38,9 @@
             </div>
         @endforeach
     </div>
-
-    <button onclick="window.location.href='{{ route('categories.index') }}'" style="border-radius: 6px;">Precedent</button>
+    <div class="button-container">
+    <button onclick="window.location.href='{{ route('categories.index') }}'" style="border-radius: 5px;">Precedent</button>
+    </div>
 </div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -43,4 +51,14 @@
     @endif
 </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#name').select2({
+            placeholder: 'Sélectionner une caractere',
+            allowClear: true,
+            theme: 'bootstrap4'
+        });
+    });
+</script>
 @endsection
