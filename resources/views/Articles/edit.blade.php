@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Article')
+@section('title', 'Modifier l\'article')
 
 @section('content')
 <div class="container">
@@ -8,7 +8,7 @@
     <form action="{{ route('articles.update', $article->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        @include('articles.form', ['article' => $article, 'categories' => $categories])        <button type="submit">Valider</button>
+        @include('articles.partials.form', ['article' => $article, 'categories' => $categories])
     </form>
 </div>
 @endsection
