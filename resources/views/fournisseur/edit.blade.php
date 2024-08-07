@@ -6,29 +6,33 @@
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
-            <form action="{{ !empty($fournisseur->id) ? route('fournisseur.update', $fournisseur->id) : route('fournisseur.store') }}" method="post">
+        <form action="{{route('fournisseur.update', $fournisseur->id) }}" method="POST">
                 @csrf
-                @method(!empty($fournisseur->id) ? 'PUT' : 'POST')
+                @method('PUT')
 
                 <label for="nom">Nom</label>
-                <input value="{{ $fournisseur->nom ?? '' }}" type="text" name="name" id="nom" placeholder="Veuillez saisir le nom">
+                <input value="{{ old('name', $fournisseur->name) }}" type="text" name="name" id="nom" placeholder="Veuillez saisir le nom" autocomplete="given-name">
                 
-                <input value="{{ $fournisseur->id ?? '' }}" type="hidden" name="id" id="id">
-            <!--
+
                 <label for="prenom">Prénom</label>
-                <input value="{{ $fournisseur->prenom ?? '' }}" type="text" name="prenom" id="prenom" placeholder="Veuillez saisir le prénom">
-            -->
+                <input value="{{ old('last_name', $fournisseur->last_name) }}" type="text" name="last_name" id="prenom" placeholder="Veuillez saisir le prénom" autocomplete="family-name">
+               
+
                 <label for="telephone">N° de téléphone</label>
-                <input value="{{ $fournisseur->telephone ?? '' }}" type="text" name="phone" id="telephone" placeholder="Veuillez saisir le N° de téléphone">
+                <input value="{{ old('telephone', $fournisseur->phone) }}" type="text" name="phone" id="telephone" placeholder="Veuillez saisir le N° de téléphone" autocomplete="tel">
+                
+
+                <label for="email">Email</label>
+                <input value="{{ old('email', $fournisseur->email) }}" type="email" name="email" id="email" placeholder="Veuillez saisir l'adresse email" autocomplete="email">
 
                 <label for="adresse">Adresse</label>
-                <input value="{{ $fournisseur->adresse ?? '' }}" type="text" name="address" id="adresse" placeholder="Veuillez saisir l'adresse">
+                <input value="{{ old('adresse', $fournisseur->address) }}" type="text" name="address" id="adresse" placeholder="Veuillez saisir l'adresse" autocomplete="street-address">
 
-                <button type="submit">Valider</button>
+                <button type="submit">Mise a jour</button>
 
                 @if(session('message'))
-                    <div class="alert {{ session('message')['type'] }}">
-                        {{ session('message')['text'] }}
+                    <div class="alert {{ session('message.type') }}">
+                        {{ session('message.text') }}
                     </div>
                 @endif
             </form>
