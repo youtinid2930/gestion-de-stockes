@@ -26,7 +26,7 @@
                 <label for="delivery_address">delivery_address</label>
                 <input value="{{ old('delivery_address', $demande->delivery_address ?? '') }}" type="text" name="address" id="delivery_address" placeholder="Veuillez saisir l'delivery_address">
 
-
+                <br><br><br>
                 <button type="submit">Valider</button>
 
                 @if(session('message'))

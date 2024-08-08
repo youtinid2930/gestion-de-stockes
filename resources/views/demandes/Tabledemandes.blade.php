@@ -34,6 +34,7 @@
                 @endforeach
             </table>
         </div>
+        <br>
         <button onclick="window.location='{{ route('demande.showDemandes') }}'">Créer Demande</button>
     </div>
 </div>

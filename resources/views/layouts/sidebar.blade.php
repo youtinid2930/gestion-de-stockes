@@ -45,11 +45,12 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('bondelivraison') }}">
-                <i class="bx bx-user"></i>
-                <span class="links_name">Bon de livraison</span>
+            <a href="{{ route('bons_de_livraison.index') }}">
+                <i class="bx bx-package"></i>
+                <span class="links_name">Bons de livraison</span>
             </a>
         </li>
+
         <li>
             <a href="{{ route('report') }}">
                 <i class="bx bx-cog"></i>
@@ -63,10 +64,13 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('logout') }}">
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="bx bx-log-out"></i>
                 <span class="links_name">Déconnexion</span>
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </li>
     </ul>
 </div>
