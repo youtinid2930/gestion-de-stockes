@@ -32,8 +32,8 @@
                 <input type="file" name="images" id="images">
 
                 <input type="hidden" name="publier" value="0">
-                <button type="submit" name="publier" value="1">Publier</button>
-                <button type="submit">Valider</button>
+                <button type="submit" name="publier" value="1">Valider</button>
+                
 
                 @if(session('message'))
                     <div class="alert {{ session('message')['type'] }}">
@@ -65,7 +65,19 @@
                         <td>{{ $article->created_at->format('d/m/Y H:i:s') }}</td>
                         <td>{{ $article->updated_at->format('d/m/Y H:i:s') }}</td>
                         <td><img width="100" height="100" src="{{ $article->images }}" alt="{{ $article->name }}"></td>
-                        <td><a href="{{ route('articles.edit', $article->id) }}"><i class='bx bx-edit-alt'></i></a></td>
+                        <td>
+                            <a href="{{ route('articles.edit', $article->id) }}">
+                                <i class='bx bx-edit-alt'></i>
+                            </a>
+                                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('vous etes sure de supprimer cette Article?');" class="delete-button">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </form>
+                        </td>
+
                     </tr>
                 @endforeach
             </table>

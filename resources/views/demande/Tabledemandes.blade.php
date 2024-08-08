@@ -21,7 +21,15 @@
                         <td>{{ $value->notes }}</td>
                         <td>{{ $value->status }}</td>
                         <td>{{ $value->delivery_address }}</td>
-                        <td><a href="{{ route('demande.edit', $value->id) }}"><i class='bx bx-edit-alt'></i></a></td>
+                        <td><a href="{{ route('demande.edit', $value->id) }}"><i class='bx bx-edit-alt'></i></a>
+                        <form action="{{ route('demande.destroy', $demande->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('vous etes sure de supprimer cette demande?');" class="delete-button">
+                                        <i class='bx bx-trash'></i>
+                                    </button>
+                                </form>
+                       </td>
                     </tr>
                 @endforeach
             </table>

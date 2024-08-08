@@ -28,9 +28,8 @@
     <input type="file" name="images" id="images">
 
     <input type="hidden" name="publier" value="0">
-    <button type="submit" name="publier" value="1">Publier</button>
-    <button type="submit">Valider</button>
-
+    <button type="submit" name="publier" value="1">Valider</button>
+   
     @if(session('message'))
         <div class="alert {{ session('message')['type'] }}">
             {{ session('message')['text'] }}
