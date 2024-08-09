@@ -57,5 +57,19 @@ class FournisseurController extends Controller
         return redirect()->route('fournisseur.index')
                          ->with('message', ['type' => 'success', 'text' => 'Fournisseur modifié avec succès']);
     }
+
+    public function destroy($id) {
+        $fournisseur = Fournisseur::findOrFail($id);
+
+        $fournisseur->delete();
+
+        return redirect()->route('fournisseur.index')->with('success', 'Fournisseur deleted successfully.');
+    }
+
+
+    public function show($id) {
+        $fournisseur = Fournisseur::findOrFail($id);
+        return view('fournisseur.show', compact('fournisseur'));
+    }
 }
 

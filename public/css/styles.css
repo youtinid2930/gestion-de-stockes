@@ -388,6 +388,7 @@ nav .profile-details i {
   margin-right: 83%;
   border-radius: 5%;
   padding: 1%;
+  
 }
 
 .overview-boxes .btn a{
@@ -921,5 +922,4 @@ ol.mtable li:nth-child(even) {
 .button-container {
   margin-top: 1.5rem; /* Adjust spacing as needed */
   text-align: left; /* Center the button horizontally within the container */
-  
 }

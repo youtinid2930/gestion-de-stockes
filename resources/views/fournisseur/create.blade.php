@@ -35,6 +35,7 @@
                 @endif
             </form>
         </div>
+        <button onclick="window.location.href='{{ route('fournisseur.index') }}'" style="border-radius: 6px;">Precedent</button>
     </div>
 </div>
 @endsection

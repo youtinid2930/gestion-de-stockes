@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Fournisseur')
+@section('title', 'Commande')
 
 @section('content')
 <div class="home-content">
@@ -8,20 +8,18 @@
         <div class="box">
             <table class="mtable">
                 <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Téléphone</th>
-                    <th>Adresse</th>
-                    <th>Email</th>
+                    <th>Fournisseur</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                    <th>Date</th>
                     <th>Action</th>
                 </tr>
-                @foreach ($fournisseurs as $value)
+                @foreach ($commandes as $value)
                     <tr>
-                        <td>{{ $value->name }}</td>
-                        <td>{{ $value->last_name }}</td>
-                        <td>{{ $value->phone }}</td>
-                        <td>{{ $value->address }}</td>
-                        <td>{{ $value->email }}</td>
+                        <td>{{ $value->fournisseur->name }}</td>
+                        <td>{{ $value->quantite }}</td>
+                        <td>{{ $value->prix }}</td>
+                        <td>{{ $value->date_commande->format('d/m/Y H:i:s') }}</td>
                         <td>
                         <a href="{{ route('fournisseur.edit', $value->id) }}"><i class='bx bx-edit-alt'></i></a>
                         <form action="{{ route('fournisseur.destroy', $value->id) }}" method="POST" style="display:inline;">
@@ -37,13 +35,9 @@
                 @endforeach
             </table>
         </div>
-        <div style="background-color: #03be1c;margin-left: 5%;margin-right: 75%;border-radius: 5%;padding: 1%;">
-            <a href="{{ route('fournisseur.create') }}" style="color: white">Ajouter Fournisseur <i class="bx bx-plus"></i></a>
+        <div style="background-color: #03be1c;margin-left: 5%;margin-right: 73%;border-radius: 5%;padding: 1%;">
+            <a href="{{ route('commande.create') }}" style="color: white">Creer un commande<i class="bx bx-plus"></i></a>
         </div>
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
     </div>
-    
 </div>
 @endsection

@@ -13,7 +13,7 @@ class CommandeController extends Controller
         $commandes = Commande::with('fournisseur','users')->get();
         $fournisseurs = Fournisseur::all();
 
-        return view('commande', compact('commandes', 'fournisseurs'));
+        return view('commande.index', compact('commandes', 'fournisseurs'));
     }
 
     public function create()

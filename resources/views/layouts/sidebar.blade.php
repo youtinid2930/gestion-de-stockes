@@ -33,7 +33,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('commande') }}" class="{{ request()->routeIs('commande') ? 'active' : '' }}">
+            <a href="{{ route('commande.index') }}" class="{{ request()->routeIs('commande.index') ? 'active' : '' }}">
                 <i class="bx bx-list-ul"></i>
                 <span class="links_name">Commandes</span>
             </a>

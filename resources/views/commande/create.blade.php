@@ -38,39 +38,6 @@
                 @endif
             </form>
         </div>
-        <div class="box">
-            <table class="mtable">
-                <tr>
-                    <th>Fournisseur</th>
-                    <th>Quantité</th>
-                    <th>Prix</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-                @foreach ($commandes as $value)
-                    <tr>
-                        <td>{{ $value->fournisseur->name }}</td>
-                        <td>{{ $value->quantite }}</td>
-                        <td>{{ $value->prix }}</td>
-                        <td>{{ $value->date_commande->format('d/m/Y H:i:s') }}</td>
-                        <td>
-                            <a href="{{ route('commande.show', $value->id) }}"><i class='bx bx-receipt'></i></a>
-                            <a onclick="annuleCommande({{ $value->id }}, {{ $value->quantite }})" style="color: red;"><i class='bx bx-stop-circle'></i></a>
-                        </td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    function annuleCommande(idCommande, quantite) {
-        if (confirm("Voulez-vous vraiment annuler cette commande ?")) {
-            window.location.href = "{{ route('commande.annuler') }}?idCommande=" + idCommande + "&quantite=" + quantite;
-        }
-    }
-</script>
-@endpush

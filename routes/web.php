@@ -32,7 +32,7 @@ Route::get('/', function () {
 
 Route::get('/', [AuthController::class, 'showLoginForm']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Auth::routes();
 /*
@@ -45,19 +45,22 @@ Route::resource('utilisateur', UserController::class)->parameters(['utilisateur'
 Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 
-// route fournisseur
+// routes fournisseur
 Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
+// routes commandes
+Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id'])->middleware('auth');
 
 
 
-// Commande routes
+/*
 Route::get('/commandes', [CommandeController::class, 'index'])->name('commande')->middleware('auth');
 Route::get('/commandes/create', [CommandeController::class, 'create'])->name('commande.create');
 Route::post('/commandes', [CommandeController::class, 'store'])->name('commande.store');
 Route::get('/commandes/{id}/edit', [CommandeController::class, 'edit'])->name('commande.edit');
 Route::put('/commandes/{id}', [CommandeController::class, 'update'])->name('commande.update');
+Route::get('/commandes/{id}', [CommandeController::class, 'destroy'])->name('commande.destroy');
 Route::get('/commandes/{id}', [CommandeController::class, 'show'])->name('commande.show');
-Route::get('/commandes/annuler', [CommandeController::class, 'destroy'])->name('commande.annuler');
+*/
 
 // categories routes
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
