@@ -24,6 +24,6 @@
             {{ __('Send') }}
         </button>
 
-        <a class="forgot-password" href="{{ route('login') }}">Go Back to the login page</a>
+        <a class="forgot-password" href="{{ route('login') }}">Retour</a>
                     
 @endsection

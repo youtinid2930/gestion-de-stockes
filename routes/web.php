@@ -11,7 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CaracteristiqueController;
 use App\Http\Controllers\ArticleController;
-
+use App\Http\Controllers\BonDeLivraisonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +97,7 @@ Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('arti
 Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
 Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
 
+Route::resource('bons_de_livraison', BonDeLivraisonController::class);
 
 
 /*

@@ -1,34 +1,25 @@
-<?php
+// database/migrations/xxxx_xx_xx_create_bon_de_livraisons_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateBonDeLivraisonsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('bon_de_livraisons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('demande_id')->constrained();
-            $table->foreignId('magasinier_id')->constrained('users');
-            $table->text('comments')->nullable();
+            $table->string('numero'); // Exemple : Numéro du bon de livraison
+            $table->date('date_livraison'); // Date de livraison
+            $table->text('adresse_livraison'); // Adresse de livraison
+            $table->foreignId('commande_id')->constrained()->onDelete('cascade'); // Clé étrangère pour Commande
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('bon_de_livraisons');
     }
-};
+}
