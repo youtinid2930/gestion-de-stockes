@@ -10,7 +10,7 @@ class Commande extends Model
     use HasFactory;
 
     protected $fillable = [
-        'admin_id', 'fournisseur_id', 'quantite', 'prix', 'date_commande'
+        'admin_id', 'fournisseur_id', 'date_commande'
     ];
 
     public function admin()

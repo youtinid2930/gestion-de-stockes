@@ -3,6 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
+
 <div class="home-content">
     <div class="overview-boxes">
     @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
@@ -54,7 +55,7 @@
                     <ul class="details">
                         <li class="topic">Article</li>
                         @foreach ($data['recentCommandes'] as $commande)
-                            @foreach ($commande->details as $detail)
+                            @foreach ($commande->commandeDetails as $detail)
                                 <li><a href="#">{{ $detail->article_name }}</a></li>
                             @endforeach
                         @endforeach
@@ -62,7 +63,7 @@
                     <ul class="details">
                         <li class="topic">Prix</li>
                         @foreach ($data['recentCommandes'] as $commande)
-                            <li><a href="#">{{ number_format($commande->total_price, 0, ",", " ") . " DH" }}</a></li>
+                            <li><a href="#">{{ number_format($commande->price, 0, ",", " ") . " DH" }}</a></li>
                         @endforeach
                     </ul>
                 </div>

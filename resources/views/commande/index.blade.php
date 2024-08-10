@@ -9,34 +9,41 @@
             <table class="mtable">
                 <tr>
                     <th>Fournisseur</th>
-                    <th>Quantité</th>
-                    <th>Prix</th>
+                    <th>Articles</th>
+                    <th>Quantité Totale</th>
+                    <th>Prix Total</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
-                @foreach ($commandes as $value)
+                @foreach ($commandes as $commande)
                     <tr>
-                        <td>{{ $value->fournisseur->name }}</td>
-                        <td>{{ $value->quantite }}</td>
-                        <td>{{ $value->prix }}</td>
-                        <td>{{ $value->date_commande->format('d/m/Y H:i:s') }}</td>
+                        <td>{{ $commande->fournisseur->name }}</td>
                         <td>
-                        <a href="{{ route('fournisseur.edit', $value->id) }}"><i class='bx bx-edit-alt'></i></a>
-                        <form action="{{ route('fournisseur.destroy', $value->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('est ce que tu es sur vous voulez supprimer cet fournisseur ?');" class="delete-button">
-                                <i class='bx bx-trash'></i>
-                            </button>
-                        </form>
-                        <button onclick="window.location.href='{{ route('fournisseur.show', $value->id) }}'">Voir plus</button>
+                            <ul>
+                                @foreach ($commande->commandeDetails as $detail)
+                                    <li>{{ $detail->article->name }} ({{ $detail->quantite }} unités à {{ $detail->prix }} chacune)</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{ $commande->commandeDetails->sum('quantite') }}</td>
+                        <td>{{ $commande->commandeDetails->sum('prix') }}</td>
+                        <td>{{ $commande->date_commande }}</td>
+                        <td>
+                            <a href="{{ route('commande.edit', $commande->id) }}"><i class='bx bx-edit-alt'></i></a>
+                            <form action="{{ route('commande.destroy', $commande->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="delete-button">
+                                    <i class='bx bx-trash'></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
             </table>
         </div>
         <div style="background-color: #03be1c;margin-left: 5%;margin-right: 73%;border-radius: 5%;padding: 1%;">
-            <a href="{{ route('commande.create') }}" style="color: white">Creer un commande<i class="bx bx-plus"></i></a>
+            <a href="{{ route('commande.create') }}" style="color: white">Créer une commande <i class="bx bx-plus"></i></a>
         </div>
     </div>
 </div>

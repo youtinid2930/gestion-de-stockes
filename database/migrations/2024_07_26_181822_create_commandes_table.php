@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('admin_id');
             $table->unsignedBigInteger('fournisseur_id');
-            $table->integer('quantite');
-            $table->decimal('prix', 8, 2);
             $table->timestamp('date_commande')->nullable();
             $table->timestamps();
 
