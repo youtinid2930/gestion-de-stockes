@@ -21,7 +21,7 @@
                 <label for="commande_id">Commande</label>
                 <select name="commande_id" id="commande_id" required>
                     @foreach($commandes as $commande)
-                        <option value="{{ $commande->id }}">{{ $commande->nom }}</option>
+                        <option value="{{ $commande->id }}">{{ $commande->name }}</option>
                     @endforeach
                 </select>
 

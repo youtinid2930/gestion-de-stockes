@@ -5,73 +5,72 @@
 @section('content')
 
 <div class="home-content">
-    <div class="overview-boxes">
-    @if (auth()->user()->role == 'admin' || auth()->user()->role == 'gestionnaire')
+    <div class="overview-boxes" style="flex-direction: row;">
+       
             <div class="box">
                 <div class="right-side">
                     <div class="box-topic">Commande</div>
-                    <div class="number">{{ $data['commandes']['nbre'] }}</div>
+                    <div class="number">{{ $data['commandes']['nbre'] ?? 'N/A' }}</div>
                     <div class="indicator">
                         <i class="bx bx-up-arrow-alt"></i>
-                        <span class="text">Depuis hier</span>
+                        <span class="text">Depuis {{ $data['commandes']['timeSinceLastUpdate'] }}</span>
                     </div>
                 </div>
-                <i class="bx bx-cart-alt cart"></i>
+                
             </div>
         
-            @endif
-        
-            <div class="box">
-                <div class="right-side">
-                    <div class="box-topic">Article</div>
-                    <div class="number">{{ $data['articles']['nbre'] }}</div>
-                    <div class="indicator">
-                        <i class="bx bx-up-arrow-alt"></i>
-                        <span class="text">Depuis hier</span>
-                    </div>
-                </div>
-                <i class="bx bx-cart cart three"></i>
-            </div>
        
-    </div>
-
-    
-        <div class="sales-boxes">
-            <div class="recent-sales box">
-                <div class="title">Commandes récentes</div>
-                <div class="sales-details">
-                    <ul class="details">
-                        <li class="topic">Date</li>
-                        @foreach ($data['recentCommandes'] as $commande)
-                            <li><a href="#">{{ date('d M Y', strtotime($commande->date_commande)) }}</a></li>
-                        @endforeach
-                    </ul>
-                    <ul class="details">
-                        <li class="topic">Client</li>
-                        @foreach ($data['recentCommandes'] as $commande)
-                            <li><a href="#">{{ $commande->client_name }}</a></li>
-                        @endforeach
-                    </ul>
-                    <ul class="details">
-                        <li class="topic">Article</li>
-                        @foreach ($data['recentCommandes'] as $commande)
-                            @foreach ($commande->commandeDetails as $detail)
-                                <li><a href="#">{{ $detail->article_name }}</a></li>
-                            @endforeach
-                        @endforeach
-                    </ul>
-                    <ul class="details">
-                        <li class="topic">Prix</li>
-                        @foreach ($data['recentCommandes'] as $commande)
-                            <li><a href="#">{{ number_format($commande->price, 0, ",", " ") . " DH" }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="button">
-                    <a href="#">Voir Tout</a>
+        
+        <div class="box">
+            <div class="right-side">
+                <div class="box-topic">Article</div>
+                <div class="number">{{ $data['articles']['nbre'] }}</div>
+                <div class="indicator">
+                    <i class="bx bx-up-arrow-alt"></i>
+                    <span class="text">Depuis {{ $data['articles']['timeSinceLastUpdate'] }}</span>
                 </div>
             </div>
         </div>
+    </div>
+
     
+    <div class="sales-boxes">
+    <div class="recent-sales box">
+        <div class="title">Commandes récentes</div>
+            <table class="">
+                    <tr>
+                        <th>Fournisseur</th>
+                        <th>Articles</th>
+                        <th>Quantité Totale</th>
+                        <th>Prix Total</th>
+                        <th>Date</th>
+                    </tr>
+
+                    @forelse ($data['recentCommandes'] as $commande)
+                    <tr>
+                        <td>{{ $commande->fournisseur->name }}</td>
+                        <td>
+                            <ul>
+                                @foreach ($commande->commandeDetails as $detail)
+                                    <li>{{ $detail->article->name }} ({{ $detail->quantite }} unités à {{ $detail->prix }} chacune)</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>{{ $commande->commandeDetails->sum('quantite') }}</td>
+                        <td>{{ $commande->commandeDetails->sum('prix') }}</td>
+                        <td>{{ optional($commande->updated_at)->format('d M Y') }}</td>
+                    </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4">Aucune commande récente</td>
+                        </tr>
+                    @endforelse
+            </table>
+        <div class="button">
+            <a href="#">Voir Tout</a>
+        </div>
+    </div>
+</div>
+
 </div>
 @endsection

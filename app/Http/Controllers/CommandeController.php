@@ -82,7 +82,10 @@ class CommandeController extends Controller
     ]);
 
     $commande = Commande::findOrFail($id);
-    $commande->update(['fournisseur_id' => $request->id_fournisseur]);
+    $commande->update([
+        'fournisseur_id' => $request->id_fournisseur,
+        'updated_at' => now(),   
+    ]);
 
     // Delete existing details and replace with the new ones
     $commande->commandeDetails()->delete();

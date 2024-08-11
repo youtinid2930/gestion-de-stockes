@@ -1,15 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Commande')
+@section('title', 'Commande')
 
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
+            
             <form action="{{ route('commande.update', $commande->id) }}" method="POST">
                 @csrf
                 @method('PUT') <!-- Ensure the method is PUT for updating -->
-                
+
                 <!-- Hidden field for the commande ID -->
                 <input value="{{ $commande->id }}" type="hidden" name="id" id="id">
 
@@ -28,7 +29,8 @@
                 <div id="articles">
                     @foreach ($commande->commandeDetails as $index => $articleDetail)
                         <div class="article-group">
-                            <select name="articles[{{ $index }}][id_article]" class="article-select" data-index="{{ $index }}">
+                            <label for="article_{{ $index }}">Article</label>
+                            <select name="articles[{{ $index }}][id_article]" id="article_{{ $index }}" class="article-select" data-index="{{ $index }}">
                                 <option value="">Select Article</option>
                                 @foreach ($articles as $value)
                                     <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}" {{ $articleDetail->article_id == $value->id ? 'selected' : '' }}>
@@ -37,11 +39,11 @@
                                 @endforeach
                             </select>
 
-                            <label for="quantité">Quantité</label>
-                            <input type="number" name="articles[{{ $index }}][quantite]" class="article-quantity" data-index="{{ $index }}" placeholder="Quantité" value="{{ $articleDetail->quantite }}" />
+                            <label for="quantite_{{ $index }}">Quantité</label>
+                            <input type="number" name="articles[{{ $index }}][quantite]" id="quantite_{{ $index }}" class="article-quantity" data-index="{{ $index }}" placeholder="Quantité" value="{{ $articleDetail->quantite }}" />
 
-                            <label for="Prix">Prix</label>
-                            <input type="number" name="articles[{{ $index }}][prix]" class="article-price" data-index="{{ $index }}" placeholder="Prix" value="{{ $articleDetail->prix }}" readonly />
+                            <label for="prix_{{ $index }}">Prix</label>
+                            <input type="number" name="articles[{{ $index }}][prix]" id="prix_{{ $index }}" class="article-price" data-index="{{ $index }}" placeholder="Prix" value="{{ $articleDetail->prix }}" readonly />
 
                             <button type="button" class="remove-article" style="border-radius: 6px;">Supprimer</button>
                         </div>
@@ -49,9 +51,7 @@
                 </div>
 
                 <button type="button" id="add-article" style="border-radius: 6px;">Ajouter article</button>
-
-                
-
+                <button type="submit" style="border-radius: 6px;">Mettre à jour</button>
                 @if(session('message'))
                     <div class="alert {{ session('message.type') }}">
                         {{ session('message.text') }}
@@ -60,8 +60,7 @@
             </form>
         </div>
         <div style="display:flex; flex-direction: row;">
-        <button type="submit" style="border-radius: 6px;">Mettre à jour</button>
-        <button onclick="window.location.href='{{ route('commande.index') }}'" style="border-radius: 6px; margin-left: 4%;">Precedent</button>
+            <button onclick="window.location.href='{{ route('commande.index') }}'" style="border-radius: 6px; margin-left: 4%;">Précédent</button>
         </div>
     </div>
 </div>
@@ -72,17 +71,21 @@
         const articleCount = articlesDiv.children.length;
         const newArticleGroup = `
             <div class="article-group">
-                <select name="articles[${articleCount}][id_article]" class="article-select" data-index="${articleCount}">
+                <label for="article_${articleCount}">Article</label>
+                <select name="articles[${articleCount}][id_article]" id="article_${articleCount}" class="article-select" data-index="${articleCount}">
                     <option value="">Select Article</option>
                     @foreach ($articles as $value)
                         <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}">{{ $value->name }}</option>
                     @endforeach
                 </select>
 
-                <input type="number" name="articles[${articleCount}][quantite]" class="article-quantity" data-index="${articleCount}" placeholder="Quantité" />
-                <input type="number" name="articles[${articleCount}][prix]" class="article-price" data-index="${articleCount}" placeholder="Prix" readonly />
+                <label for="quantite_${articleCount}">Quantité</label>
+                <input type="number" name="articles[${articleCount}][quantite]" id="quantite_${articleCount}" class="article-quantity" data-index="${articleCount}" placeholder="Quantité" />
 
-                <button type="button" class="remove-article">Remove</button>
+                <label for="prix_${articleCount}">Prix</label>
+                <input type="number" name="articles[${articleCount}][prix]" id="prix_${articleCount}" class="article-price" data-index="${articleCount}" placeholder="Prix" readonly />
+                
+                <button type="button" class="remove-article">Supprimer</button>
             </div>
         `;
         articlesDiv.insertAdjacentHTML('beforeend', newArticleGroup);

@@ -1,47 +1,49 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Commande;
+use App\Models\CommandeDetail;
+use App\Models\Article;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
-use App\Services\CommandeService;
-use App\Services\ArticleService;
-use App\Services\RecentCommandesService;
+
 
 class DashboardController extends Controller
 {
-    protected $commandeService;
-    protected $articleService;
-    protected $recentCommandesService;
-
-    public function __construct(
-        CommandeService $commandeService,
-        ArticleService $articleService,
-        RecentCommandesService $recentCommandesService
-    ) {
-        $this->middleware('auth');
-        $this->commandeService = $commandeService;
-        $this->articleService = $articleService;
-        $this->recentCommandesService = $recentCommandesService;
-    }
+    
 
     public function index()
     {
-        $data = [];
+        Carbon::setLocale('fr');
+        
+        $commandes = Commande::all();
+        $articles = Article::all();
+        $recentCommandes = Commande::with('fournisseur','commandeDetails.article')->latest()->take(2)->get(); // Exemple de récupération des commandes récentes
+        $commandesCount = Commande::count();
+        $articlesCount = Article::count(); // Ajustez selon vos besoins
+        $commandeDetail = CommandeDetail::all();
 
-        $userRole = auth()->user()->role;
 
-        
-        $data['commandes'] = $this->commandeService->getAllCommandes();
-        $data['articles'] = $this->articleService->getAllArticles();
-        
+        $lastCommande = $commandes->sortByDesc('updated_at')->first();
+        $lastArticle = $articles->sortByDesc('updated_at')->first();
 
-        
-        
+        $timeSinceLastCommande = $lastCommande ? $lastCommande->updated_at->diffForHumans() : 'N/A';
+        $timeSinceLastArticle = $lastArticle ? $lastArticle->updated_at->diffForHumans() : 'N/A';
 
-        
-        $data['recentCommandes'] = $this->recentCommandesService->getRecentCommandes();
-        
 
+        $data = [
+            'recentCommandes' => $recentCommandes,
+            'commandeDetail' => $commandeDetail,
+            'commandes' => [
+                'nbre' => $commandesCount,
+                'timeSinceLastUpdate' => $timeSinceLastCommande,
+            ],
+            'articles' => [
+                'nbre' => $articlesCount,
+                'timeSinceLastUpdate' => $timeSinceLastArticle,
+            ],
+        ];
         return view('dashboard', compact('data'));
     }
 }

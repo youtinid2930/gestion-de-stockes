@@ -27,7 +27,7 @@
                         </td>
                         <td>{{ $commande->commandeDetails->sum('quantite') }}</td>
                         <td>{{ $commande->commandeDetails->sum('prix') }}</td>
-                        <td>{{ $commande->date_commande }}</td>
+                        <td>{{ optional($commande->updated_at)->format('d M Y') }}</td>
                         <td>
                             <a href="{{ route('commande.edit', $commande->id) }}"><i class='bx bx-edit-alt'></i></a>
                             <form action="{{ route('commande.destroy', $commande->id) }}" method="POST" style="display:inline;">

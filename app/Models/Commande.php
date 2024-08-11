@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Commande;
+use App\Models\Article;
 
 class Commande extends Model
 {
@@ -12,6 +14,8 @@ class Commande extends Model
     protected $fillable = [
         'admin_id', 'fournisseur_id', 'date_commande'
     ];
+
+    public $timestamps = true;
 
     public function admin()
     {

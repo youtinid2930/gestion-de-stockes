@@ -120,6 +120,7 @@ button[type="submit"]:active {
     width: 150px;
     text-align: right;
     margin-right: 10px;
+    
 }
 
 .form-group input[type="password"] {
