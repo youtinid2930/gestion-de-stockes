@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('admin_id');
             $table->unsignedBigInteger('fournisseur_id');
-            $table->timestamp('date_commande')->nullable();
             $table->timestamps();
 
             // Foreign key constraints (if needed)

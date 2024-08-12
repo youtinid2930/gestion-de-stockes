@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('commande_id')->constrained();
             $table->foreignId('article_id')->constrained();
             $table->integer('quantite');
+            $table->decimal('prix', 8, 2);
             $table->timestamps();
         });
     }

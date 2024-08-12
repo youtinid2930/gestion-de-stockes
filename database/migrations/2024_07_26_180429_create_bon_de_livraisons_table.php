@@ -1,3 +1,5 @@
+<?php
+
 // database/migrations/xxxx_xx_xx_create_bon_de_livraisons_table.php
 
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +15,7 @@ class CreateBonDeLivraisonsTable extends Migration
             $table->string('numero'); // Exemple : Numéro du bon de livraison
             $table->date('date_livraison'); // Date de livraison
             $table->text('adresse_livraison'); // Adresse de livraison
-            $table->foreignId('commande_id')->constrained()->onDelete('cascade'); // Clé étrangère pour Commande
+            $table->foreignId('demande_id')->constrained('demandes')->onDelete('cascade'); // Clé étrangère pour Commande
             $table->timestamps();
         });
     }

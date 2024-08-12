@@ -11,7 +11,7 @@ class CreateDemandesTable extends Migration
         Schema::create('demandes', function (Blueprint $table) {
             $table->id(); // Auto-incrementing primary key
             $table->unsignedBigInteger('gestionnaire_id'); // Reference to the gestionnaire making the request
-            $table->unsignedBigInteger('article_id'); // Reference to the article being requested
+            $table->unsignedBigInteger('magasinier_id'); // Reference to the article being requested
             $table->unsignedBigInteger('quantity'); // Quantity of the article requested
             $table->text('notes')->nullable(); // Optional notes or comments
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // Status of the request
@@ -20,7 +20,7 @@ class CreateDemandesTable extends Migration
 
             // Foreign key constraints
             $table->foreign('gestionnaire_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->foreign('magasinier_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

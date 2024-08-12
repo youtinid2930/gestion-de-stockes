@@ -9,7 +9,9 @@
             
             <table>
                 <tr>
-                    <th>Quantity</th>
+                    <th>magasinier</th>
+                    <th>Article</th>
+                    <th>Quantite</th>
                     <th>Notes</th>
                     <th>Status</th>
                     <th>Delivery Address</th>
