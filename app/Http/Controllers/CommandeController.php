@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Models\Fournisseur;
 use App\Models\Article;
+use App\Models\CommandeDetail;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class CommandeController extends Controller
 {

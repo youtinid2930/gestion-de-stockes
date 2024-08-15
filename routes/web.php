@@ -14,6 +14,8 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BonDeLivraisonController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ReportController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,13 +45,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 
 
-Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
+
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 
 // routes fournisseur
 Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
 // routes commandes
-Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id'])->middleware('auth');
+
 // web.php
 Route::resource('commande', CommandeController::class);
 
@@ -57,13 +59,7 @@ Route::resource('commande', CommandeController::class);
 
 
 
-Route::get('/commandes', [CommandeController::class, 'index'])->name('commande')->middleware('auth');
-Route::get('/commandes/create', [CommandeController::class, 'create'])->name('commande.create');
-Route::post('/commandes', [CommandeController::class, 'store'])->name('commande.store');
-Route::get('/commandes/{id}/edit', [CommandeController::class, 'edit'])->name('commande.edit');
-Route::put('/commandes/{id}', [CommandeController::class, 'update'])->name('commande.update');
-Route::get('/commandes/{id}', [CommandeController::class, 'destroy'])->name('commande.destroy');
-Route::get('/commandes/{id}', [CommandeController::class, 'show'])->name('commande.show');
+
 
 // categories routes
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
@@ -87,6 +83,7 @@ Route::get('/configuration', [ConfigurationController::class, 'index'])->name('c
 Route::get('/report', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
 
 // route demande
+Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
 Route::get('/demandes', [DemandeController::class, 'showDemandes'])->name('demande.showDemandes');
 Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demande.create');
 Route::post('/demandes', [DemandeController::class, 'store'])->name('demande.store');
@@ -107,9 +104,11 @@ Route::resource('bons_de_livraison', BonDeLivraisonController::class);
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
 Route::post('/configuration/update', [ConfigurationController::class, 'update'])->name('configuration.update');
+Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id'])->middleware(['auth', 'role:admin']);
 
-Route::group(['middleware' => ['role:admin']], function () {
-    Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id'])->middleware('auth');
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    
+    Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
 });
 /*
 Route::group(['middleware' => ['role:gestionnaire']], function () {
