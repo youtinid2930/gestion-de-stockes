@@ -15,9 +15,11 @@
                     {{ $category->name }}
                 </a>
                 <div class="float-right">
+                    @if(auth()->user()->can('gerer categorie'))
                     <a href="{{ route('categories.edit', $category->id) }}">
                         <i class="bx bx-edit-alt"></i>
                     </a>
+                    
                     <a href="{{ route('category.characteristics', $category->id) }}">
                         <i class="bx bx-cog"></i>
                     </a>
@@ -28,6 +30,7 @@
                             <i class='bx bx-trash'></i>
                         </button>
                     </form>
+                    @endif
                 </div>
                 @if ($category->souscategories->count() > 0)
                 <div class="collapse" id="collapseCategory{{ $category->id }}">
@@ -39,13 +42,15 @@
             </div>
         @endforeach
     </div>
+    @if(auth()->user()->can('gerer categorie'))
     <div class="mt-3 btns">
         <a href="{{ route('categories.create') }}" class="btn btn-primary">Ajouter Catégorie</a>
         <a href="{{ route('caracteristique.index') }}" class="btn btn-secondary">Gérer les caractéristiques</a>
     </div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
-     @endif
+    @endif
+    @endif
 </div>
 </div>
 @endsection

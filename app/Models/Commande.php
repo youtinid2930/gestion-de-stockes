@@ -12,7 +12,7 @@ class Commande extends Model
     use HasFactory;
 
     protected $fillable = [
-        'admin_id', 'fournisseur_id', 'date_commande'
+        'admin_id', 'fournisseur_id', 'status'
     ];
 
     public $timestamps = true;
@@ -31,9 +31,18 @@ class Commande extends Model
     {
         return $this->hasMany(CommandeDetail::class);
     }
+    public function commande()
+    {
+        return $this->belongsTo(Commande::class);
+    }
 
     public function facteur()
     {
         return $this->hasOne(Facteur::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
     }
 }

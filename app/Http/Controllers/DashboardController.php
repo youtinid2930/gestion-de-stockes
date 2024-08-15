@@ -5,8 +5,11 @@ use App\Models\Commande;
 use App\Models\CommandeDetail;
 use App\Models\Article;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
+
+
 
 
 class DashboardController extends Controller
@@ -15,8 +18,15 @@ class DashboardController extends Controller
 
     public function index()
     {
+
         Carbon::setLocale('fr');
-        
+
+        $user = Auth::user();
+        $data = [];
+
+
+        if ($user->hasRole('admin')) {
+
         $commandes = Commande::all();
         $articles = Article::all();
         $recentCommandes = Commande::with('fournisseur','commandeDetails.article')->latest()->take(2)->get(); // Exemple de récupération des commandes récentes
@@ -44,6 +54,9 @@ class DashboardController extends Controller
                 'timeSinceLastUpdate' => $timeSinceLastArticle,
             ],
         ];
-        return view('dashboard', compact('data'));
+       
+       }
+       return view('dashboard', compact('data'));
     }
+    
 }

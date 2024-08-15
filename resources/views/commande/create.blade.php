@@ -12,7 +12,7 @@
                     @method('PUT')
                 @endif
 
-                <input value="{{ old('id', $commande->id ?? '') }}" type="hidden" name="id" id="id">
+                <input type="hidden" name="id" value="{{ old('id', $commande->id ?? '') }}" id="id">
                 
                 <label for="id_fournisseur">Fournisseur</label>
                 <select name="id_fournisseur" id="id_fournisseur">
@@ -23,8 +23,9 @@
                     @endforeach
                 </select>
 
-                <label for="articles">Articles</label>
+                
                 <div id="articles">
+                    <label for="articles">Articles</label>
                     @foreach (old('articles', $commande->commandeDetails ?? [['id_article' => '', 'quantite' => '', 'prix' => '']]) as $index => $article)
                         <div class="article-group">
                             <select name="articles[{{ $index }}][id_article]" class="article-select" data-index="{{ $index }}">
@@ -47,10 +48,20 @@
 
                 <button type="button" id="add-article" style="border-radius: 6px;">Ajouter article</button>
 
+
                 <button type="submit" style="border-radius: 6px;">Valider</button>
                 @if(session('message'))
                     <div class="alert {{ session('message.type') }}">
                         {{ session('message.text') }}
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                     </div>
                 @endif
             </form>

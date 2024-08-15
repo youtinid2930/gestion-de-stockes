@@ -62,7 +62,7 @@
                 @error('role')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-
+                <!--Selon le role selectionner va etre soit centre, magasin ou bureau -->
                 <label for="location">Lieu</label>
                 <input value="{{ old('location', $utilisateur->location) }}" type="text" name="location" id="location" placeholder="Veuillez saisir le lieu" autocomplete="location">
                 @error('location')

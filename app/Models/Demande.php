@@ -10,7 +10,7 @@ class Demande extends Model
     use HasFactory;
 
     protected $fillable = [
-        'gestionnaire_id', 'article_id', 'quantity', 'notes', 'status', 'delivery_address'
+        'gestionnaire_id', 'magasinier_id', 'admin_id', 'quantity', 'notes', 'status', 'delivery_address'
     ];
 
     public function gestionnaire()
@@ -31,5 +31,18 @@ class Demande extends Model
     public function bonDeLivraisons()
     {
         return $this->hasMany(BonDeLivraison::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+    public function magasinier()
+    {
+    return $this->belongsTo(User::class, 'magasinier_id');
+    }
+    public function admin()
+    {
+    return $this->belongsTo(User::class, 'admin_id');
     }
 }

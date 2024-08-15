@@ -23,7 +23,7 @@ class FournisseurController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'address' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|string|max:255',
         ]);

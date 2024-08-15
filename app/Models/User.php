@@ -78,9 +78,11 @@ class User extends Authenticatable
         );
     }
 
-    // Relationship with BonDeDemande (gestionnaire creating bon de demande)
-    public function bonDeDemandes()
+    
+    public function stockMovements()
     {
-        return $this->hasMany(BonDeDemande::class, 'gestionnaire_id');
+        return $this->hasMany(StockMovement::class);
     }
+
+
 }

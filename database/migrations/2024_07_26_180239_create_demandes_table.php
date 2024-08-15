@@ -20,7 +20,10 @@ class CreateDemandesTable extends Migration
 
             // Foreign key constraints
             $table->foreign('gestionnaire_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->foreign('magasinier_id')->references('id')->on('users')->onDelete('cascade');
+
+ 
         });
     }
 

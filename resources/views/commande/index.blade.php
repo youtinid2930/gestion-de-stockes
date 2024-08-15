@@ -12,6 +12,7 @@
                     <th>Articles</th>
                     <th>Quantité Totale</th>
                     <th>Prix Total</th>
+                    <th>Status</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
@@ -27,16 +28,19 @@
                         </td>
                         <td>{{ $commande->commandeDetails->sum('quantite') }}</td>
                         <td>{{ $commande->commandeDetails->sum('prix') }}</td>
-                        <td>{{ optional($commande->updated_at)->format('d M Y') }}</td>
+                        <td> {{ $commande->status}} </td>
+                        <td>{{ optional($commande->updated_at)->format('d/m/Y H:i:s') ?? 'Date non disponible' }}</td>
+                        
                         <td>
-                            <a href="{{ route('commande.edit', $commande->id) }}"><i class='bx bx-edit-alt'></i></a>
+                            <a href="{{ route('commande.edit', $commande->id) }}"><i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i></a>
                             <form action="{{ route('commande.destroy', $commande->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="delete-button">
-                                    <i class='bx bx-trash'></i>
+                                    <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                 </button>
                             </form>
+                            <a href="{{ route('commande.edit', $commande->id) }}"><i class="fas fa-check" data-toggle="tooltip" title="Valider la commande"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -47,4 +51,9 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 @endsection

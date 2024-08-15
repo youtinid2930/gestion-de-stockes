@@ -10,7 +10,7 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'unit_price', 'stock', 'category_id'
+        'name', 'description', 'unit_price', 'stock', 'category_id','user_id'
     ];
 
     public function category()
@@ -41,5 +41,15 @@ class Article extends Model
     public function facteurDetails()
     {
         return $this->hasMany(FacteurDetail::class);
+    }
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
     }
 }

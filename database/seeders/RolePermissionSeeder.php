@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 
 class RolePermissionSeeder extends Seeder
 {
@@ -14,12 +17,45 @@ class RolePermissionSeeder extends Seeder
      */
     public function run()
     {
-        //$adminRole = Role::findByName('admin');
-        //$gestionnaireRole = Role::findByName('gestionnaire');
-        //$magasinierRole = Role::findByName('magasinier');
+        $admin = Role::where('name', 'admin')->first();
+        $gestionnaire = Role::where('name', 'gestionnaire')->first();
+        $magasinier = Role::where('name', 'magasinier')->first();
 
 
-        //$adminRole->givePermissionTo(['manage inventory', 'view reports', 'handle requests']);
+        $admin->givePermissionTo([
+            'gerer utilisateur',
+            'voir demande',
+            'gerer commande',
+            'gerer articles',
+            'voir articles',
+            'gerer fournisseur',
+            'gerer categorie',
+            'ajouter livraison',
+            'voir livraison',
+            'supprimer livraison',
+            'modifier livraison'
+        ]);
+
+        $magasinier->givePermissionTo([
+            'voir demande',
+            'ajouter demande', 
+            'supprimer demande',
+            'modifier demande',
+            'voir articles',
+            'ajouter livraison',
+            'voir livraison',
+            'supprimer livraison',
+            'modifier livraison'
+        ]);
+
+        $gestionnaire->givePermissionTo([
+            'voir demande',
+            'ajouter demande', 
+            'supprimer demande',
+            'modifier demande',
+            'voir articles',
+            'voir livraison'
+        ]);
 
     }
 }

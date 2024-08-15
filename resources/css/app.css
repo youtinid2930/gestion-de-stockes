@@ -1,4 +1,5 @@
 /* Assurez-vous que le body occupe toute la hauteur de la fenêtre */
+
 html, body {
     height: 100%;
     margin: 0;

@@ -5,6 +5,7 @@
                 {{ $category->name }}
             </a>
             <div class="float-right">
+            @if(auth()->user()->can('gerer categorie'))
                 <a href="{{ route('categories.edit', $category->id) }}">
                     <i class="bx bx-edit-alt"></i>
                 </a>
@@ -18,6 +19,7 @@
                     <i class='bx bx-trash'></i>
                 </button>
             </form>
+            @endif
             </div>
             @if ($category->souscategories->count() > 0)
             <div class="collapse" id="collapseCategory{{ $category->id }}">

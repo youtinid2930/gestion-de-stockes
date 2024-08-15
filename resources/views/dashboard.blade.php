@@ -5,8 +5,14 @@
 @section('content')
 
 <div class="home-content">
+    @if(auth()->user()->hasRole('admin'))
+
     <div class="overview-boxes" style="flex-direction: row;">
-       
+
+
+
+        
+
             <div class="box">
                 <div class="right-side">
                     <div class="box-topic">Commande</div>
@@ -18,6 +24,9 @@
                 </div>
                 
             </div>
+
+
+
         
        
         
@@ -70,7 +79,10 @@
             <a href="#">Voir Tout</a>
         </div>
     </div>
+    @endif
+
 </div>
+
 
 </div>
 @endsection
