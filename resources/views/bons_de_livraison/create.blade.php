@@ -7,7 +7,7 @@
     <div class="overview-boxes">
         <div class="box">
             <h2>Créer Bon de Livraison</h2>
-            <form action="{{ route('bons_de_livraison.store') }}" method="POST">
+            <form action="{{ route('livraison.store') }}" method="POST">
                 @csrf
                 <label for="numero">Numéro</label>
                 <input type="text" name="numero" id="numero" required>

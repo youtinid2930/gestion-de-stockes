@@ -15,6 +15,11 @@ class ArticleController extends Controller
         $offset = ($page - 1) * $limit;
 
         $categories = Categorie::all();
+        $finalCategories = collect();
+
+        foreach ($categories as $categorie) {
+            $this->collectFinalSubcategories($categorie, $finalCategories);
+        }
 
         $articlesQuery = Article::query();
 
@@ -30,7 +35,7 @@ class ArticleController extends Controller
 
         $articles = $articlesQuery->skip($offset)->take($limit)->get();
 
-        return view('articles.index', compact('articles', 'categories', 'page', 'total_pages'));
+        return view('articles.index', compact('articles', 'categories', 'page', 'total_pages','finalCategories'));
     }
 
     public function create()
@@ -64,5 +69,20 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès.');
+    }
+
+    private function collectFinalSubcategories($categorie, &$finalCategories)
+    {
+        if ($categorie->sousCategories->isEmpty()) {
+            // Add the final subcategory (leaf node) to the collection
+            if (!$finalCategories->contains($categorie)) {
+                $finalCategories->push($categorie);
+            }
+        } else {
+            // Recursively collect final subcategories from children
+            foreach ($categorie->sousCategories as $child) {
+                $this->collectFinalSubcategories($child, $finalCategories);
+            }
+        }
     }
 }

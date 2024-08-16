@@ -32,4 +32,16 @@ class Categorie extends Model
     public function caracteristiques() {
         return $this->belongsToMany(Caracteristique::class, 'categorie_caracteristique', 'categorie_id', 'caracteristique_id');
     }
+    public function getFinalSubcategory()
+    {
+        // If the category has no children, it's the final subcategory
+        if ($this->sousCategories()->count() === 0) {
+            return $this;
+        }
+
+        // If it has children, recursively find the final subcategory
+        foreach ($this->sousCategories as $child) {
+            return $child->getFinalSubcategory();
+        }
+    }
 }

@@ -19,10 +19,11 @@
                     <a href="{{ route('categories.edit', $category->id) }}">
                         <i class="bx bx-edit-alt"></i>
                     </a>
-                    
+                    @endif
                     <a href="{{ route('category.characteristics', $category->id) }}">
                         <i class="bx bx-cog"></i>
                     </a>
+                    @if(auth()->user()->can('gerer categorie'))
                     <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')

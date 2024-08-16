@@ -7,7 +7,7 @@
     <div class="overview-boxes">
         <div class="box">
             <div class="title">Bons de Livraison</div>
-            <a href="{{ route('bons_de_livraison.create') }}" class="btn btn-primary">Créer Bon de Livraison</a>
+            <a href="{{ route('livraison.create') }}" class="btn btn-primary">Créer Bon de Livraison</a>
             <table class="table">
                 <thead>
                     <tr>
@@ -26,8 +26,8 @@
                             <td>{{ $bon->adresse_livraison }}</td>
                             <td>{{ $bon->commande->nom }}</td>
                             <td>
-                                <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
-                                <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
+                                <form action="{{ route('livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Supprimer</button>

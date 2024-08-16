@@ -42,7 +42,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('bons_de_livraison.index') }}">
+            <a href="{{ route('livraison.index') }}">
                 <i class="bx bx-package"></i>
                 <span class="links_name">Livraison</span>
             </a>

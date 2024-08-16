@@ -45,15 +45,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 
 
-
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 
 // routes fournisseur
-Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
+
 // routes commandes
 
-// web.php
-Route::resource('commande', CommandeController::class);
+
 
 
 
@@ -66,7 +64,7 @@ Route::resource('categories', CategoryController::class)->parameters(['categorie
 // caracteristiques routes
 Route::get('categories/{id}/characteristics', [CaracteristiqueController::class, 'characteristics'])->name('category.characteristics');
 Route::post('categories/{id}/characteristics', [CaracteristiqueController::class, 'StoreCharacteristicsByCategorie'])->name('characteristicsbycategorie.store');
-Route::delete('categories/{id_categorie}/characteristics/{id_charateristics}', [CaracteristiqueController::class, 'DestroyCharacteristics'])->name('characteristics.destroy');
+Route::delete('categories/{id_categorie}/characteristics/{id_charateristics}', [CaracteristiqueController::class, 'DestroyCharacteristics'])->name('characteristicsCategorie.destroy');
 Route::get('/characteristics', [CaracteristiqueController::class, 'index'])->name('caracteristique.index');
 Route::post('/characteristics', [CaracteristiqueController::class, 'store'])->name('characteristics.store');
 Route::delete('/characteristics/{id_caracteristique}', [CaracteristiqueController::class, 'destroy'])->name('characteristics.destroy');
@@ -93,24 +91,35 @@ Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demand
 
 
 Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
-Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
-Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
-Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
-Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
 
-Route::resource('bons_de_livraison', BonDeLivraisonController::class);
+
+Route::resource('livraison', BonDeLivraisonController::class)->parameters(['livraison' => 'id'])->middleware('auth');
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
 Route::post('/configuration/update', [ConfigurationController::class, 'update'])->name('configuration.update');
-Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id'])->middleware(['auth', 'role:admin']);
 
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
-    
+
+Route::group(['middleware' => ['auth','role:admin']], function () {
+    // Utilisateur
+    Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
+    // Commande
     Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
+    // Fournisseur
+    Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
+    // Articles
+    Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+    //
 });
 /*
+Route::get('test-role', function () {
+    return 'Role middleware is working correctly';
+})->middleware(['auth', 'role:admin']);
+
 Route::group(['middleware' => ['role:gestionnaire']], function () {
     Route::get('/gestionnaire', function () {
         

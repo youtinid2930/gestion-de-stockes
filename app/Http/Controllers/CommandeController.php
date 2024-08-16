@@ -109,7 +109,7 @@ class CommandeController extends Controller
     {
         $commande = Commande::findOrFail($id);
         $fournisseurs = Fournisseur::all();
-        $allArticles = Article::all(); // Vous devez aussi passer tous les articles pour l'édition
-        return view('commande.edit', compact('commande', 'fournisseurs', 'allArticles'));
+        $articles = Article::all(); // Vous devez aussi passer tous les articles pour l'édition
+        return view('commande.edit', compact('commande', 'fournisseurs', 'articles'));
     }
 }

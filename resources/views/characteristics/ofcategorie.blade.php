@@ -7,7 +7,7 @@
 <div class="overview-boxes">
 <div class="box">
     <h2>Caracteristique de {{ $category->name }}</h2>
-
+    @if(auth()->user()->can('gerer categorie'))
     <form action="{{ route('characteristicsbycategorie.store', $category->id) }}" method="POST">
         @csrf
         <label for="name">nom de caracteristique</label>
@@ -21,11 +21,12 @@
             <button type="submit" style="border-radius: 5%;">Ajouter</button>
         </div>
     </form>
-
+    @endif
     <div class="list-group mt-4">
         @foreach ($characteristics as $characteristic)
             <div class="list-group-item">
                 {{ $characteristic->name }}
+                @if(auth()->user()->can('gerer categorie'))
                 <div class="float-right">
                     <form action="{{ route('characteristics.destroy', [$category->id, $characteristic->id]) }}" method="POST" class="d-inline">
                         @csrf
@@ -35,9 +36,11 @@
                         </button>
                     </form>
                 </div>
+                @endif
             </div>
         @endforeach
     </div>
+    @if(auth()->user()->can('gerer categorie'))
     <div class="button-container">
     <button onclick="window.location.href='{{ route('categories.index') }}'" style="border-radius: 5px;">Precedent</button>
     </div>
@@ -50,6 +53,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 </div>
+@endif
 </div>
 
 <script>
