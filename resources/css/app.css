@@ -1,0 +1,68 @@
+/* Assurez-vous que le body occupe toute la hauteur de la fenêtre */
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Centrage du contenu de la page */
+.home-content {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;     /* Centre verticalement */
+    height: 100vh;           /* Hauteur de la fenêtre du navigateur */
+}
+
+.overview-boxes {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;     /* Centre verticalement */
+    flex-direction: column;  /* Aligne les éléments en colonne */
+}
+
+.box {
+    background-color: #f9f9f9; /* Couleur de fond pour la box (modifiez selon vos préférences) */
+    padding: 20px;            /* Espacement intérieur */
+    border-radius: 8px;       /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    width: 100%;               /* Ajuste la largeur au besoin */
+    max-width: 600px;          /* Largeur maximale pour le formulaire */
+}
+
+form {
+    display: flex;
+    flex-direction: column;    /* Aligne les éléments du formulaire en colonne */
+    gap: 10px;                 /* Espacement entre les éléments */
+}
+
+label {
+    font-weight: bold;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
