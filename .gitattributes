@@ -1,4 +1,6 @@
 * text=auto
+<<<<<<< HEAD
+=======
 
 *.blade.php diff=html
 *.css diff=css
@@ -9,3 +11,4 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+>>>>>>> a5ba58e2391f59a67d8d923fa8920f9c7cd35903

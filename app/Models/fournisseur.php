@@ -22,4 +22,5 @@ class Fournisseur extends Model
     {
         return $this->hasMany(Facteur::class);
     }
+    
 }

@@ -15,7 +15,7 @@ class BonDeLivraison extends Model
 
     public function demande()
     {
-        return $this->belongsTo(Demande::class);
+        return $this->belongsTo(Demande::class, 'demande_id');
     }
 
     public function magasinier()
@@ -25,6 +25,7 @@ class BonDeLivraison extends Model
 
     public function bonDeLivraisonDetails()
     {
-        return $this->hasMany(BonDeLivraisonDetail::class);
+        return $this->hasMany(BonDeLivraisonDetail::class, 'bon_de_livraison_id');
     }
+    
 }

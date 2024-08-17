@@ -7,7 +7,7 @@
     <div class="overview-boxes">
         <div class="box">
             <h2>Créer Bon de Livraison</h2>
-            <form action="{{ route('livraison.store') }}" method="POST">
+            <form action="{{ route('bons_de_livraison.store') }}" method="POST">
                 @csrf
                 <label for="numero">Numéro</label>
                 <input type="text" name="numero" id="numero" required>
@@ -21,7 +21,11 @@
                 <label for="commande_id">Commande</label>
                 <select name="commande_id" id="commande_id" required>
                     @foreach($commandes as $commande)
-                        <option value="{{ $commande->id }}">{{ $commande->name }}</option>
+                        @foreach($commande->commandeDetails as $detail)
+                            <option value="{{ $commande->id }}">
+                                {{ $detail->article->name }}
+                            </option>
+                        @endforeach
                     @endforeach
                 </select>
 
@@ -42,6 +46,7 @@
                     </div>
                 @endif
             </form>
+
         </div>
     </div>
 </div>

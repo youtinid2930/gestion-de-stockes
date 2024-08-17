@@ -74,9 +74,15 @@ Route::get('/characteristics/{id_caracteristique}/edit', [CaracteristiqueControl
 Route::put('/characteristics/{id_caracteristique}', [CaracteristiqueController::class, 'update'])->name('characteristics.update');
 
 
+Route::get('/bons_de_livraison', [BonDeLivraisonController::class, 'index'])->name('bons_de_livraison.index');
+Route::get('/bons_de_livraison/create', [BonDeLivraisonController::class, 'create'])->name('bons_de_livraison.create');
+Route::post('/bons_de_livraison', [BonDeLivraisonController::class, 'store'])->name('bons_de_livraison.store');
+Route::get('/bons_de_livraison/{id}/edit', [BonDeLivraisonController::class, 'edit'])->name('bons_de_livraison.edit');
+Route::put('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'update'])->name('bons_de_livraison.update');
+Route::delete('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'destroy'])->name('bons_de_livraison.destroy');
 
 
-Route::get('/bondelivraison', [BonDeLivraisonController::class, 'index'])->name('bondelivraison')->middleware('auth');
+
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
 
 // Report routes
@@ -132,7 +138,6 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
-    //
 
 
     Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
