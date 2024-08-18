@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Tableau de bord')
 
 @section('content')
 
@@ -81,7 +81,5 @@
     @endif
 
 </div>
-
-
 </div>
 @endsection

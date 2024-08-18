@@ -75,11 +75,13 @@ class FournisseurController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $fournisseurs = Fournisseur::where('name', 'like', "%{$query}%")
-                                   ->orWhere('email', 'like', "%{$query}%")
-                                   ->get();
+        $fournisseurs = Fournisseur::where('name', 'LIKE', "%$query%")
+                                ->orWhere('last_name', 'LIKE', "%$query%")
+                                ->orWhere('email', 'LIKE', "%$query%")
+                                ->get();
 
-        return view('fournisseurs.index', compact('fournisseurs'));
+        return view('fournisseur.index', compact('fournisseurs'));
     }
+
 }
 

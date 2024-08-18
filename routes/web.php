@@ -33,6 +33,16 @@ Route::get('/', function () {
 */
 
 
+// Routes pour la recherche
+Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
+Route::get('/utilisateurs/search', [UtilisateurController::class, 'search'])->name('utilisateurs.search');
+Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
+Route::get('/commandes/search', [CommandeController::class, 'search'])->name('commandes.search');
+
+
+
+
 Route::get('/', [AuthController::class, 'showLoginForm']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -41,23 +51,14 @@ Auth::routes();
 /*
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 */
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard/search', [DashboardController::class, 'search'])->name('dashboard.search');
 
 
 Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 
 // routes fournisseur
-
-// routes commandes
-
-
-
-
-
-
-
-
+Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
 
 // categories routes
 Route::resource('categories', CategoryController::class)->parameters(['categories' => 'id'])->middleware('auth');
@@ -105,12 +106,21 @@ Route::resource('livraison', BonDeLivraisonController::class)->parameters(['livr
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
 Route::post('/configuration/update', [ConfigurationController::class, 'update'])->name('configuration.update');
 
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
+
+Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
+Route::get('/commandes/search', [CommandeController::class, 'search'])->name('commandes.search');
 
 Route::group(['middleware' => ['auth','role:admin']], function () {
+    
     // Utilisateur
+    Route::get('/utilisateurs/search', [UserController::class, 'search'])->name('utilisateurs.search');
     Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
     // Commande
     Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
+    Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+
     // Fournisseur
     Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
     // Articles
@@ -122,8 +132,6 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
 
 
     Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
-
-    //
 });
 /*
 Route::get('test-role', function () {
