@@ -2,13 +2,12 @@
 
 @extends('layouts.app')
 
-@section('title', 'Livraison')
-
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
             <div class="title">Bons de Livraison</div>
+            <a href="{{ route('livraison.create') }}" class="btn btn-primary">Créer Bon de Livraison</a>
             <table class="table">
                 <thead>
                     <tr>
@@ -39,10 +38,6 @@
                 </tbody>
             </table>
         </div>
-        <button class="btn btn-primary" 
-                onclick="window.location.href='{{ route('livraison.create') }}'" 
-                style="width: 200px;height:50px; padding: 10px;">
-            Créer Bon de Livraison
-        </button>    </div>
+    </div>
 </div>
 @endsection

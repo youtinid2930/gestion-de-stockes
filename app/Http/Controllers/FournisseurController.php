@@ -71,17 +71,5 @@ class FournisseurController extends Controller
         $fournisseur = Fournisseur::findOrFail($id);
         return view('fournisseur.show', compact('fournisseur'));
     }
-    
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $fournisseurs = Fournisseur::where('name', 'LIKE', "%$query%")
-                                ->orWhere('last_name', 'LIKE', "%$query%")
-                                ->orWhere('email', 'LIKE', "%$query%")
-                                ->get();
-
-        return view('fournisseur.index', compact('fournisseurs'));
-    }
-
 }
 

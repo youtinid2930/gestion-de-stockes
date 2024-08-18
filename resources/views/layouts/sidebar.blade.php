@@ -3,7 +3,7 @@
     @csrf
     <ul class="nav-links">
         <li>
-            <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="bx bx-grid-alt"></i>
                 <span class="links_name">Tableau de bord</span>
             </a>

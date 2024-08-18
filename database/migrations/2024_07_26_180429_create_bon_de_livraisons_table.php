@@ -12,15 +12,12 @@ class CreateBonDeLivraisonsTable extends Migration
     {
         Schema::create('bon_de_livraisons', function (Blueprint $table) {
             $table->id();
-            $table->string('numero'); // Assurez-vous que le champ numero est bien défini
-            $table->date('date_livraison');
-            $table->string('adresse_livraison');
-            $table->unsignedBigInteger('commande_id');
+            $table->string('numero'); // Exemple : Numéro du bon de livraison
+            $table->date('date_livraison'); // Date de livraison
+            $table->text('adresse_livraison'); // Adresse de livraison
+            $table->foreignId('demande_id')->constrained('demandes')->onDelete('cascade'); // Clé étrangère pour Commande
             $table->timestamps();
-        });    
-        Schema::table('bon_de_livraisons', function (Blueprint $table) {
-            $table->unsignedBigInteger('commande_id'); // Ajoute la colonne
-        });    
+        });
     }
 
     public function down()

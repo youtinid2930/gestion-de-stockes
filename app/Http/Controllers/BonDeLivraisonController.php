@@ -27,13 +27,12 @@ class BonDeLivraisonController extends Controller
             'date_livraison' => 'required|date',
             'adresse_livraison' => 'required|string',
             'commande_id' => 'required|exists:commandes,id',
-            'demande_id' => 'required|exists:demandes,id',
         ]);
 
         BonDeLivraison::create($request->all());
 
         return redirect()->route('bons_de_livraison.index')
-                     ->with('message', ['type' => 'success', 'text' => 'Bon de livraison ajouté avec succès']);
+                         ->with('message', ['type' => 'success', 'text' => 'Bon de livraison ajouté avec succès']);
     }
 
     public function edit($id)

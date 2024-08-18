@@ -10,7 +10,7 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'unit_price', 'stock', 'category_id','user_id'
+        'name', 'description', 'unit_price', 'sku', 'serial_number', 'batch_number', 'combined_code', 'category_id','date_de_fabrication','date_d_expiration'
     ];
     
     protected static function boot()
@@ -59,7 +59,8 @@ class Article extends Model
 
     public function characteristics()
     {
-        return $this->hasMany(ArticleCaracteristique::class);
+        return $this->belongsToMany(Caracteristique::class, 'article_caracteristique')
+                    ->withPivot('valeur');
     }
 
     public function commandeDetails()

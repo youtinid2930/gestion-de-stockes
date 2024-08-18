@@ -1,5 +1,3 @@
-<!-- resources/views/utilisateur/index.blade.php -->
-
 @extends('layouts.app')
 
 @section('title', 'Utilisateur')
@@ -13,7 +11,7 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
-                    <th>Role</th>
+                    <th>Role</th> 
                     <th>Actions</th>
                 </tr>
                 @foreach ($users as $user)
@@ -25,11 +23,11 @@
                             @if ($user->hasRole('admin'))
                                 Admin
                             @elseif ($user->hasRole('gestionnaire'))
-                                Gestionnaire
+                                gestionnaire
                             @elseif ($user->hasRole('magasinier'))
-                                Magasinier
+                                magasinier
                             @else
-                                Pas de rôle
+                                pas de role
                             @endif
                         </td>
                         <td>
@@ -37,7 +35,7 @@
                             <form action="{{ route('utilisateur.destroy', $user->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" class="delete-button">
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this user?');" class="delete-button">
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </form>
@@ -48,7 +46,7 @@
             </table>
         </div>
         <div class="btn">
-            <a href="{{ route('utilisateur.create') }}">Ajouter Utilisateur <i class="bx bx-plus"></i></a>
+            <a href="{{ route('utilisateur.create') }}">Add User <i class="bx bx-plus"></i></a>
         </div>
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
