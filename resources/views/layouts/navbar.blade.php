@@ -10,5 +10,4 @@
         <i class="bx bx-search"></i>
     </div>
     <img class='image' src="{{ asset('image/logo.jpeg') }}">
-    <i class="bx bx-chevron-down"></i>
 </nav>
