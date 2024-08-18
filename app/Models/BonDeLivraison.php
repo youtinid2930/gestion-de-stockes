@@ -10,7 +10,7 @@ class BonDeLivraison extends Model
     use HasFactory;
 
     protected $fillable = [
-        'demande_id', 'magasinier_id', 'comments'
+        'numero', 'date_livraison', 'adresse_livraison', 'commande_id', 'demande_id', 'magasinier_id'
     ];
 
     public function demande()
