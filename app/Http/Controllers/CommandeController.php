@@ -112,4 +112,48 @@ class CommandeController extends Controller
         $articles = Article::all(); // Vous devez aussi passer tous les articles pour l'édition
         return view('commande.edit', compact('commande', 'fournisseurs', 'articles'));
     }
+    public function createLivraison()
+    {
+    $commandes = Commande::all(); // Récupère toutes les commandes
+    return view('livraison.create', compact('commandes')); // Passe les commandes à la vue
+    }
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $articleName = $request->input('article_name');
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $status = $request->input('status');
+
+        $commandes = Commande::with('fournisseur', 'commandeDetails.article')
+            ->when($query, function ($q) use ($query) {
+                // Recherche par ID
+                $q->where('id', 'LIKE', "%$query%");
+                
+                // Recherche par nom de fournisseur
+                $q->orWhereHas('fournisseur', function ($queryFournisseur) use ($query) {
+                    $queryFournisseur->where('name', 'LIKE', "%$query%");
+                });
+                
+                // Recherche par nom d'article
+                $q->orWhereHas('commandeDetails.article', function ($queryArticle) use ($query) {
+                    $queryArticle->where('name', 'LIKE', "%$query%");
+                });
+            })
+            ->when($status, function ($q) use ($status) {
+                // Recherche par status
+                $q->where('status', $status);
+            })
+            ->when($dateFrom && $dateTo, function ($q) use ($dateFrom, $dateTo) {
+                // Recherche par date
+                $q->whereBetween('created_at', [$dateFrom, $dateTo]);
+            })
+            ->get();
+
+
+        // Vérifie les résultats de la requête
+
+        return view('commande.index', compact('commandes'));
+    }
+
 }

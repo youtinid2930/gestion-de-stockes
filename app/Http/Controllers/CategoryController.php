@@ -77,6 +77,14 @@ class CategoryController extends Controller
 
     public function show($id) {
         $categorie = Categorie::findOrFail($id);
-        return view('categories.show','catergorie');
+        return view('categories.show', compact('categorie'));
+    }    
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        // Filtrer les catégories par nom
+        $categories = Categorie::where('name', 'LIKE', "%$query%")->whereNull('parent_id')->with('sousCategories')->get();
+        return view('categories.index', compact('categories'));
     }
+
 }
