@@ -20,6 +20,6 @@ class Caracteristique extends Model
     public function articles()
     {
         return $this->belongsToMany(Article::class, 'article_caracteristique')
-                    ->withPivot('value');
+                    ->withPivot('valeur');
     }
 }

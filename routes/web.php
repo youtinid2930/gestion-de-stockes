@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DemandeController;
@@ -14,6 +12,9 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BonDeLivraisonController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CompanySettingsController;
+use App\Http\Controllers\ProfileSettingsController;
+use App\Http\Controllers\DepotSettingsController;
 
 
 /*
@@ -33,9 +34,6 @@ Route::get('/', function () {
 */
 
 
-Route::get('/', [AuthController::class, 'showLoginForm']);
-Route::post('login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Auth::routes();
 /*
@@ -97,9 +95,16 @@ Route::resource('livraison', BonDeLivraisonController::class)->parameters(['livr
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
-Route::post('/configuration/update', [ConfigurationController::class, 'update'])->name('configuration.update');
+// Route for Company Information settings
+Route::get('configuration/company-settings', [CompanySettingsController::class, 'index'])->name('company.settings');
 
+// Route for Profile Settings
+Route::get('configuration/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
 
+// Route for Depot Settings
+Route::get('configuration/depot-settings', [DepotSettingsController::class, 'index'])->name('depot.settings');
+Route::post('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.store');
+Route::put('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.update');
 Route::group(['middleware' => ['auth','role:admin']], function () {
     // Utilisateur
     Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
@@ -113,6 +118,7 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+    Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
     //
 });
 /*
