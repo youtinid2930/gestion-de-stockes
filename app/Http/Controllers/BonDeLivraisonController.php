@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BonDeLivraison;
-use App\Models\Commande;
+use App\Models\Demande;
 use Illuminate\Http\Request;
 
 class BonDeLivraisonController extends Controller
@@ -16,7 +16,7 @@ class BonDeLivraisonController extends Controller
 
     public function create()
     {
-        $commandes = Commande::all();
+        $commandes = Demande::all();
         return view('bons_de_livraison.create', compact('commandes'));
     }
 
@@ -26,7 +26,6 @@ class BonDeLivraisonController extends Controller
             'numero' => 'required|string|max:255',
             'date_livraison' => 'required|date',
             'adresse_livraison' => 'required|string',
-            'commande_id' => 'required|exists:commandes,id',
             'demande_id' => 'required|exists:demandes,id',
         ]);
 
@@ -39,7 +38,7 @@ class BonDeLivraisonController extends Controller
     public function edit($id)
     {
         $bonDeLivraison = BonDeLivraison::findOrFail($id);
-        $commandes = Commande::all();
+        $commandes = Demande::all();
         return view('bons_de_livraison.edit', compact('bonDeLivraison', 'commandes'));
     }
 

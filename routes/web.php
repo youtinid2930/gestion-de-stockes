@@ -17,6 +17,8 @@ use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\DepotSettingsController;
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,8 +47,7 @@ Route::get('/commandes/search', [CommandeController::class, 'search'])->name('co
 
 
 Route::get('/', [AuthController::class, 'showLoginForm']);
-Route::post('login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
 
 Auth::routes();
 /*
