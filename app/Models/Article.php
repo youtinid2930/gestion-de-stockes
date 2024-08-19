@@ -10,9 +10,12 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'unit_price', 'sku', 'serial_number', 'batch_number', 'combined_code', 'category_id','date_de_fabrication','date_d_expiration'
+        'name', 'description', 'unit_price', 'sku', 'serial_number', 'batch_number', 'combined_code', 'category_id'
     ];
     
+    protected $dates = ['date_de_fabrication', 'date_d_expiration'];
+
+
     protected static function boot()
     {
         parent::boot();

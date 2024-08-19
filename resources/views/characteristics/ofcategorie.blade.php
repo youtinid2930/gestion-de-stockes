@@ -28,7 +28,7 @@
                 {{ $characteristic->name }}
                 @if(auth()->user()->can('gerer categorie'))
                 <div class="float-right">
-                    <form action="{{ route('characteristics.destroy', [$category->id, $characteristic->id]) }}" method="POST" class="d-inline">
+                    <form action="{{ route('characteristicsCategorie.destroy', [$category->id, $characteristic->id]) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" onclick="return confirm('est ce que tu es sur vous voulez supprimer cet caracteristique ?');" class="delete-button">

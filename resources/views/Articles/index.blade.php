@@ -17,7 +17,7 @@
                     <tr>
                         <td>{{ $article->name }}</td>
                         <td>{{ $article->category->name }}</td>
-                        <td>{{ $article->stock }}</td>
+                        <td>{{ $article->total_quantity }}</td>
                         <td>{{ $article->unit_price }}</td>
                         <td>
                             <a href="{{ route('articles.edit', $article->id) }}">

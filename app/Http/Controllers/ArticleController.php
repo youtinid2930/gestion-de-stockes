@@ -25,7 +25,11 @@ class ArticleController extends Controller
             $this->collectFinalSubcategories($categorie, $finalCategories);
         }
 
-        $articlesQuery = Article::query();
+        $articlesQuery = Article::query()
+        ->leftJoin('depot_articles', 'articles.id', '=', 'depot_articles.article_id')
+        ->select('articles.id', 'articles.name', 'articles.description', 'articles.unit_price', 'articles.sku', 'articles.serial_number', 'articles.batch_number', 'articles.combined_code', 'articles.category_id', DB::raw('SUM(depot_articles.quantity) as total_quantity'))
+        ->groupBy('articles.id', 'articles.name', 'articles.description', 'articles.unit_price', 'articles.sku', 'articles.serial_number', 'articles.batch_number', 'articles.combined_code', 'articles.category_id');
+
 
         if ($request->filled('name')) {
             $articlesQuery->where('name', 'like', '%' . $request->input('name') . '%');
@@ -147,21 +151,51 @@ class ArticleController extends Controller
 }
     public function edit($id)
     {
-        $article = Article::findOrFail($id);
-        $categories = Categorie::all();
-        return view('articles.edit', compact('article', 'categories'));
+        $article = Article::with('characteristics')->findOrFail($id);
+        $categories = Categorie::all(); // Fetch categories for the dropdown
+        $finalCategories = collect();
+
+        foreach ($categories as $categorie) {
+            $this->collectFinalSubcategories($categorie, $finalCategories);
+        }
+
+        return view('articles.edit', [
+            'article' => $article,
+            'finalCategories' => $finalCategories
+        ]);
     }
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'unit_price' => 'required|numeric',
+            'quantity' => 'nullable|integer',
+            'category_id' => 'nullable|exists:categories,id',
+            'date_de_fabrication' => 'nullable|date',
+            'date_d_expiration' => 'nullable|date',
+            'caracteristiques.*.valeur' => 'nullable|string',
+            'caracteristiques.*.id' => 'required|exists:caracteristiques,id'
+        ]);
+    
         $article = Article::findOrFail($id);
-        $article->update($request->all());
-        return redirect()->route('articles.index')->with('success', 'Article mis à jour avec succès.');
+        $article->update($validatedData);
+    
+        // Sync characteristics
+        $caracteristiques = $request->input('caracteristiques', []);
+        foreach ($caracteristiques as $id => $data) {
+            $article->characteristics()->updateExistingPivot($data['id'], ['valeur' => $data['valeur']]);
+        }
+    
+        return redirect()->route('articles.index')->with('message', ['type' => 'success', 'text' => 'Article mis à jour avec succès!']);
     }
 
     public function destroy($id)
     {
         $article = Article::findOrFail($id);
+        $article->commandeDetails()->delete();
+        $article->characteristics()->detach();
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès.');
     }
