@@ -46,7 +46,7 @@ Route::get('/commandes/search', [CommandeController::class, 'search'])->name('co
 
 
 
-Route::get('/', [AuthController::class, 'showLoginForm']);
+
 
 
 Auth::routes();

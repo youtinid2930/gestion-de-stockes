@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorie;
 use Illuminate\Http\Request;
+use App\Models\Commande;
 use App\Models\Caracteristique;
 use App\Models\CategorieCaracteristique;
 use Illuminate\Support\Facades\DB;
