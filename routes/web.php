@@ -139,6 +139,9 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
+    Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
+
+    
 
 
     Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');

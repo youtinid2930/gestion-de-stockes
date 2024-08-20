@@ -31,9 +31,12 @@
             searchForm.action = "{{ route('categories.search') }}";
         } else if (currentPath.includes('commande')) {
             searchForm.action = "{{ route('commandes.search') }}";
+        } else if (currentPath.includes('article')) {  // Ajout de la condition pour les articles
+            searchForm.action = "{{ route('articles.search') }}"; // Assurez-vous que cette route est définie
         } else {
             searchForm.action = "#"; // Optionnel: si aucune correspondance, ne rien faire
         }
     });
 </script>
+
 </nav>

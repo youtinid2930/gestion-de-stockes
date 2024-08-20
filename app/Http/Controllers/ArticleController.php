@@ -214,4 +214,22 @@ class ArticleController extends Controller
             }
         }
     }
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $articles = Article::where('name', 'LIKE', "%$query%")
+            ->orWhere('description', 'LIKE', "%$query%")
+            ->orWhere('unit_price', 'LIKE', "%$query%")
+            ->orWhereHas('category', function($q) use ($query) {
+                $q->where('name', 'LIKE', "%$query%");
+            })
+            ->get();
+        
+        // Définir des variables de pagination si nécessaire
+        $page = 1;
+        $total_pages = 1;
+
+        return view('articles.index', compact('articles', 'page', 'total_pages'));
+    }
+
 }

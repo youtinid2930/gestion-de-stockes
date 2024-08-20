@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Article')
+
 @section('content')
 <div class="home-content">
     <div class="overview-boxes">
@@ -36,17 +38,17 @@
             </table>
 
             <div class='pagination'>
-                @if ($page > 1)
-                    <a href="{{ route('articles.index', ['page' => $page - 1]) }}">&laquo; Précédent</a>
-                @endif
+            @if ($page > 1)
+                <a href="{{ route('articles.index', ['page' => $page - 1]) }}">&laquo; Précédent</a>
+            @endif
 
-                @for ($i = 1; $i <= $total_pages; $i++)
-                    <a class="{{ $i == $page ? 'active' : '' }}" href="{{ route('articles.index', ['page' => $i]) }}">{{ $i }}</a>
-                @endfor
+            @for ($i = 1; $i <= $total_pages; $i++)
+                <a class="{{ $i == $page ? 'active' : '' }}" href="{{ route('articles.index', ['page' => $i]) }}">{{ $i }}</a>
+            @endfor
 
-                @if ($page < $total_pages)
-                    <a href="{{ route('articles.index', ['page' => $page + 1]) }}">Suivant &raquo;</a>
-                @endif
+            @if ($page < $total_pages)
+                <a href="{{ route('articles.index', ['page' => $page + 1]) }}">Suivant &raquo;</a>
+            @endif
             </div>
             <div class="mt-3 btns">
             <a href="{{ route('articles.create') }}" class="btn btn-primary">creer article</a>
