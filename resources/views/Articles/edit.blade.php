@@ -20,7 +20,7 @@
                 <input type="number" name="unit_price" id="unit_price" placeholder="Veuillez saisir le prix" value="{{ old('unit_price', $article->unit_price) }}">
 
                 <label for="quantity">Quantité</label>
-                <input type="number" name="quantity" id="quantity" placeholder="Veuillez saisir la quantité" value="{{ old('quantity', $article->quantity) }}">
+                <input type="number" name="quantity" id="quantity" placeholder="Quantité" value="{{ old('quantity', $article->depots->where('depot_id', $user->depot_id)->first()->quantity ?? 0) }}">
 
                 <label for="category_id">Catégorie</label>
                 <select name="category_id" id="category_id" onchange="updateCaracteristiques()">

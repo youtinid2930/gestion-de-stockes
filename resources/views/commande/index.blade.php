@@ -18,6 +18,7 @@
 
     <div class="overview-boxes">
         <div class="box">
+        @if($commandes->isNotEmpty())
             <table class="mtable">
                 <thead>
                     <tr>
@@ -31,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($commandes as $commande)
+                    @foreach ($commandes as $commande)
                         <tr>
                             <td>{{ $commande->fournisseur->name }}</td>
                             <td>
@@ -61,13 +62,12 @@
                                 </a>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7">Aucune commande trouvée pour cette recherche</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
+            @else
+                <div>Aucune commande trouvée</div>
+            @endif
         </div>
         <div style="background-color: #03be1c;margin-left: 5%;margin-right: 73%;border-radius: 5%;padding: 1%;">
             <a href="{{ route('commande.create') }}" style="color: white">Créer une commande <i class="bx bx-plus"></i></a>
