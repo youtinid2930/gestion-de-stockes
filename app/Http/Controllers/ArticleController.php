@@ -151,6 +151,7 @@ class ArticleController extends Controller
 }
     public function edit($id)
     {
+        $user = auth()->user();
         $article = Article::with('characteristics')->findOrFail($id);
         $categories = Categorie::all(); // Fetch categories for the dropdown
         $finalCategories = collect();
@@ -161,40 +162,55 @@ class ArticleController extends Controller
 
         return view('articles.edit', [
             'article' => $article,
-            'finalCategories' => $finalCategories
+            'finalCategories' => $finalCategories,
+            'user' => $user
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'unit_price' => 'required|numeric',
-            'quantity' => 'nullable|integer',
-            'category_id' => 'nullable|exists:categories,id',
-            'date_de_fabrication' => 'nullable|date',
-            'date_d_expiration' => 'nullable|date',
-            'caracteristiques.*.valeur' => 'nullable|string',
-            'caracteristiques.*.id' => 'required|exists:caracteristiques,id'
-        ]);
-    
         $article = Article::findOrFail($id);
-        $article->update($validatedData);
-    
-        // Sync characteristics
-        $caracteristiques = $request->input('caracteristiques', []);
-        foreach ($caracteristiques as $id => $data) {
-            $article->characteristics()->updateExistingPivot($data['id'], ['valeur' => $data['valeur']]);
-        }
-    
-        return redirect()->route('articles.index')->with('message', ['type' => 'success', 'text' => 'Article mis à jour avec succès!']);
+
+    // Update article information
+    $article->update([
+        'name' => $request->input('name'),
+        'description' => $request->input('description'),
+        'unit_price' => $request->input('unit_price'),
+        'category_id' => $request->input('category_id'),
+        'date_de_fabrication' => $request->input('date_de_fabrication'),
+        'date_d_expiration' => $request->input('date_d_expiration'),
+    ]);
+
+    // Update characteristics
+    foreach ($request->input('caracteristiques', []) as $caracteristiqueId => $data) {
+        $article->characteristics()->updateOrCreate(
+            [
+                'article_id' => $article->id,
+                'caracteristique_id' => $caracteristiqueId
+            ],
+            ['valeur' => $data['valeur']]
+        );
+    }
+
+    // Update the quantity for the specific depot
+    $depotArticle = DepotArticle::where('article_id', $article->id)
+        ->where('depot_id', auth()->user()->depot_id)
+        ->first();
+
+    if ($depotArticle) {
+        $depotArticle->update(['quantity' => $request->input('quantity')]);
+    }
+
+    return redirect()->route('articles.index')->with('message', ['type' => 'success', 'text' => 'Article mis à jour avec succès']);
     }
 
     public function destroy($id)
     {
-        $article = Article::findOrFail($id);
-        $article->commandeDetails()->delete();
+        $article = Article::with(['commandeDetails.commande', 'characteristics'])->findOrFail($id);
+        foreach ($article->commandeDetails as $detail) {
+            $detail->commande()->delete(); 
+            $detail->delete(); 
+        }
         $article->characteristics()->detach();
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès.');
@@ -213,5 +229,45 @@ class ArticleController extends Controller
                 $this->collectFinalSubcategories($child, $finalCategories);
             }
         }
+    }
+    public function show($id) {
+        $article = Article::leftJoin('depot_articles', 'articles.id', '=', 'depot_articles.article_id')
+        ->select(
+            'articles.id',
+            'articles.name',
+            'articles.description',
+            'articles.unit_price',
+            'articles.sku',
+            'articles.serial_number',
+            'articles.batch_number',
+            'articles.combined_code',
+            'articles.category_id',
+            'articles.date_de_fabrication',
+            'articles.date_d_expiration',
+            DB::raw('SUM(depot_articles.quantity) as total_quantity'),
+            'articles.created_at',
+            'articles.updated_at'
+        )
+        ->groupBy(
+            'articles.id',
+            'articles.name',
+            'articles.description',
+            'articles.unit_price',
+            'articles.sku',
+            'articles.serial_number',
+            'articles.batch_number',
+            'articles.combined_code',
+            'articles.category_id',
+            'articles.date_de_fabrication',
+            'articles.date_d_expiration',
+            'articles.created_at',
+            'articles.updated_at'
+        )
+        ->where('articles.id', $id)
+        ->firstOrFail();
+
+
+
+    return view('articles.show', compact('article'));
     }
 }

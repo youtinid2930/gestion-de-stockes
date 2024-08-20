@@ -30,6 +30,7 @@
                                         <i class='bx bx-trash'></i>
                                     </button>
                                 </form>
+                            <button onclick="window.location.href='{{ route('articles.show', $article->id) }}'">Voir plus</button>
                         </td>
                     </tr>
                 @endforeach
@@ -48,7 +49,7 @@
                     <a href="{{ route('articles.index', ['page' => $page + 1]) }}">Suivant &raquo;</a>
                 @endif
             </div>
-            <div class="mt-3 btns">
+            <div class="mt-3">
             <a href="{{ route('articles.create') }}" class="btn btn-primary">creer article</a>
             </div>
         </div>

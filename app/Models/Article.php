@@ -95,4 +95,9 @@ class Article extends Model
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    public function depots()
+    {
+    return $this->hasMany(DepotArticle::class);
+    }
 }

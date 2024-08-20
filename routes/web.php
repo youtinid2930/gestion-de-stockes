@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\CommandeController;
@@ -46,7 +47,7 @@ Route::get('/commandes/search', [CommandeController::class, 'search'])->name('co
 
 
 
-
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
 
 Auth::routes();
@@ -137,6 +138,7 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
 
