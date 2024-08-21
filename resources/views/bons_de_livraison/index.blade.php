@@ -15,7 +15,7 @@
                         <th>Numéro</th>
                         <th>Date de Livraison</th>
                         <th>Adresse de Livraison</th>
-                        <th>Commande</th>
+                        <th>demande</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -25,7 +25,7 @@
                             <td>{{ $bon->numero }}</td>
                             <td>{{ $bon->date_livraison->format('d/m/Y') }}</td>
                             <td>{{ $bon->adresse_livraison }}</td>
-                            <td>{{ $bon->commande->nom }}</td>
+                            <td>{{ $bon->demande->nom }}</td>
                             <td>
                                 <a href="{{ route('livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
                                 <form action="{{ route('livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">

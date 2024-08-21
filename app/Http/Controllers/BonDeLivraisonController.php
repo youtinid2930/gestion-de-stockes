@@ -16,8 +16,8 @@ class BonDeLivraisonController extends Controller
 
     public function create()
     {
-        $commandes = Demande::all();
-        return view('bons_de_livraison.create', compact('commandes'));
+        $demandes = Demande::all();
+        return view('bons_de_livraison.create', compact('demandes'));
     }
 
     public function store(Request $request)
@@ -38,8 +38,8 @@ class BonDeLivraisonController extends Controller
     public function edit($id)
     {
         $bonDeLivraison = BonDeLivraison::findOrFail($id);
-        $commandes = Demande::all();
-        return view('bons_de_livraison.edit', compact('bonDeLivraison', 'commandes'));
+        $demandes = Demande::all();
+        return view('bons_de_livraison.edit', compact('bonDeLivraison', 'demandes'));
     }
 
     public function update(Request $request, $id)
@@ -48,7 +48,7 @@ class BonDeLivraisonController extends Controller
             'numero' => 'required|string|max:255',
             'date_livraison' => 'required|date',
             'adresse_livraison' => 'required|string',
-            'commande_id' => 'required|exists:commandes,id',
+            'commande_id' => 'required|exists:demandes,id',
         ]);
 
         $bonDeLivraison = BonDeLivraison::findOrFail($id);

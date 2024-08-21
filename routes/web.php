@@ -16,6 +16,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\DepotSettingsController;
+use App\Http\Controllers\FactureController;
+
 
 
 
@@ -143,8 +145,16 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
     Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
 
-    
 
+    Route::resource('factures', FactureController::class);
+    Route::delete('/factures/{id}', [FactureController::class, 'destroy']);
+    Route::get('/factures/{id}/edit', [FactureController::class, 'edit'])->name('factures.edit');
+    Route::put('/factures/{id}', [FactureController::class, 'update'])->name('factures.update');
+    Route::get('/factures/{id}/print', [FactureController::class, 'print'])->name('factures.print');
+    Route::get('/factures/search', [FactureController::class, 'search'])->name('factures.search');
+    Route::get('/factures/{id}', [FactureController::class, 'show'])->name('factures.show');
+
+ 
 
     Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
 });

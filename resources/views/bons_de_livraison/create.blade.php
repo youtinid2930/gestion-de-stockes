@@ -18,11 +18,11 @@
                 <label for="adresse_livraison">Adresse de Livraison</label>
                 <input type="text" name="adresse_livraison" id="adresse_livraison" required>
 
-                <label for="commande_id">Commande</label>
-                <select name="commande_id" id="commande_id" required>
-                    @foreach($commandes as $commande)
-                        @foreach($commande->commandeDetails as $detail)
-                            <option value="{{ $commande->id }}">
+                <label for="demande_id">demande</label>
+                <select name="demande_id" id="demande_id" required>
+                    @foreach($demandes as $demande)
+                        @foreach($demande->demandeDetails as $detail)
+                            <option value="{{ $demande->id }}">
                                 {{ $detail->article->name }}
                             </option>
                         @endforeach

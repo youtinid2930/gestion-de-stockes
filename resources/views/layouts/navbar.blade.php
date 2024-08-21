@@ -18,9 +18,6 @@
     <img class='image' src="{{ asset('image/logo.jpeg') }}" alt="Logo">
 </nav>
 
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var currentPath = window.location.pathname;
@@ -36,6 +33,8 @@
             searchForm.action = "{{ route('commandes.search') }}";
         } else if (currentPath.includes('article')) {  // Ajout de la condition pour les articles
             searchForm.action = "{{ route('articles.search') }}"; // Assurez-vous que cette route est définie
+        } else if (currentPath.includes('facture')) {  // Ajout de la condition pour les factures
+            searchForm.action = "{{ route('factures.search') }}"; // Assurez-vous que cette route est définie
         } else {
             searchForm.action = "#"; // Optionnel: si aucune correspondance, ne rien faire
         }
@@ -44,47 +43,41 @@
 
 </nav>
 <style>
-
     /* General styles for nav */
-.search-box {
-    display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: center; /* Center content horizontally */
-    padding-right: 70px; /* Space for the fixed image */
-    background-color: #fff; /* Adjust based on your design */
-    position: fixed;
-}
+    .search-box {
+        display: flex;
+        align-items: center; /* Align items vertically */
+        justify-content: center; /* Center content horizontally */
+        padding-right: 70px; /* Space for the fixed image */
+        background-color: #fff; /* Adjust based on your design */
+        position: fixed;
+    }
 
-/* Style for the fixed image */
-.image {
-    margin-left:1000px;
-    position: fixed;
-}
+    /* Style for the fixed image */
+    .image {
+        margin-left:1000px;
+        position: fixed;
+    }
 
+    nav #searchForm {
+        
+        display: flex;
+        align-items: center; /* Align items vertically */
+        
+    }
 
-
-nav #searchForm {
-    
-    display: flex;
-    align-items: center; /* Align items vertically */
-    
-}
-
-nav #searchInput {
-
-    padding: 10px; /* Adjust padding as needed */
-    border: 1px solid #ccc; /* Optional: Add border */
-    border-radius: 4px; /* Optional: Add border-radius */
-    margin-right: 5px; /* Space between input and button */
-    width: 350px;
-}
-
-nav button {
-    margin-right:300px;
-}
-.bx-search{
-    margin-right:290px;
-    
-}
+    nav #searchInput {
+        padding: 10px; /* Adjust padding as needed */
+        border: 1px solid #ccc; /* Optional: Add border */
+        border-radius: 4px; /* Optional: Add border-radius */
+        margin-right: 5px; /* Space between input and button */
+        width: 350px;
+    }
+    nav button {
+        margin-right:300px;
+    }
+    .bx-search{
+        margin-right:290px;
+    }
 
 </style>
