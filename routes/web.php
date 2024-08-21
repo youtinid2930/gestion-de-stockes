@@ -45,7 +45,7 @@ Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->na
 Route::get('/utilisateurs/search', [UtilisateurController::class, 'search'])->name('utilisateurs.search');
 Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 Route::get('/commandes/search', [CommandeController::class, 'search'])->name('commandes.search');
-
+Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
 
 
 
@@ -60,7 +60,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/dashboard/search', [DashboardController::class, 'search'])->name('dashboard.search');
 
 
-Route::get('/article', [ArticleController::class, 'index'])->name('article')->middleware('auth');
 
 // routes fournisseur
 Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
@@ -93,19 +92,24 @@ Route::get('/configuration', [ConfigurationController::class, 'index'])->name('c
 Route::get('/report', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
 
 // route demande
-Route::get('/demande', [DemandeController::class, 'index'])->name('demande')->middleware('auth');
-Route::get('/demandes', [DemandeController::class, 'showDemandes'])->name('demande.showDemandes');
+Route::get('/demandes', [DemandeController::class, 'index'])->name('demande.index')->middleware('auth');
 Route::get('/demandes/create', [DemandeController::class, 'create'])->name('demande.create');
 Route::post('/demandes', [DemandeController::class, 'store'])->name('demande.store');
 Route::get('/demandes/{id}/edit', [DemandeController::class, 'edit'])->name('demande.edit');
 Route::put('/demandes/{id}', [DemandeController::class, 'update'])->name('demande.update');
+Route::delete('/demandes/{id}', [DemandeController::class, 'destroy'])->name('demande.destroy');
 Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demande.Table');
-
+Route::get('/demandes/magasiniers', [DemandeController::class, 'getMagasiniers'])->name('demande.getMagasiniers');
 
 Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
+Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
 
 
 Route::resource('livraison', BonDeLivraisonController::class)->parameters(['livraison' => 'id'])->middleware('auth');
+
+
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
@@ -138,9 +142,8 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     // Articles
     Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
-    Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-    Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
-    Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
+    
+
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
     Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
@@ -157,19 +160,19 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
 
     Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
 });
+
+Route::group(['middleware' => ['auth','role:magasinier']], function () {
+    Route::get('articles/add/{id}', [ArticleController::class, 'addStock'])->name('articles.add');
+    Route::post('articles/update-stock/{id}', [ArticleController::class, 'updateStock'])->name('articles.updateStock');
+    Route::delete('articles/cancel-stock/{id}', [ArticleController::class, 'cancelStock'])->name('articles.cancelStock');
+});
 /*
 Route::get('test-role', function () {
     return 'Role middleware is working correctly';
 })->middleware(['auth', 'role:admin']);
 
 Route::group(['middleware' => ['role:gestionnaire']], function () {
-    Route::get('/gestionnaire', function () {
-        
-    });
+    
 });
-Route::group(['middleware' => ['role:magasinier']], function () {
-    Route::get('/magasinier', function () {
-        
-    });
-});
+
 */

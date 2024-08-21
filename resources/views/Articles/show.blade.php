@@ -35,10 +35,10 @@
                 <input type="text" name="category_id" id="category_id" value="{{ $article->category->name ?? 'N/A' }}" readonly>
 
                 <label for="date_de_fabrication">Date de fabrication</label>
-                <input type="text" name="date_de_fabrication" id="date_de_fabrication" value="{{ $article->date_de_fabrication->format('d/m/Y H:i:s') }}" readonly>
+                <input type="text" name="date_de_fabrication" id="date_de_fabrication" value="{{ $article->date_de_fabrication ? $article->date_de_fabrication->format('d/m/Y H:i:s') : 'date non disponible' }}" readonly>
 
                 <label for="date_d_expiration">Date d'expiration</label>
-                <input type="text" name="date_d_expiration" id="date_d_expiration" value="{{ $article->date_d_expiration }}" readonly>
+                <input type="text" name="date_d_expiration" id="date_d_expiration" value="{{ $article->date_d_expiration ? $article->date_d_expiration->format('d/m/Y H:i:s') : 'date non disponible' }}" readonly>
 
                 <label for="total_quantity">Quantité totale</label>
                 <input type="number" name="total_quantity" id="total_quantity" value="{{ $article->total_quantity }}" readonly>
@@ -48,6 +48,12 @@
 
                 <label for="updated_at">Mis à jour le</label>
                 <input type="text" name="updated_at" id="updated_at" value="{{ $article->updated_at->format('d/m/Y H:i:s') }}" readonly>
+                
+                <div>Caracteristiques<div>
+                @foreach($caracteristiques as $caracteristique) 
+                    <label for="{{ $caracteristique->caracteristique->name }}">{{ $caracteristique->caracteristique->name }}</label>
+                    <input type="text" name="{{ $caracteristique->caracteristique->name }}" id="{{ $caracteristique->caracteristique->name }}" value="{{ $caracteristique->valeur }}" readonly>
+                @endforeach
 
                 <div class="mt-3">
                     <a href="{{ route('articles.index') }}" class="btn btn-secondary">Retour à la liste</a>

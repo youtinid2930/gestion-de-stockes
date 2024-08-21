@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\ArticleCaracteristique;
 use App\Models\Caracteristique;
 use App\Models\Categorie;
 use App\Models\DepotArticle;
 use App\Models\Depot;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -25,10 +27,35 @@ class ArticleController extends Controller
             $this->collectFinalSubcategories($categorie, $finalCategories);
         }
 
+        
+
+        $depotId = Auth::user()->depot_id;
+
         $articlesQuery = Article::query()
         ->leftJoin('depot_articles', 'articles.id', '=', 'depot_articles.article_id')
-        ->select('articles.id', 'articles.name', 'articles.description', 'articles.unit_price', 'articles.sku', 'articles.serial_number', 'articles.batch_number', 'articles.combined_code', 'articles.category_id', DB::raw('SUM(depot_articles.quantity) as total_quantity'))
-        ->groupBy('articles.id', 'articles.name', 'articles.description', 'articles.unit_price', 'articles.sku', 'articles.serial_number', 'articles.batch_number', 'articles.combined_code', 'articles.category_id');
+        ->select(
+        'articles.id',
+        'articles.name',
+        'articles.description',
+        'articles.unit_price',
+        'articles.sku',
+        'articles.serial_number',
+        'articles.batch_number',
+        'articles.combined_code',
+        'articles.category_id',
+        DB::raw('SUM(CASE WHEN depot_articles.depot_id = ' . $depotId . ' THEN depot_articles.quantity ELSE 0 END) as total_quantity')
+        )
+        ->groupBy(
+        'articles.id',
+        'articles.name',
+        'articles.description',
+        'articles.unit_price',
+        'articles.sku',
+        'articles.serial_number',
+        'articles.batch_number',
+        'articles.combined_code',
+        'articles.category_id'
+        );
 
 
         if ($request->filled('name')) {
@@ -43,7 +70,7 @@ class ArticleController extends Controller
 
         $articles = $articlesQuery->skip($offset)->take($limit)->get();
 
-        return view('articles.index', compact('articles', 'categories', 'page', 'total_pages'));
+        return view('articles.index', compact('articles', 'categories', 'page', 'total_pages','depotId'));
     }
 
     public function create()
@@ -55,7 +82,8 @@ class ArticleController extends Controller
         foreach ($categories as $categorie) {
             $this->collectFinalSubcategories($categorie, $finalCategories);
         }
-        return view('articles.create', compact('finalCategories','caracteristiques'));
+        
+        return view('Articles.create', compact('finalCategories','caracteristiques'));
     }
 
     public function store(Request $request)
@@ -231,6 +259,8 @@ class ArticleController extends Controller
         }
     }
     public function show($id) {
+        $depotId = auth()->user()->depot_id;
+        $caracteristiques = ArticleCaracteristique::get()->where('article_id', $id);
         $article = Article::leftJoin('depot_articles', 'articles.id', '=', 'depot_articles.article_id')
         ->select(
             'articles.id',
@@ -244,7 +274,7 @@ class ArticleController extends Controller
             'articles.category_id',
             'articles.date_de_fabrication',
             'articles.date_d_expiration',
-            DB::raw('SUM(depot_articles.quantity) as total_quantity'),
+            DB::raw('SUM(CASE WHEN depot_articles.depot_id = ' . intval($depotId) . ' THEN depot_articles.quantity ELSE 0 END) as total_quantity'),
             'articles.created_at',
             'articles.updated_at'
         )
@@ -266,23 +296,45 @@ class ArticleController extends Controller
         ->where('articles.id', $id)
         ->firstOrFail();
 
-    return view('articles.show', compact('article'));
-    }
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $articles = Article::where('name', 'LIKE', "%$query%")
-            ->orWhere('description', 'LIKE', "%$query%")
-            ->orWhere('unit_price', 'LIKE', "%$query%")
-            ->orWhereHas('category', function($q) use ($query) {
-                $q->where('name', 'LIKE', "%$query%");
-            })
-            ->get();
-        
-        $page = 1;
-        $total_pages = 1;
 
-        return view('articles.index', compact('articles', 'page', 'total_pages'));
+        return view('articles.show', compact('article','caracteristiques'));
+    }
+
+    public function addStock($id)
+   {
+    $article = Article::findOrFail($id);
+    return view('articles.addtostock', compact('article'));
+   }
+
+    public function updateStock(Request $request, $id)
+    {
+    $request->validate([
+        'quantity' => 'required|numeric|min:0',
+    ]);
+
+    $article = Article::findOrFail($id);
+    $depotId = auth()->user()->depot_id;
+
+    // Add or update stock
+    DepotArticle::updateOrCreate(
+        ['article_id' => $article->id, 'depot_id' => $depotId],
+        ['quantity' => $request->quantity]
+    );
+
+    return redirect()->route('articles.index')->with('success', 'Stock mis à jour avec succès.');
+   }
+
+    public function cancelStock($id)
+    {
+    $article = Article::findOrFail($id);
+    $depotId = auth()->user()->depot_id;
+
+    
+    DepotArticle::where('article_id', $article->id)
+        ->where('depot_id', $depotId)
+        ->delete();
+
+    return redirect()->route('articles.index')->with('success', 'Annulation réussie.');
     }
 
 }

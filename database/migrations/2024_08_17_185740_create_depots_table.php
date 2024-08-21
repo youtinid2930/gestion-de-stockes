@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('depots')) {
         Schema::create('depots', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('adresse');
             $table->timestamps();
         });
+    }
     }
 
     /**

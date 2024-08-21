@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Depot extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'adresse'];
+    protected $fillable = ['name', 'adresse','type'];
 
     public function depotArticles()
     {

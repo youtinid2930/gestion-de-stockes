@@ -22,17 +22,37 @@
                         <td>{{ $article->total_quantity }}</td>
                         <td>{{ $article->unit_price }}</td>
                         <td>
+                            @if(auth()->user()->hasRole('admin'))
                             <a href="{{ route('articles.edit', $article->id) }}">
                                 <i class='bx bx-edit-alt'></i>
                             </a>
-                                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('vous etes sure de supprimer cette Article?');" class="delete-button">
+                                    <i class='bx bx-trash'></i>
+                                </button>
+                            </form>
+                            @endif
+                            @if(auth()->user()->hasRole('magasinier'))
+                                @if($article->total_quantity == 0)
+                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" title="Ajouter au stock">
+                                    <i class='bx bx-plus'></i>
+                                </a>
+                                @else
+                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" title="Mettre à jour">
+                                    <i class='bx bx-edit-alt'></i>
+                                </a>
+                                <form action="{{ route('articles.cancelStock', ['id' => $article->id]) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('vous etes sure de supprimer cette Article?');" class="delete-button">
-                                        <i class='bx bx-trash'></i>
+                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir annuler l\'ajout de stock?');" class="delete-button btn btn-icon" title="Annuler">
+                                        <i class='bx bx-x'></i>
                                     </button>
                                 </form>
-                            <button onclick="window.location.href='{{ route('articles.show', $article->id) }}'">Voir plus</button>
+                                @endif
+                            @endif
+                            <button onclick="window.location.href='{{ route('articles.show', $article->id) }}'" class="btn">Voir plus</button>
                         </td>
                     </tr>
                 @endforeach
@@ -51,9 +71,11 @@
                 <a href="{{ route('articles.index', ['page' => $page + 1]) }}">Suivant &raquo;</a>
             @endif
             </div>
+            @if(auth()->user()->hasRole('admin'))
             <div class="mt-3">
-            <a href="{{ route('articles.create') }}" class="btn btn-primary">creer article</a>
+                <button onclick="window.location.href='{{ route('articles.create') }}'" class="btn">Créer article</button>
             </div>
+            @endif
         </div>
     </div>
 </div>

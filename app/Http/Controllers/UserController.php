@@ -46,7 +46,6 @@ class UserController extends Controller
             'adresse' => 'required|string|max:255',
             'etat' => 'required|string|in:actif,inactif',
             'role' => 'required|exists:roles,name', // Validate the role name
-            'location' => 'required|string|max:255',
         ]);
 
         $user = User::create([
@@ -56,7 +55,6 @@ class UserController extends Controller
             'telephone' => $request->telephone,
             'adresse' => $request->adresse,
             'etat' => $request->etat,
-            'location' => $request->location,
             'password' => Hash::make('defaultpassword'), // you might want to handle password more securely
         ]);
 
@@ -91,7 +89,6 @@ class UserController extends Controller
             'adresse' => 'required|string|max:255',
             'etat' => 'required|string|in:actif,inactif',
             'role' => 'required|exists:roles,name', // Validate the role name
-            'location' => 'required|string|max:255',
         ]);
 
         $utilisateur->update([
@@ -101,7 +98,6 @@ class UserController extends Controller
             'telephone' => $request->telephone,
             'adresse' => $request->adresse,
             'etat' => $request->etat,
-            'location' => $request->location,
         ]);
 
         $utilisateur->syncRoles($request->role); // Sync the roles by name

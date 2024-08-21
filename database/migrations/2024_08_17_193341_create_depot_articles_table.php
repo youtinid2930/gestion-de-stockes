@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('depot_articles')) {
         Schema::create('depot_articles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('depot_id');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreign('depot_id')->references('id')->on('depots')->onDelete('cascade');
             $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
         });
+        }
     }
 
     /**

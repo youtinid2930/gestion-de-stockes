@@ -383,11 +383,22 @@ nav .profile-details i {
 
 
 .overview-boxes .btn {
-  background-color: #03be1c;
-  margin-left: 5%;
-  margin-right: 83%;
-  border-radius: 5%;
-  padding: 1%;
+  background-color: #03be1c; /* Green background */
+  color: whitesmoke; /* White text color */
+  display: inline-flex; /* Align items */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  border-radius: 6px; /* Rounded corners */
+  font-weight: 600; /* Bold text */
+  font-size: 0.8rem; /* Slightly larger font size for better readability */
+  line-height: 1.5; /* Ensure text is centered vertically */
+  text-align: center; /* Center text horizontally */
+  padding: 0.5rem 1rem; /* Adjust padding for more space around text */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth hover effect */
+  box-sizing: border-box; /* Include padding and border in width and height */
+  min-width: 1em; /* Ensure a minimum width for consistent button size */
   
 }
 
@@ -769,32 +780,7 @@ ol.mtable li:nth-child(even) {
   color: #fff !important;
 }
 
-/* Style for the buttons */
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-}
 
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
 
 /* Style for the action buttons 
 .btn-outline-secondary, .btn-outline-info, .btn-outline-danger {
@@ -845,21 +831,7 @@ ol.mtable li:nth-child(even) {
   font-size: 1rem;  Adjust font size for better text fitting 
 }
 */
-.btn {
-  display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-weight: 600;
-    line-height: 1.5;
-    text-align: center;
-    padding: 0.75rem 1.5rem; /* Adjust padding for button size */
-    font-size: 1rem; /* Adjust font size for better text fitting */
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
-    box-sizing: border-box;
-}
+
 /* Primary button style */
 .btn-primary {
   background-color: #007bff;
@@ -935,3 +907,29 @@ ol.mtable li:nth-child(even) {
   height: 50px;
 }
 
+
+.overview-boxes .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem; /* Adjust width for smaller size */
+  height: 1.7rem; /* Adjust height for smaller size */
+  border-radius: 0.25rem; /* Adjust border radius if needed */
+  background-color: transparent; /* No background color */
+  color: hsl(123, 74%, 30%); /* Icon color */
+  font-size: 1rem; /* Adjust font size for smaller icons */
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+  border: 1px solid #03be1c; /* Border color */
+  text-align: center;
+}
+
+.overview-boxes .btn-icon:hover {
+  color: black; /* Icon color on hover */
+  background-color: #fff; /* Background color on hover */
+  border-color: hsl(123, 87%, 32%); /* Border color on hover */
+}
+
+.overview-boxes .btn-icon i {
+  vertical-align: middle;
+}

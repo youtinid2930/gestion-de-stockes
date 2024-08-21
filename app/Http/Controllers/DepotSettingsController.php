@@ -36,6 +36,7 @@ class DepotSettingsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'addresse' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
         ]);
 
         // Get the current authenticated user
@@ -49,6 +50,7 @@ class DepotSettingsController extends Controller
                 $depot->update([
                     'name' => $request->input('name'),
                     'adresse' => $request->input('addresse'),
+                    'type' => $request->input('type'),
                 ]);
             }
         } else {
@@ -56,6 +58,7 @@ class DepotSettingsController extends Controller
             $depot = Depot::create([
                 'name' => $request->input('name'),
                 'adresse' => $request->input('addresse'),
+                'type' => $request->input('type'),
             ]);
 
             // Update user's depot_id

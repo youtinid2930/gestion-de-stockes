@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('article_caracteristiques', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('article_id')->constrained();
-            $table->foreignId('caracteristique_id')->constrained();
-            $table->string('valeur');
-            $table->timestamps();
+        Schema::table('depots', function (Blueprint $table) {
+            $table->enum('type', ['Dépôt central', 'Magasin', 'Bureau Administratif'])->after('adresse');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_caracteristiques');
+        Schema::table('depots', function (Blueprint $table) {
+            $table->dropColumn('type');
+        });
     }
 };

@@ -63,12 +63,6 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
 
-                <label for="location">Lieu</label>
-                <input value="{{ old('location', $utilisateur->location) }}" type="text" name="location" id="location" placeholder="Veuillez saisir le lieu" autocomplete="location">
-                @error('location')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror
-
                 <button type="submit">Valider</button>
 
                 @if(session('message'))

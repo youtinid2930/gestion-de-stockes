@@ -15,7 +15,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('article') }}" class="{{ request()->routeIs('article') ? 'active' : '' }}">
+            <a href="{{ route('articles.index') }}" class="{{ request()->routeIs('articles.index') ? 'active' : '' }}">
                 <i class="bx bx-box"></i>
                 <span class="links_name">Article</span>
             </a>
@@ -36,7 +36,7 @@
         </li>
         @endif
         <li>
-            <a href="{{ route('demande') }}" class="{{ request()->routeIs('demande') ? 'active' : '' }}">
+            <a href="{{ route('demande.index') }}" class="{{ request()->routeIs('demande.index') ? 'active' : '' }}">
                 <i class="bx bx-user"></i>
                 <span class="links_name">Demande</span>
             </a>
