@@ -15,12 +15,17 @@ class DemandeController extends Controller
     {
         if(auth()->user()->hasRole('gestionnaire')){
             $Medemandes = Demande::with('demandeDetails.article','magasinier')->whereNull('admin_id')->get();
+            return view('demandes.index', compact('Medemandes'));
         }
-        if(auth()->user()->hasRole('magasinier')){
+        else if(auth()->user()->hasRole('magasinier')){
             $Medemandes = Demande::with('demandeDetails.article','admin')->whereNull('gestionnaire_id')->get();
+            $demandesRecus = Demande::with('demandeDetails.article','gestionnaire')->whereNull('admin_id')->get();
+            return view('demandes.index', compact('Medemandes','demandesRecus'));
         }
-        
-        return view('demandes.index', compact('Medemandes'));
+        else {
+            $demandesRecus = Demande::with('demandeDetails.article','magasinier')->whereNull('gestionnaire_id')->get();
+            return view('demandes.index',compact('demandesRecus'));
+        }
     }
     
     public function create()
@@ -76,6 +81,9 @@ class DemandeController extends Controller
         $demande->admin_id = $request->admin; // Assign admin ID
         if(auth()->user()->hasRole('gestionnaire')) {
             $demande->gestionnaire_id = auth()->user()->id;
+        }
+        if(auth()->user()->hasRole('magasinier')) {
+            $demande->magasinier_id = auth()->user()->id;
         }
         $demande->notes = $request->notes;
         $demande->delivery_address = $request->delivery_address;
@@ -142,6 +150,47 @@ class DemandeController extends Controller
             'text' => 'Demande supprimée avec succès.'
         ]);
     }
+    
+    public function changeStatus($id) {
+    // Find the demande by its ID
+    $demande = Demande::findOrFail($id);
+
+    // Define the sequence of statuses
+    $statuses = [
+        'En attente' => 'En cours de traitement',
+        'En cours de traitement' => 'Livrée',
+        'Livrée' => 'Complétée',
+        'Complétée' => 'Complétée', // Or keep as 'Complétée' if it shouldn't change
+    ];
+
+    // Get the current status
+    $currentStatus = $demande->status;
+
+    // Determine the next status
+    if (array_key_exists($currentStatus, $statuses)) {
+        $demande->status = $statuses[$currentStatus];
+    } else {
+        // Handle unexpected status (optional)
+        return redirect()->route('demande.index')->with('error', 'Statut invalide.');
+    }
+
+    // Save the changes to the database
+    $demande->save();
+
+    // Redirect with a success message
+    return redirect()->route('demande.index')->with('success', 'Le statut de la demande a été mis à jour avec succès.');
+    }
+
+    public function show($id)
+   {
+    // Retrieve the demande by ID, including related models
+    $demande = Demande::with(['demandeDetails.article', 'admin', 'magasinier', 'gestionnaire'])->findOrFail($id);
+    
+    // Pass the data to the view
+    return view('demandes.show', compact('demande'));
+   }
+
+   
 
 }    
 

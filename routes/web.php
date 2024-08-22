@@ -100,6 +100,10 @@ Route::put('/demandes/{id}', [DemandeController::class, 'update'])->name('demand
 Route::delete('/demandes/{id}', [DemandeController::class, 'destroy'])->name('demande.destroy');
 Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demande.Table');
 Route::get('/demandes/magasiniers', [DemandeController::class, 'getMagasiniers'])->name('demande.getMagasiniers');
+Route::get('/demandes/status/{id}',[DemandeController::class, 'changeStatus'])->name('demande.status');
+Route::get('/demandes/{id}', [DemandeController::class, 'show'])->name('demande.show');
+
+
 
 Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
