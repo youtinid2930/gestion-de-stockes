@@ -33,8 +33,6 @@
             searchForm.action = "{{ route('commandes.search') }}";
         } else if (currentPath.includes('article')) {  // Ajout de la condition pour les articles
             searchForm.action = "{{ route('articles.search') }}"; // Assurez-vous que cette route est définie
-        } else if (currentPath.includes('facture')) {  // Ajout de la condition pour les factures
-            searchForm.action = "{{ route('factures.search') }}"; // Assurez-vous que cette route est définie
         } else {
             searchForm.action = "#"; // Optionnel: si aucune correspondance, ne rien faire
         }

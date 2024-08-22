@@ -20,9 +20,9 @@ class Facture extends Model
         'date_facture' => 'datetime',  // Convertir date_facture en objet Carbon
     ];
 
-    // Exemple de relation
-    public function commandes()
+    public function commande()
     {
-        return $this->hasMany(Commande::class);
+        return $this->belongsTo(Commande::class);
     }
+
 }

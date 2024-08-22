@@ -4,21 +4,10 @@
 
 @section('content')
 <div class="home-content">
-    <!-- Formulaire de recherche (optionnel si déjà inclus dans la navbar) -->
-    <!--
-    <div class="search-box">
-        <form action="{{ route('commandes.search') }}" method="GET">
-            <input type="text" name="query" placeholder="Recherche..." required />
-            <button type="submit" style="border:none;background:none;">
-                <i class="bx bx-search"></i>
-            </button>
-        </form>
-    </div>
-    -->
 
     <div class="overview-boxes">
         <div class="box">
-        @if($commandes->isNotEmpty())
+         @if($commandes->isNotEmpty())
             <table class="mtable">
                 <thead>
                     <tr>
@@ -54,13 +43,17 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="delete-button">
-                                        <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
+                                    <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                     </button>
                                 </form>
                                 <a href="{{ route('commande.edit', $commande->id) }}">
                                     <i class="fas fa-check" data-toggle="tooltip" title="Valider la commande"></i>
+                                </a>         
+                                <a href="{{ route('factures.index', ['commande_id' => $commande->id]) }}">
+                                    <i class="fas fa-file-invoice" aria-hidden="true" data-toggle="tooltip" title="Facture de commande"></i>
                                 </a>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>

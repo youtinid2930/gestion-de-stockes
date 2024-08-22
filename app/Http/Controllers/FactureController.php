@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Facture;
+use Spatie\Permission\Models\Role;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 
 class FactureController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $factures = Facture::all();  // Assurez-vous que cette ligne est correcte
+        $commandeId = $request->input('commande_id');
+
+        if ($commandeId) {
+            // Rechercher les factures associées à la commande spécifique
+            $factures = Facture::where('commande_id', $commandeId)->get();
+        } else {
+            $factures = Facture::all(); // Affiche toutes les factures si aucune commande n'est sélectionnée
+        }
+
         return view('factures.index', compact('factures'));
     }
 
     public function create()
     {
-        return view('factures.create'); // Créez la vue correspondante
+        return view('factures.create');
     }
 
-
-    // Ajoutez d'autres méthodes selon vos besoins (show, edit, update, destroy)
     public function store(Request $request)
     {
         $request->validate([
@@ -53,29 +60,16 @@ class FactureController extends Controller
 
     public function edit($id)
     {
-        // Trouver la facture par son ID
         $facture = Facture::find($id);
 
-        // Vérifier si la facture existe
         if ($facture) {
-            // Retourner la vue d'édition avec la facture
             return view('factures.edit', compact('facture'));
         }
-
-        // Retourner une réponse d'erreur si la facture n'existe pas
         return redirect()->route('factures.index')->with('error', 'Facture non trouvée.');
     }
 
-    /**
-     * Met à jour une facture spécifique dans la base de données.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        // Validation des données
         $request->validate([
             'numero_facture' => 'required|string|max:255',
             'date_facture' => 'required|date',
@@ -84,12 +78,9 @@ class FactureController extends Controller
             'description' => 'required|string',
         ]);
 
-        // Trouver la facture par son ID
         $facture = Facture::find($id);
 
-        // Vérifier si la facture existe
         if ($facture) {
-            // Mettre à jour la facture
             $facture->update([
                 'numero_facture' => $request->input('numero_facture'),
                 'date_facture' => $request->input('date_facture'),
@@ -98,11 +89,9 @@ class FactureController extends Controller
                 'description' => $request->input('description'),
             ]);
 
-            // Retourner une réponse réussie
             return redirect()->route('factures.index')->with('success', 'Facture mise à jour avec succès.');
         }
 
-        // Retourner une réponse d'erreur si la facture n'existe pas
         return redirect()->route('factures.index')->with('error', 'Facture non trouvée.');
     }
     public function print($id)
@@ -112,27 +101,19 @@ class FactureController extends Controller
 
         // Vérifier si la facture existe
         if ($facture) {
-            // Générer le PDF
             $pdf = PDF::loadView('factures.pdf', compact('facture'));
-
-            // Télécharger le PDF
             return $pdf->download('facture-' . $facture->numero_facture . '.pdf');
         }
-
-        // Rediriger avec un message d'erreur si la facture n'existe pas
         return redirect()->route('factures.index')->with('error', 'Facture non trouvée.');
-    }
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
-        $factures = Facture::where('numero_facture', 'LIKE', '%' . $query . '%')->get();
-
-        return view('factures.index', compact('factures'));
     }
     public function show($id)
     {
+        // Récupérer la facture par ID
         $facture = Facture::findOrFail($id);
+
+        // Retourner la vue avec les détails de la facture
         return view('factures.show', compact('facture'));
     }
+
 
 }

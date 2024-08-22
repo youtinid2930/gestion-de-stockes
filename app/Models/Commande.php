@@ -36,10 +36,11 @@ class Commande extends Model
         return $this->belongsTo(Commande::class);
     }
 
-    public function facteur()
+    public function factures()
     {
-        return $this->hasOne(Facteur::class);
+        return $this->hasMany(Facture::class);
     }
+
 
     public function stockMovements()
     {

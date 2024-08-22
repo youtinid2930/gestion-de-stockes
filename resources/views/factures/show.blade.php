@@ -3,15 +3,40 @@
 @section('title', 'Détails de la Facture')
 
 @section('content')
-<div class="container">
-    <h1>Détails de la Facture</h1>
+<div class="home-content">
+    <div class="overview-boxes">
+        <div class="box">
+            <h1>Détails de la Facture #{{ $facture->numero_facture }}</h1>
 
-    <p><strong>Numéro de Facture :</strong> {{ $facture->numero_facture }}</p>
-    <p><strong>Date :</strong> {{ $facture->date_facture->format('d/m/Y') }}</p>
-    <p><strong>Montant Total :</strong> {{ number_format($facture->montant_total, 2) }} DH</p>
-    <p><strong>Client :</strong> {{ $facture->client }}</p>
-    <p><strong>Description :</strong> {{ $facture->description }}</p>
+            <table class="mtable">
+                <tbody>
+                    <tr>
+                        <th>Numéro de Facture</th>
+                        <td>{{ $facture->numero_facture }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>{{ $facture->date_facture->format('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Montant Total</th>
+                        <td>{{ number_format($facture->montant_total, 2) }} DH</td>
+                    </tr>
+                    <tr>
+                        <th>Client</th>
+                        <td>{{ $facture->client }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ $facture->description }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <a href="{{ route('factures.index') }}" class="btn btn-primary">Retour à la liste</a>
+            <div class="mb-3">
+                <a href="{{ route('factures.index') }}" class="btn btn-primary">Retour à la liste des factures</a>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

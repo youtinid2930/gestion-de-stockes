@@ -14,10 +14,10 @@
                 </div>
             @endif
 
-            <!-- Affichage du terme de recherche (si applicable) -->
-            @if(request()->has('query'))
+            <!-- Affichage du terme de recherche ou de la commande (si applicable) -->
+            @if(request()->has('commande_id'))
                 <div class="alert alert-info">
-                    Résultats pour le numéro de facture : <strong>{{ request('query') }}</strong>
+                    Factures pour la commande : <strong>{{ request('commande_id') }}</strong>
                 </div>
             @endif
 
@@ -41,18 +41,21 @@
                             <td>{{ $facture->client }}</td>
                             <td>{{ $facture->description }}</td>
                             <td>
-                                <a href="{{ route('factures.edit', $facture->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                                <a href="{{ route('factures.print', $facture->id) }}" class="btn btn-secondary btn-sm" target="_blank">Imprimer</a>
+                                <a href="{{ route('factures.edit', $facture->id) }}" ><i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la facture"></i></a>
+                                <a href="{{ route('factures.print', $facture->id) }}"><i class="fas fa-receipt" data-toggle="tooltip" title="Imprimer la facture"></i></a>
+                                <a href="{{ route('factures.show', $facture->id) }}">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </a>
                                 <form action="{{ route('factures.destroy', $facture->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?');">Supprimer</button>
+                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?');" class="delete-button"><i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la facture"></i></button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">Aucune facture trouvée.</td>
+                            <td colspan="6" class="text-center">Aucune facture trouvée pour cette commande.</td>
                         </tr>
                     @endforelse
                 </tbody>

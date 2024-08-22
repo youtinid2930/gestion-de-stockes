@@ -27,12 +27,7 @@
                 <span class="links_name">Fournisseur</span>
             </a>
         </li>
-        <li>
-            <a href="{{ route('factures.index') }}" class="{{ request()->routeIs('factures.index') ? 'active' : '' }}">
-                <i class="bx bx-user"></i>
-                <span class="links_name">Facture</span>
-            </a>
-        </li>
+        
         <li>
             <a href="{{ route('commande.index') }}" class="{{ request()->routeIs('commande.index') ? 'active' : '' }}">
                 <i class="bx bx-list-ul"></i>
