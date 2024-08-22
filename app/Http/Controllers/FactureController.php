@@ -19,22 +19,16 @@ class FactureController extends Controller
         if ($commandeId) {
             // Rechercher les factures associées à la commande spécifique
             $factures = Facture::where('commande_id', $commandeId)->get();
-            
-            // Récupérer la commande pour obtenir le fournisseur
-            $commande = Commande::find($commandeId);
-            $fournisseur = $commande ? $commande->fournisseur : null; // Assurez-vous que la relation est correctement définie
         } else {
             $factures = Facture::all(); // Affiche toutes les factures si aucune commande n'est sélectionnée
-            $fournisseur = null;
         }
 
-        return view('factures.index', compact('factures', 'fournisseur'));
+        return view('factures.index', compact('factures'));
     }
 
     public function create()
     {
-        $fournisseurs = Fournisseur::all(); // Récupérer tous les fournisseurs
-        return view('factures.create', compact('fournisseurs'));
+        return view('factures.create');
     }
 
     public function store(Request $request)
@@ -116,8 +110,10 @@ class FactureController extends Controller
     }
     public function show($id)
     {
+        // Récupérer la facture par ID
         $facture = Facture::findOrFail($id);
 
+<<<<<<< HEAD
         // Récupérer la commande associée à la facture pour obtenir le fournisseur
         $commande = $facture->commande;
         $fournisseur = $commande ? $commande->fournisseur : null;
@@ -127,4 +123,11 @@ class FactureController extends Controller
 
 
 
+=======
+        // Retourner la vue avec les détails de la facture
+        return view('factures.show', compact('facture'));
+    }
+
+
+>>>>>>> 8ce03b3 (la modifiction sur  commande et facture)
 }

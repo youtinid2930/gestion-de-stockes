@@ -20,17 +20,9 @@ class Facture extends Model
         'date_facture' => 'datetime',  // Convertir date_facture en objet Carbon
     ];
 
-    public function fournisseur()
+    public function commande()
     {
-        return $this->belongsTo(Fournisseur::class, 'fournisseur_id'); // Assurez-vous que 'fournisseur_id' est le nom correct de la colonne
+        return $this->belongsTo(Commande::class);
     }
-    
-public function commande()
-{
-    return $this->belongsTo(Commande::class, 'commande_id');
-}
-
-
-
 
 }

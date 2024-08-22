@@ -23,20 +23,13 @@
                         <td>{{ number_format($facture->montant_total, 2) }} DH</td>
                     </tr>
                     <tr>
+                        <th>Client</th>
+                        <td>{{ $facture->client }}</td>
+                    </tr>
+                    <tr>
                         <th>Description</th>
                         <td>{{ $facture->description }}</td>
                     </tr>
-                    @if ($fournisseur)
-                        <tr>
-                            <th>Fournisseur</th>
-                            <td>{{ $fournisseur->name }}</td>
-                        </tr>
-                    @else
-                        <tr>
-                            <th>Fournisseur</th>
-                            <td>Non disponible</td>
-                        </tr>
-                    @endif
                 </tbody>
             </table>
 
