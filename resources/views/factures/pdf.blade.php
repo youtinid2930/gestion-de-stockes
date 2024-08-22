@@ -50,8 +50,8 @@
                 <td>{{ number_format($facture->montant_total, 2) }} DH</td>
             </tr>
             <tr>
-                <th>Client</th>
-                <td>{{ $facture->client }}</td>
+                <th>Fournisseur</th>
+                <td>{{ $facture->commande->fournisseur->name }}</td> <!-- Assurez-vous que la relation est définie correctement -->
             </tr>
             <tr>
                 <th>Description</th>
