@@ -14,10 +14,10 @@
                 </div>
             @endif
 
-            <!-- Affichage du terme de recherche ou de la commande (si applicable) -->
-            @if(request()->has('commande_id'))
-                <div class="alert alert-info">
-                    Factures pour la commande : <strong>{{ request('commande_id') }}</strong>
+            @if ($fournisseur)
+                <div class="fournisseur-info">
+                    <h3>Fournisseur : {{ $fournisseur->name }}</h3>
+                    <!-- Affichez d'autres détails du fournisseur si nécessaire -->
                 </div>
             @endif
 
@@ -39,7 +39,6 @@
                             <td>{{ number_format($facture->montant_total, 2) }} DH</td>
                             <td>{{ $facture->description }}</td>
                             <td>
-<<<<<<< HEAD
                                 <a href="{{ route('factures.edit', $facture->id) }}" data-toggle="tooltip" title="Mettre à jour la facture">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -48,29 +47,19 @@
                                 </a>
                                 <a href="{{ route('factures.show', $facture->id) }}" data-toggle="tooltip" title="Voir la facture">
                                     <i class="fas fa-eye"></i>
-=======
-                                <a href="{{ route('factures.edit', $facture->id) }}" ><i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la facture"></i></a>
-                                <a href="{{ route('factures.print', $facture->id) }}"><i class="fas fa-receipt" data-toggle="tooltip" title="Imprimer la facture"></i></a>
-                                <a href="{{ route('factures.show', $facture->id) }}">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
->>>>>>> 8ce03b3 (la modifiction sur  commande et facture)
                                 </a>
                                 <form action="{{ route('factures.destroy', $facture->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-<<<<<<< HEAD
                                     <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?');" class="delete-button">
                                         <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la facture"></i>
                                     </button>
-=======
-                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette facture ?');" class="delete-button"><i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la facture"></i></button>
->>>>>>> 8ce03b3 (la modifiction sur  commande et facture)
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">Aucune facture trouvée pour cette commande.</td>
+                            <td colspan="6" class="text-center">Aucune facture trouvée.</td>
                         </tr>
                     @endforelse
                 </tbody>

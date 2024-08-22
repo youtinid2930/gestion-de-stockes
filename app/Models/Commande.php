@@ -47,9 +47,4 @@ class Commande extends Model
         return $this->hasMany(StockMovement::class);
     }
 
-    public function bonDeLivraisonDetails()
-    {
-        return $this->hasMany(BonDeLivraisonDetail::class);
-    }
-
 }
