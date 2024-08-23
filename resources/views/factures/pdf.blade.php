@@ -51,7 +51,13 @@
             </tr>
             <tr>
                 <th>Fournisseur</th>
-                <td>{{ $facture->commande->fournisseur->name }}</td> <!-- Assurez-vous que la relation est définie correctement -->
+                <td>
+                    @if($facture->commande && $facture->commande->fournisseur)
+                        {{ $facture->commande->fournisseur->name }}
+                    @else
+                        Non disponible
+                    @endif
+                </td>
             </tr>
             <tr>
                 <th>Description</th>

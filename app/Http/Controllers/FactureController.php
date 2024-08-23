@@ -40,22 +40,20 @@ class FactureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'numero_facture' => 'required|unique:factures,numero_facture',
+            'numero_facture' => 'required|string|max:255',
             'date_facture' => 'required|date',
             'montant_total' => 'required|numeric',
-            'client' => 'required|string|max:255',
+            'fournisseur_id' => 'required|exists:fournisseurs,id',  // Assurez-vous que cette règle correspond à votre table
+            'description' => 'nullable|string',
         ]);
 
-        Facture::create([
-            'numero_facture' => $request->numero_facture,
-            'date_facture' => $request->date_facture,
-            'montant_total' => $request->montant_total,
-            'client' => $request->client,
-            'description' => $request->description,
-        ]);
+        // Création de la facture
+        Facture::create($request->all());
 
         return redirect()->route('factures.index')->with('success', 'Facture créée avec succès.');
     }
+
+        
     public function destroy($id)
     {
         $facture = Facture::find($id);
@@ -71,10 +69,12 @@ class FactureController extends Controller
         $facture = Facture::find($id);
 
         if ($facture) {
-            return view('factures.edit', compact('facture'));
+            $fournisseurs = Fournisseur::all(); // Récupérer tous les fournisseurs
+            return view('factures.edit', compact('facture', 'fournisseurs'));
         }
         return redirect()->route('factures.index')->with('error', 'Facture non trouvée.');
     }
+
 
     public function update(Request $request, $id)
     {
@@ -82,7 +82,7 @@ class FactureController extends Controller
             'numero_facture' => 'required|string|max:255',
             'date_facture' => 'required|date',
             'montant_total' => 'required|numeric',
-            'client' => 'required|string|max:255',
+            'fournisseur' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
 
@@ -93,7 +93,7 @@ class FactureController extends Controller
                 'numero_facture' => $request->input('numero_facture'),
                 'date_facture' => $request->input('date_facture'),
                 'montant_total' => $request->input('montant_total'),
-                'client' => $request->input('client'),
+                'fournisseur' => $request->input('fournisseur'),
                 'description' => $request->input('description'),
             ]);
 

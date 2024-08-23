@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Demande;
 use App\Models\Article;
 use App\Models\Depot;
@@ -27,6 +28,7 @@ class DemandeController extends Controller
             return view('demandes.index',compact('demandesRecus'));
         }
     }
+
     
     public function create()
     {

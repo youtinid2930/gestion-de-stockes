@@ -34,7 +34,7 @@
 
             <div class="form-group">
                 <label for="montant_total">Montant Total (DH)</label>
-                <input type="number" name="montant_total" id="montant_total" class="form-control" step="0.01" value="{{ old('montant_total') }}" required>
+                <input type="number" name="montant_total" id="montant_total" class="form-control" step="1" value="{{ old('montant_total') }}" required>
             </div>
 
             <div class="form-group">
@@ -54,7 +54,7 @@
                 <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
             </div>
 
-            <input type="submit" text="Créer" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">Enregister</button>
             <a href="{{ route('factures.index') }}" class="btn btn-secondary">Annuler</a>
         </form>
         </div>

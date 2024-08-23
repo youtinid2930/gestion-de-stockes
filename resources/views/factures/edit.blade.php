@@ -41,8 +41,15 @@
             </div>
 
             <div class="form-group">
-                <label for="client">Client</label>
-                <input type="text" id="client" name="client" class="form-control" value="{{ old('client', $facture->client) }}" required>
+                <label for="fournisseur_id">Fournisseur</label>
+                <select name="fournisseur_id" id="fournisseur_id" class="form-control" required>
+                    <option value="">Sélectionner un Fournisseur</option>
+                    @foreach($fournisseurs as $fournisseur)
+                        <option value="{{ $fournisseur->id }}" {{ old('fournisseur_id', $facture->fournisseur_id) == $fournisseur->id ? 'selected' : '' }}>
+                            {{ $fournisseur->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">
@@ -54,7 +61,7 @@
             <a href="{{ route('factures.index') }}" class="btn btn-secondary">Retour à la liste</a>
         </form>
     
-</div>
-</div>
+        </div>
+    </div>
 </div>
 @endsection
