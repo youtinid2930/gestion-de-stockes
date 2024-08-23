@@ -10,22 +10,17 @@ class BonDeLivraison extends Model
     use HasFactory;
 
     protected $fillable = [
-        'numero', 'date_livraison', 'adresse_livraison', 'commande_id', 'demande_id', 'magasinier_id'
+        'numero', 'date_livraison','status','user_id'
     ];
 
-    public function demande()
-    {
-        return $this->belongsTo(Demande::class, 'demande_id');
-    }
-
-    public function magasinier()
-    {
-        return $this->belongsTo(User::class, 'magasinier_id');
-    }
 
     public function bonDeLivraisonDetails()
     {
         return $this->hasMany(BonDeLivraisonDetail::class, 'bon_de_livraison_id');
     }
     
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

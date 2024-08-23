@@ -10,7 +10,7 @@ class BonDeLivraisonDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'bon_de_livraison_id', 'article_id', 'quantity', 'unit_price'
+        'bon_de_livraison_id', 'commande_id', 'demande_id', 'unit_price'
     ];
 
     public function bonDeLivraison()
@@ -18,9 +18,14 @@ class BonDeLivraisonDetail extends Model
         return $this->belongsTo(BonDeLivraison::class);
     }
 
-    public function article()
+    public function demande()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Demande::class, 'demande_id');
+    }
+
+    public function commande()
+    {
+        return $this->belongsTo(Commande::class); 
     }
 }
 

@@ -28,9 +28,9 @@ class Demande extends Model
         return $this->hasMany(DemandeDetail::class);
     }
 
-    public function bonDeLivraisons()
+    public function bonDeLivraisonDetails()
     {
-        return $this->hasMany(BonDeLivraison::class);
+        return $this->hasMany(BonDeLivraisonDetail::class);
     }
 
     public function stockMovements()
