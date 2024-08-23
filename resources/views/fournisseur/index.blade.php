@@ -23,15 +23,15 @@
                         <td>{{ $value->address }}</td>
                         <td>{{ $value->email }}</td>
                         <td>
-                        <a href="{{ route('fournisseur.edit', $value->id) }}"><i class='bx bx-edit-alt'></i></a>
+                        <a href="{{ route('fournisseur.edit', $value->id) }}" class="btn btn-icon" data-toggle="tooltip" title="mettre a jour le fournisseur"><i class='bx bx-edit-alt'></i></a>
                         <form action="{{ route('fournisseur.destroy', $value->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('est ce que tu es sur vous voulez supprimer cet fournisseur ?');" class="delete-button">
+                            <button type="submit" onclick="return confirm('est ce que tu es sur vous voulez supprimer cet fournisseur ?');" class="delete-button btn btn-icon">
                                 <i class='bx bx-trash'></i>
                             </button>
                         </form>
-                        <button onclick="window.location.href='{{ route('fournisseur.show', $value->id) }}'">Voir plus</button>
+                        <a href="{{ route('fournisseur.show', $value->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur le fournisseur">&#9660;</a>
                         </td>
                     </tr>
                 @endforeach

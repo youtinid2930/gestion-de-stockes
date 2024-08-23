@@ -23,7 +23,7 @@
                 <tbody>
                     @foreach ($commandes as $commande)
                         <tr>
-                            <td>{{ $commande->fournisseur->name }}</td>
+                            <td>{{ $commande->fournisseur->name }} {{ $commande->fournisseur->last_name }}</td>
                             <td>
                                 <ul>
                                     @foreach ($commande->commandeDetails as $detail)
@@ -36,22 +36,23 @@
                             <td> {{ $commande->status }} </td>
                             <td>{{ optional($commande->updated_at)->format('d/m/Y H:i:s') ?? 'Date non disponible' }}</td>
                             <td>
-                                <a href="{{ route('commande.edit', $commande->id) }}">
+                                <a href="{{ route('commande.edit', $commande->id) }}" class="btn btn-icon">
                                     <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                 </a>
                                 <form action="{{ route('commande.destroy', $commande->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="delete-button">
+                                    <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');" class="delete-button btn btn-icon">
                                     <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                     </button>
                                 </form>
-                                <a href="{{ route('commande.edit', $commande->id) }}">
+                                <a href="{{ route('commande.edit', $commande->id) }}" class="btn btn-icon">
                                     <i class="fas fa-check" data-toggle="tooltip" title="Valider la commande"></i>
                                 </a>         
-                                <a href="{{ route('factures.index', ['commande_id' => $commande->id]) }}">
+                                <a href="{{ route('factures.index', ['commande_id' => $commande->id]) }}" class="btn btn-icon">
                                     <i class="fas fa-file-invoice" aria-hidden="true" data-toggle="tooltip" title="Facture de commande"></i>
                                 </a>
+                                <a href="{{ route('commande.show', $commande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la commande">&#9660;</a>
                             </td>
 
                         </tr>
@@ -61,9 +62,9 @@
             @else
                 <div>Aucune commande trouvée</div>
             @endif
-        </div>
-        <div style="background-color: #03be1c;margin-left: 5%;margin-right: 73%;border-radius: 5%;padding: 1%;">
-            <a href="{{ route('commande.create') }}" style="color: white">Créer une commande <i class="bx bx-plus"></i></a>
+            
+            <a href="{{ route('commande.create') }}" class="btn" style="margin-right: 80%; margin-top: 1%;">Créer une commande</a>
+            
         </div>
     </div>
 </div>

@@ -16,18 +16,18 @@
                 </a>
                 <div class="float-right">
                     @if(auth()->user()->can('gerer categorie'))
-                    <a href="{{ route('categories.edit', $category->id) }}">
+                    <a href="{{ route('categories.edit', $category->id) }}"  data-toggle="tooltip" title="Mettre a jour la categorie">
                         <i class="bx bx-edit-alt"></i>
                     </a>
                     @endif
-                    <a href="{{ route('category.characteristics', $category->id) }}">
+                    <a href="{{ route('category.characteristics', $category->id) }}"  data-toggle="tooltip" title="Gerer les caracteristique de la categorie">
                         <i class="bx bx-cog"></i>
                     </a>
                     @if(auth()->user()->can('gerer categorie'))
-                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline">
+                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline" data-toggle="tooltip" title="Supprimer la categorie">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this category?');" class="delete-button">
+                        <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer la categorie?');" class="delete-button">
                             <i class='bx bx-trash'></i>
                         </button>
                     </form>

@@ -33,23 +33,23 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('utilisateur.edit', $user->id) }}"><i class='bx bx-edit-alt'></i></a>
-                            <form action="{{ route('utilisateur.destroy', $user->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('utilisateur.edit', $user->id) }}" class="btn btn-icon" data-toggle="tooltip" title="mettre a jour l'utilisateur"><i class='bx bx-edit-alt'></i></a>
+                            <form action="{{ route('utilisateur.destroy', $user->id) }}" method="POST" style="display:inline;" data-toggle="tooltip" title="Supprimer l'utilisateur">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" class="delete-button">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" class="delete-button btn btn-icon">
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </form>
-                            <button onclick="window.location.href='{{ route('utilisateur.show', $user->id) }}'">Voir plus</button>
+                            <a href="{{ route('utilisateur.show', $user->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur l'utilisateur">&#9660;</button>
                         </td>
                     </tr>
                 @endforeach
             </table>
+            <a href="{{ route('utilisateur.create') }}" class="btn" style="margin-right: 80%; margin-top: 1%;">Ajouter Utilisateur</a>
         </div>
-        <div class="btn">
-            <a href="{{ route('utilisateur.create') }}">Ajouter Utilisateur <i class="bx bx-plus"></i></a>
-        </div>
+        
+        
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif

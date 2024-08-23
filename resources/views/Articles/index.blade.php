@@ -23,24 +23,24 @@
                         <td>{{ $article->unit_price }}</td>
                         <td>
                             @if(auth()->user()->hasRole('admin'))
-                            <a href="{{ route('articles.edit', $article->id) }}">
+                            <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-icon" data-toggle="tooltip" title="mettre a jour l'article">
                                 <i class='bx bx-edit-alt'></i>
                             </a>
-                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display:inline;" data-toggle="tooltip" title="Supprimer l'article">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('vous etes sure de supprimer cette Article?');" class="delete-button">
+                                <button type="submit" onclick="return confirm('vous etes sure de supprimer cette Article?');" class="delete-button btn btn-icon">
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </form>
                             @endif
                             @if(auth()->user()->hasRole('magasinier'))
                                 @if($article->total_quantity == 0)
-                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" title="Ajouter au stock">
+                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" data-toggle="tooltip" title="Ajouter au stock">
                                     <i class='bx bx-plus'></i>
                                 </a>
                                 @else
-                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" title="Mettre à jour">
+                                <a href="{{ route('articles.add', ['id' => $article->id]) }}" class="btn btn-icon" data-toggle="tooltip" title="Mettre à jour">
                                     <i class='bx bx-edit-alt'></i>
                                 </a>
                                 <form action="{{ route('articles.cancelStock', ['id' => $article->id]) }}" method="POST" style="display:inline;">
@@ -52,7 +52,7 @@
                                 </form>
                                 @endif
                             @endif
-                            <button onclick="window.location.href='{{ route('articles.show', $article->id) }}'" class="btn">Voir plus</button>
+                            <a href="{{ route('articles.show', $article->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur l'article">&#9660;</a>
                         </td>
                     </tr>
                 @endforeach
