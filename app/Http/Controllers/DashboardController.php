@@ -126,6 +126,25 @@ class DashboardController extends Controller
                 'derniereLivraison' => $derniereLivraison,
             ];
         }
+        else {
+            $demandesEnCours = Demande::where('gestionnaire_id', $user->id)
+                ->where('status', '!=', 'Complétée')
+                ->count();
+            $demandesTerminees = Demande::where('gestionnaire_id', $user->id)
+                ->where('status', 'Complétée')
+                ->count();
+            $mesDernieresDemandes = Demande::with('magasinier', 'demandeDetails.article')
+                ->whereNull('admin_id')
+                ->orderBy('updated_at', 'desc')
+                ->take(2)
+                ->get();
+            
+            $data = [
+                'demandesEnCours' => $demandesEnCours,
+                'demandesTerminees' => $demandesTerminees,
+                'mesDernieresDemandes' => $mesDernieresDemandes,
+            ];
+        }
 
         return view('Dashboard.index', compact('data'));
     }

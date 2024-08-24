@@ -83,7 +83,7 @@ Route::post('/bons_de_livraison', [BonDeLivraisonController::class, 'store'])->n
 Route::get('/bons_de_livraison/{id}/edit', [BonDeLivraisonController::class, 'edit'])->name('bons_de_livraison.edit');
 Route::put('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'update'])->name('bons_de_livraison.update');
 Route::delete('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'destroy'])->name('bons_de_livraison.destroy');
-
+Route::get('/get-demandes/{deliveryAddress}', [BonDeLivraisonController::class, 'getDemandes'])->name('get.demandes');
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
@@ -105,13 +105,14 @@ Route::get('/demandes/{id}', [DemandeController::class, 'show'])->name('demande.
 
 
 
+
 Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
 Route::put('articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
 
 
-Route::resource('livraison', BonDeLivraisonController::class)->parameters(['livraison' => 'id'])->middleware('auth');
+
 
 
 

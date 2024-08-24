@@ -10,9 +10,10 @@ class DemandeDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'demande_id', 'article_id'
+        'demande_id', 'article_id','quantity','quantity_livree','quantity_restant'
     ];
-
+    public $timestamps = true;
+    
     public function demande()
     {
         return $this->belongsTo(Demande::class);

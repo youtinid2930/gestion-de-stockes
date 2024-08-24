@@ -163,6 +163,12 @@
     </div>
     @elseif(auth()->user()->hasRole('magasinier'))
             <div style="display: flex; flex-direction: row; margin-right: 6%;">
+            <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Articles en stock</div>
+                        <div class="number">{{ $data['articlesInStock'] }}</div>
+                    </div>
+                </div>
                 <div class="box">
                     <div class="right-side">
                         <div class="box-topic">Demandes en cours</div>
@@ -171,13 +177,32 @@
                 </div>
                 <div class="box">
                     <div class="right-side">
-                        <div class="box-topic">Articles en stock</div>
-                        <div class="number">{{ $data['articlesInStock'] }}</div>
+                        <div class="box-topic">Demandes terminées</div>
+                        <div class="number">{{ $data['demandesTerminees'] }}</div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Livraisons en cours</div>
+                        <div class="number">{{ $data['livraisonsEnCours']->count() }}</div>
+                    </div>
+                </div>
+                
+            </div>
+            <div style="display: flex; flex-direction: row; margin-right: 6%;">
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Livraisons livrées</div>
+                        <div class="number">{{ $data['livraisonsLivrees']->count() }}</div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Livraisons terminées</div>
+                        <div class="number">{{ $data['livraisonsTerminees']->count() }}</div>
                     </div>
                 </div>
             </div>
-        </div>
-
         <div class="sales-boxes">
             <div style="display: flex; flex-direction: column; margin-right: 6%;">
                 <div class="recent-sales box" style="margin-bottom: 4%;">
@@ -274,6 +299,73 @@
                 
             </div>
         </div>
+    @else
+           <div style="display: flex; flex-direction: row; margin-right: 6%;">
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Demandes en cours</div>
+                        <div class="number">{{ $data['demandesEnCours'] }}</div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Demandes terminées</div>
+                        <div class="number">{{ $data['demandesTerminees'] }}</div>
+                    </div>
+                </div>
+           </div>
+            <div class="sales-boxes">
+            <div style="display: flex; flex-direction: column; margin-right: 6%;">
+                <div class="recent-sales box" style="margin-bottom: 4%;">
+                    <div class="title">Mes dernieres demandes</div>
+                    <table>
+                        <tr>
+                            <th>Administrateur</th>
+                            <th>Articles</th>
+                            <th>Quantité Totale</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                        @forelse ($data['mesDernieresDemandes'] as $demande)
+                        <tr>
+                            <td>{{ $demande->magasinier->name }} {{ $demande->magasinier->last_name }}</td>
+                            <td>
+                                <ul>
+                                    @foreach ($demande->demandeDetails as $detail)
+                                        <li>{{ $detail->article->name }} ({{ $detail->quantity }} unités)</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>{{ $demande->demandeDetails->sum('quantity') }}</td>
+                            <td>{{ optional($demande->updated_at)->format('d M Y') }}</td>
+                            <td>
+                            @if($demande->status == "En attente")
+                                <a href="{{ route('demande.edit', $demande->id) }}" class="btn btn-icon"><i class='bx bx-edit-alt' data-toggle="tooltip" title="mettre a jour la demande"></i></a>
+                                <form action="{{ route('demande.destroy', $demande->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('vous êtes sûr de supprimer cette demande?');" class="delete-button">
+                                    <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la demande"></i>
+                                </button>
+                                </form>
+                            @elseif($demande->status == "Livrée")
+                                <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la demande"></i></a>
+                            @endif
+                                <a href="{{ route('demande.show', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la demande">&#9660;</a>
+                            </td>
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">Aucune demande récente</td>
+                            </tr>
+                        @endforelse
+                    </table>
+                    <div class="button">
+                        <a href="{{ route('demande.index') }}" class="btn btn-primary">Voir Tout</a>
+                    </div>
+                </div>
+            </div>
+            </div>
     @endif
     </div>
 </div>

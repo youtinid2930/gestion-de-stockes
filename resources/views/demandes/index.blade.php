@@ -6,7 +6,7 @@
 <div class="home-content">
     <div class="overview-boxes">
         @if(auth()->user()->hasRole('magasinier') || auth()->user()->hasRole('gestionnaire'))
-        <div class="box" style="margin-right: 70%;"><h3>Mes commandes</h3></div>
+        <div class="box" style="margin-right: 70%;"><h3>Mes demandes</h3></div>
         <div class="box">
             @if($Medemandes->isNotEmpty())
             <table>

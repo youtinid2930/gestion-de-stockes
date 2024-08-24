@@ -110,26 +110,34 @@ class DemandeController extends Controller
 
     public function edit($id)
     {
-        $demande = Demande::findOrFail($id); // Fetch the demande by ID
-        return view('demandes.edit', compact('demande')); // Pass the demande to the view
+        $demande = Demande::with('demandeDetails.article')->findOrFail($id);
+        $articles = Article::all(); // Assuming you want to show all available articles for editing
+        return view('demandes.edit', compact('demande', 'articles'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'quantity' => 'required',
-            'notes' => 'nullable',
-            'status' => 'nullable',
-            'delivery_address' => 'nullable',
+            'delivery_address' => 'required|string|max:255',
+            'details.*.article_id' => 'required|exists:articles,id',
+            'details.*.quantity' => 'required|integer|min:1',
         ]);
-
+    
         $demande = Demande::findOrFail($id);
-        $demande->update($request->all());
-
-        return redirect()->route('demande.showDemandes')->with('message', [
-            'type' => 'success',
-            'text' => 'Demande mise à jour avec succès.'
+        $demande->update([
+            'delivery_address' => $request->input('delivery_address'),
         ]);
+    
+        // Update demande details
+        foreach ($request->input('details') as $detailData) {
+            $demandeDetail = DemandeDetail::findOrFail($detailData['id']);
+            $demandeDetail->update([
+                'article_id' => $detailData['article_id'],
+                'quantity' => $detailData['quantity'],
+            ]);
+        }
+    
+        return redirect()->route('demande.index')->with('success', 'Demande mise à jour avec succès');
     }
     public function Table()
     {

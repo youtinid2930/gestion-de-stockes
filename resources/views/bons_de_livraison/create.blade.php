@@ -6,36 +6,41 @@
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
-            <h2>Créer Bon de Livraison</h2>
-            <form action="{{ route('bons_de_livraison.store') }}" method="POST">
+            <h3>Créer Bon de Livraison</h3>
+            <form action="{{route('bons_de_livraison.store')}}" method="POST">
                 @csrf
-                <label for="numero">Numéro</label>
-                <input type="text" name="numero" id="numero" required>
 
-                <label for="date_livraison">Date de Livraison</label>
-                <input type="date" name="date_livraison" id="date_livraison" required>
+                <input type="hidden" name="date_livraison" value="{{ now()->format('Y-m-d') }}">
 
-                <label for="adresse_livraison">Adresse de Livraison</label>
-                <input type="text" name="adresse_livraison" id="adresse_livraison" required>
-
-                <label for="demande_id">demande</label>
+                <label for="demande_id">Choisir le destinataire</label>
                 <select name="demande_id" id="demande_id" required>
+                    <option value="">-- Sélectionner --</option>
+                    @if(auth()->user()->hasRole('admin'))
                     @foreach($demandes as $demande)
-                        @foreach($demande->demandeDetails as $detail)
-                            <option value="{{ $demande->id }}">
-                                {{ $detail->article->name }}
-                            </option>
-                        @endforeach
+                        <option value="{{ $demande->delivery_address }}">
+                            {{ $demande->delivery_address}}
+                        </option>
                     @endforeach
+                    @else
+                    @foreach($demandes as $demande)
+                        <option value="{{ $demande->delivery_address }}">
+                            {{ $demande->delivery_address }}
+                        </option>
+                    @endforeach
+                    @endif
+
                 </select>
+                <div id="demandes-table">
+                    
+                </div>
 
-
-                <button type="submit" class="btn btn-primary" style="width: 200px;height:50px;margin-top:20px; padding: 10px;">Valider</button>
+                <button type="submit" class="btn">Valider</button>
                 @if(session('message'))
                     <div class="alert {{ session('message.type') }}">
                         {{ session('message.text') }}
                     </div>
                 @endif
+
                 @if ($errors->any())
                     <div class="alert alert-danger">
                     <ul>
@@ -46,8 +51,29 @@
                     </div>
                 @endif
             </form>
-
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#demande_id').on('change', function() {
+            let deliveryAddress = $(this).val();
+            if (deliveryAddress) {
+                $.ajax({
+                    url: `/get-demandes/${deliveryAddress}`,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#demandes-table').html(data);
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else {
+                $('#demandes-table').html('');
+            }
+        });
+    });
+</script>
 @endsection

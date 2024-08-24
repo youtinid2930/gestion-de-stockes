@@ -113,8 +113,6 @@
                 </select>
                 <label for="quantite">Quantité</label>
                 <input type="number" name="articles[${articleCount}][quantite]" class="article-quantity" data-index="${articleCount}" placeholder="Quantité" />
-                <label for="prix">Prix</label>
-                <input type="number" name="articles[${articleCount}][prix]" class="article-price" data-index="${articleCount}" placeholder="Prix" readonly />
 
                 <button type="button" class="remove-article" style="border-radius: 6px; margin-top: 2%; margin-bottom: 2%;">Supprimer</button>
             </div>

@@ -1,41 +1,53 @@
 @extends('layouts.app')
 
-@section('title', 'Demande')
+@section('title', 'Modifier Demande')
 
 @section('content')
 <div class="home-content">
-    <div class="overview-boxes">
-        <div class="box">
-        <form action="{{ !empty($demande) ? route('demande.update', $demande->id) : route('demande.store') }}" method="POST">
-                @csrf
-                @if (!empty($demande))
-                    @method('PUT')
-                @endif
+<div class="overview-boxes">
+    <div class="box">
+    <h2>Modifier Demande #{{ $demande->numero }}</h2>
+    <form action="{{ route('demande.update', $demande->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-                <label for="quantity">quantity</label>
-                <input value="{{ old('quantity', $demande->quantity ?? '') }}" type="text" name="quantity" id="quantity" placeholder="Veuillez saisir le quantity">
-                
-                <input value="{{ old('id', $demande->id ?? '') }}" type="hidden" name="id" id="id">
-                
-                <label for="notes">Notes</label>
-                <input value="{{ old('notes', $demande->notes ?? '') }}" type="text" name="notes" id="notes" placeholder="Veuillez saisir le Notes">
-                
-                <label for="status">status</label>
-                <input value="{{ old('status', $demande->status ?? '') }}" type="text" name="status" id="status" placeholder="Veuillez saisir le status">
-                
-                <label for="delivery_address">delivery address</label>
-                <input value="{{ old('delivery_address', $demande->delivery_address ?? '') }}" type="text" name="delivery_address" id="delivery_address" placeholder="Veuillez saisir l'delivery_address">
-
-                <br><br><br>
-                <button type="submit">Valider</button>
-
-                @if(session('message'))
-                    <div class="alert {{ session('message.type') }}">
-                        {{ session('message.text') }}
-                    </div>
-                @endif
-            </form>
+        <div class="form-group">
+            <label for="delivery_address">Adresse de livraison</label>
+            <input type="text" name="delivery_address" id="delivery_address" class="form-control" value="{{ $demande->delivery_address }}" required>
         </div>
-    </div>
+
+        <h4>Articles</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Article</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($demande->demandeDetails as $detail)
+                    <tr>
+                        <td>
+                            <select name="details[{{ $loop->index }}][article_id]" class="form-control" required>
+                                @foreach($articles as $article)
+                                    <option value="{{ $article->id }}" {{ $article->id == $detail->article_id ? 'selected' : '' }}>
+                                        {{ $article->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="details[{{ $loop->index }}][quantity]" class="form-control" value="{{ $detail->quantity }}" required>
+                            <input type="hidden" name="details[{{ $loop->index }}][id]" value="{{ $detail->id }}">
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    </form>
+</div>
+</div>
 </div>
 @endsection
