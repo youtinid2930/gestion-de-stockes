@@ -11,11 +11,6 @@
         @csrf
         @method('PUT')
 
-        <div class="form-group">
-            <label for="delivery_address">Adresse de livraison</label>
-            <input type="text" name="delivery_address" id="delivery_address" class="form-control" value="{{ $demande->delivery_address }}" required>
-        </div>
-
         <h4>Articles</h4>
         <table class="table">
             <thead>

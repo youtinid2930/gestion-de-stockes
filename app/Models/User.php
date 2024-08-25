@@ -87,4 +87,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(BonDeLivraison::class);
     }
+
+    public function depot()
+    {
+        return $this->belongsTo(Depot::class, 'depot_id');
+    }
 }

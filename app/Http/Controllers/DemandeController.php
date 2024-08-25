@@ -9,6 +9,7 @@ use App\Models\Article;
 use App\Models\Depot;
 use App\Models\User;
 use App\Models\DemandeDetail;
+use Illuminate\Support\Facades\Auth;
 
 class DemandeController extends Controller
 {
@@ -67,6 +68,7 @@ class DemandeController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
         // Validate the incoming request
         $validatedData = $request->validate([
             'admin' => 'nullable|exists:users,id', // Only if the user is a magasinier
@@ -74,9 +76,9 @@ class DemandeController extends Controller
             'articles.*.id_article' => 'required|exists:articles,id',
             'articles.*.quantite' => 'required|integer|min:1',
             'notes' => 'nullable|string',
-            'delivery_address' => 'nullable|string|max:255',
         ]);
-
+        $users = User::with('depot')->find($user->id);
+        $delivery_address = $users->depot->adresse;
         // Create a new Demande
         $demande = new Demande();
         $demande->magasinier_id = $request->magasinier; // Assign magasinier ID
@@ -88,7 +90,7 @@ class DemandeController extends Controller
             $demande->magasinier_id = auth()->user()->id;
         }
         $demande->notes = $request->notes;
-        $demande->delivery_address = $request->delivery_address;
+        $demande->delivery_address = $delivery_address;
         $demande->save(); // Save the demande first to get its ID
 
         // Loop through the articles and save them in DemandeDetails

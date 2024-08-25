@@ -66,9 +66,6 @@
                 <label for="notes">Notes</label>
                 <textarea value="{{ old('notes', $demande->notes ?? '') }}" type="text" name="notes" id="notes" placeholder="Veuillez saisir les notes"></textarea>
 
-                
-                <label for="delivery_address">Adresse de livraison</label>
-                <input value="{{ old('delivery_address', $demande->delivery_address ?? '') }}" type="text" name="delivery_address" id="delivery_address" placeholder="Veuillez saisir l'adresse de livraison">
 
                 <br><br><br>
                 <button type="submit" class="btn">Valider</button>
@@ -83,64 +80,78 @@
     </div>
 </div>
 <script>
-    document.getElementById('magasin').addEventListener('change', function() {
-        const magasinId = this.value;
-        const magasinierSelect = document.getElementById('magasinier');
+    document.addEventListener('DOMContentLoaded', function() {
+    const magasinElement = document.getElementById('magasin');
+    const addArticleElement = document.getElementById('add-article');
+    const articlesElement = document.getElementById('articles');
 
-        if (magasinId) {
-            fetch('{{ route('demande.getMagasiniers') }}?magasin_id=' + magasinId)
-                .then(response => response.json())
-                .then(data => {
-                    magasinierSelect.innerHTML = '<option value="">--Choisir le magasinier--</option>';
-                    data.forEach(magasinier => {
-                        magasinierSelect.innerHTML += `<option value="${magasinier.id}">${magasinier.name} ${magasinier.last_name}</option>`;
+    if (magasinElement) {
+        magasinElement.addEventListener('change', function() {
+            const magasinId = this.value;
+            const magasinierSelect = document.getElementById('magasinier');
+
+            if (magasinId) {
+                fetch('{{ route('demande.getMagasiniers') }}?magasin_id=' + magasinId)
+                    .then(response => response.json())
+                    .then(data => {
+                        magasinierSelect.innerHTML = '<option value="">--Choisir le magasinier--</option>';
+                        data.forEach(magasinier => {
+                            magasinierSelect.innerHTML += `<option value="${magasinier.id}">${magasinier.name} ${magasinier.last_name}</option>`;
+                        });
                     });
-                });
-        } else {
-            magasinierSelect.innerHTML = '<option value="">--Choisir le magasinier--</option>';
-        }
-    });
-    document.getElementById('add-article').addEventListener('click', function() {
-        const articlesDiv = document.getElementById('articles');
-        const articleCount = articlesDiv.children.length;
-        const newArticleGroup = `
-            <div class="article-group">
-                <select name="articles[${articleCount}][id_article]" class="article-select" data-index="${articleCount}">
-                    <option value="">Choisir un article</option>
-                    @foreach ($allArticles as $value)
-                        <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}">{{ $value->name }}</option>
-                    @endforeach
-                </select>
-                <label for="quantite">Quantité</label>
-                <input type="number" name="articles[${articleCount}][quantite]" class="article-quantity" data-index="${articleCount}" placeholder="Quantité" />
+            } else {
+                magasinierSelect.innerHTML = '<option value="">--Choisir le magasinier--</option>';
+            }
+        });
+    }
 
-                <button type="button" class="remove-article" style="border-radius: 6px; margin-top: 2%; margin-bottom: 2%;">Supprimer</button>
-            </div>
-        `;
-        articlesDiv.insertAdjacentHTML('beforeend', newArticleGroup);
-    });
+    if (addArticleElement) {
+        addArticleElement.addEventListener('click', function() {
+            const articlesDiv = articlesElement;
+            const articleCount = articlesDiv.children.length;
+            const newArticleGroup = `
+                <div class="article-group">
+                    <select name="articles[${articleCount}][id_article]" class="article-select" data-index="${articleCount}">
+                        <option value="">Choisir un article</option>
+                        @foreach ($allArticles as $value)
+                            <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}">{{ $value->name }}</option>
+                        @endforeach
+                    </select>
+                    <label for="quantite">Quantité</label>
+                    <input type="number" name="articles[${articleCount}][quantite]" class="article-quantity" data-index="${articleCount}" placeholder="Quantité" />
 
-    document.getElementById('articles').addEventListener('change', function(e) {
-        if (e.target.classList.contains('article-select')) {
-            const index = e.target.getAttribute('data-index');
-            const price = e.target.options[e.target.selectedIndex].getAttribute('data-price');
-            const quantity = document.querySelector(`.article-quantity[data-index="${index}"]`).value || 1;
-            document.querySelector(`.article-price[data-index="${index}"]`).value = price * quantity;
-        }
-    });
+                    <button type="button" class="remove-article" style="border-radius: 6px; margin-top: 2%; margin-bottom: 2%;">Supprimer</button>
+                </div>
+            `;
+            articlesDiv.insertAdjacentHTML('beforeend', newArticleGroup);
+        });
+    }
 
-    document.getElementById('articles').addEventListener('input', function(e) {
-        if (e.target.classList.contains('article-quantity')) {
-            const index = e.target.getAttribute('data-index');
-            const price = document.querySelector(`.article-select[data-index="${index}"]`).options[document.querySelector(`.article-select[data-index="${index}"]`).selectedIndex].getAttribute('data-price');
-            document.querySelector(`.article-price[data-index="${index}"]`).value = price * e.target.value;
-        }
-    });
+    if (articlesElement) {
+        articlesElement.addEventListener('change', function(e) {
+            if (e.target.classList.contains('article-select')) {
+                const index = e.target.getAttribute('data-index');
+                const price = e.target.options[e.target.selectedIndex].getAttribute('data-price');
+                const quantity = document.querySelector(`.article-quantity[data-index="${index}"]`).value || 1;
+                document.querySelector(`.article-price[data-index="${index}"]`).value = price * quantity;
+            }
+        });
 
-    document.getElementById('articles').addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-article')) {
-            e.target.parentElement.remove();
-        }
-    });
+        articlesElement.addEventListener('input', function(e) {
+            if (e.target.classList.contains('article-quantity')) {
+                const index = e.target.getAttribute('data-index');
+                const price = document.querySelector(`.article-select[data-index="${index}"]`).options[document.querySelector(`.article-select[data-index="${index}"]`).selectedIndex].getAttribute('data-price');
+                document.querySelector(`.article-price[data-index="${index}"]`).value = price * e.target.value;
+            }
+        });
+
+        articlesElement.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-article')) {
+                e.target.parentElement.remove();
+            }
+        });
+    }
+});
+
 </script>
 @endsection

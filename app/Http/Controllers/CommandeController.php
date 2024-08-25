@@ -6,6 +6,7 @@ use App\Models\Commande;
 use App\Models\Fournisseur;
 use App\Models\Article;
 use App\Models\CommandeDetail;
+use App\Models\BonDeLivraison;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -57,6 +58,17 @@ class CommandeController extends Controller
                 'prix' => $price,
             ]);
         }
+
+        // Automatically create a BonDeLivraison
+        $bonDeLivraison = new BonDeLivraison();
+        $bonDeLivraison->date_livraison = now(); // Current date and time
+        $bonDeLivraison->user_id = auth()->user()->id; // Current authenticated user
+        $bonDeLivraison->save();
+
+        // Create BonDeLivraisonDetails for each article in the commande
+        $bonDeLivraison->bonDeLivraisonDetails()->create([
+            'commande_id' => $commande->id,
+        ]);
 
         return redirect()->route('commande.index')->with('message', ['text' => 'Commande ajoutée avec succès', 'type' => 'success']);
     }

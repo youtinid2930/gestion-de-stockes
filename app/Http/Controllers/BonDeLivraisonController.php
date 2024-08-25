@@ -13,8 +13,54 @@ class BonDeLivraisonController extends Controller
 {
     public function index()
     {
-        $bonsDeLivraison = BonDeLivraison::with('bonDeLivraisonDetails.demande')->get();
-        return view('bons_de_livraison.index', compact('bonsDeLivraison'));
+        $user = Auth::user();
+        if($user->hasRole('admin')) {
+            // pour les commandes
+            $bonsDeLivraisonCommande = BonDeLivraison::with('bonDeLivraisonDetails.commande')
+                ->where('user_id',$user->id)
+                ->whereHas('bonDeLivraisonDetails.commande', function ($query) {
+                    $query->whereNull('demande_id');
+                })
+                ->get();
+            // pour les demandes
+            $bonsDeLivraisonDemande = BonDeLivraison::with('bonDeLivraisonDetails.demande')
+                ->where('user_id',$user->id)
+                ->whereHas('bonDeLivraisonDetails.demande', function ($query) {
+                    $query->whereNull('commande_id');
+                })
+                ->get();
+            return view('bons_de_livraison.index', compact('bonsDeLivraisonCommande', 'bonsDeLivraisonDemande'));
+        }
+        else if($user->hasRole('magasinier')) {
+            $meBonsDeLivraison = BonDeLivraison::with('bonDeLivraisonDetails.demande')
+                ->where('user_id',$user->id)
+                ->get();
+            $bonDeLivraisonrecus = BonDeLivraison::with('bonDeLivraisonDetails.demande')
+                ->whereHas('bonDeLivraisonDetails.demande', function ($query) use ($user) {
+                    $query->where('delivery_address', $user->depot->adresse);
+                })
+                ->whereHas('user', function ($query) {
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('name', 'admin');
+                    });
+                })
+                ->get();
+            return view('bons_de_livraison.index', compact('meBonsDeLivraison', 'bonDeLivraisonrecus'));
+        }
+        else {
+            $bonDeLivraisonrecus = BonDeLivraison::with('bonDeLivraisonDetails.demande')
+                ->whereHas('bonDeLivraisonDetails.demande', function ($query) use ($user) {
+                    $query->where('delivery_address', $user->depot->adresse);
+                })
+                ->whereHas('user', function ($query) {
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('name', 'magasinier');
+                    });
+                })
+                ->get();
+            return view('bons_de_livraison.index', compact('bonDeLivraisonrecus'));
+        }
+
     }
 
     public function create()
