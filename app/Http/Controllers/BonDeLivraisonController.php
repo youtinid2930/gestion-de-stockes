@@ -111,56 +111,66 @@ class BonDeLivraisonController extends Controller
    }
 
    public function store(Request $request)
-   {
-       $user = Auth::user();
-       // Validate the incoming request data
-       $validated = $request->validate([
-           'demande_id' => 'required',
-           'date_livraison' => 'required|date',
-           'demande' => 'nullable|exists:demandes,id'
-       ]);
-   
-       // Get the demande (request) based on the selected delivery address
-       $demande = Demande::where('delivery_address', $validated['demande_id'])->firstOrFail();
-   
-       // Create the BonDeLivraison (Delivery Note)
-       $bonDeLivraison = BonDeLivraison::create([
-           'date_livraison' => $validated['date_livraison'],
-           'user_id' => $user->id,
-       ]);
-   
-       // Iterate through the demande details and handle the articles
-       foreach ($demande->demandeDetails as $detail) {
-           $availableQuantity = DepotArticle::where('article_id', $detail->article_id)->sum('quantity');
-   
-           if ($availableQuantity >= $detail->quantity) {
-               // Update the depot article stock (subtract the delivered quantity)
-               DepotArticle::where('article_id', $detail->article_id)
-                   ->decrement('quantity', $detail->quantity);
-   
-               // Create a record in the bon_de_livraison_details table
-               BonDeLivraisonDetail::create([
-                   'bon_de_livraison_id' => $bonDeLivraison->id,
-                   'demande_id' => $validated['demande'],
-               ]);
-           } else {
-               // Handle the case where the requested quantity exceeds available stock
-               return back()->withErrors([
-                   'error' => "La quantité demandée pour l'article {$detail->article->name} dépasse la quantité disponible."
-               ]);
-           }
-       }
-   
-       // Update the status of the demande to indicate it has been delivered
-       $demande->status = 'Livrée';
-       $demande->save();
-   
-       // Redirect back with a success message
-       return redirect()->route('bons_de_livraison.index')->with('message', [
-           'type' => 'success',
-           'text' => 'Le bon de livraison a été créé avec succès.',
-       ]);
-   }
+{
+    $user = Auth::user();
+    // Validate the incoming request data
+    $validated = $request->validate([
+        'demande_id' => 'required',
+        'date_livraison' => 'required|date',
+        'demande' => 'nullable|exists:demandes,id'
+    ]);
+
+    // Get the demande (request) based on the selected delivery address
+    $demande = Demande::findOrFail($validated['demande_id']);
+    // Create the BonDeLivraison (Delivery Note)
+    $bonDeLivraison = BonDeLivraison::create([
+        'date_livraison' => $validated['date_livraison'],
+        'user_id' => $user->id,
+    ]);
+    // Iterate through the demande details and handle the articles
+    foreach ($demande->demandeDetails as $detail) {
+        $availableQuantity = DepotArticle::where('article_id', $detail->article_id)->sum('quantity');
+        $quantityToDeliver = min($availableQuantity, $detail->quantity);
+
+        // Handle the quantity to deliver
+        if ($quantityToDeliver > 0) {
+            // Update the depot article stock
+            DepotArticle::where('article_id', $detail->article_id)
+                ->decrement('quantity', $quantityToDeliver);
+            // Create a record in the bon_de_livraison_details table
+            BonDeLivraisonDetail::create([
+                'bon_de_livraison_id' => $bonDeLivraison->id,
+                'demande_id' => $validated['demande'],
+            ]);
+
+            // Update the demande detail
+            $detail->quantity_livree += $quantityToDeliver;
+            $detail->quantity_restant = max(0, $detail->quantity - $quantityToDeliver);
+            $detail->save();
+        }
+
+        // Handle the case where the requested quantity exceeds available stock
+        if ($quantityToDeliver < $detail->quantity) {
+            BonDeLivraisonDetail::create([
+                'bon_de_livraison_id' => $partialDelivery->id,
+                'demande_id' => $validated['demande'],
+            ]);
+            $detail->quantity_restant = $detail->quantity - $quantityToDeliver;
+            $detail->save();
+        }
+    }
+
+    // Update the status of the demande to indicate it has been delivered if fully delivered
+    $demande->status = $demande->demandeDetails->sum('quantity_restant') > 0 ? 'Livrée partiellement' : 'Livrée';
+    $demande->save();
+
+    // Redirect back with a success message
+    return redirect()->route('bons_de_livraison.index')->with('message', [
+        'type' => 'success',
+        'text' => 'Le bon de livraison a été créé avec succès.',
+    ]);
+}
+
 
     public function edit($id)
     {

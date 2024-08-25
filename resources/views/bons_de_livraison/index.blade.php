@@ -36,7 +36,9 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
-                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
+                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
+                                        <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
+                                    </a>
                                     <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -65,7 +67,9 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
-                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
+                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
+                                        <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
+                                    </a>
                                     <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -95,7 +99,9 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
-                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn">Modifier</a>
+                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
+                                        <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
+                                    </a>
                                     <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -123,7 +129,9 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
-                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
+                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
+                                        <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
+                                    </a>
                                     <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -153,7 +161,9 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
-                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-warning">Modifier</a>
+                                    <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
+                                        <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
+                                    </a>
                                     <form action="{{ route('bons_de_livraison.destroy', $bon->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
