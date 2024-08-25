@@ -88,82 +88,137 @@ class BonDeLivraisonController extends Controller
 
     public function getDemandes($deliveryAddress)
     {
-    // Fetch demandes based on the recipient
-    $user = Auth::user();
-    if($user->hasRole('admin')) {
-        $demandes = Demande::with('demandeDetails.article')
-        ->where('delivery_address', $deliveryAddress)
-        ->whereNull('gestionnaire_id')
-        ->where('status', '!=', 'Complétée')
-        ->get();
-    } else {
-        $demandes = Demande::with('demandeDetails.article')
-        ->where('delivery_address', $deliveryAddress)
-        ->where('status', '!=', 'Complétée')
-        ->whereNull('admin_id')
-        ->get();
+        // Fetch demandes based on the recipient
+        $user = Auth::user();
+        $depotArticles = DepotArticle::where('depot_id', $user->depot_id)->get()->keyBy('article_id');
+    
+        if ($user->hasRole('admin')) {
+            $demandes = Demande::with('demandeDetails.article')
+                ->where('delivery_address', $deliveryAddress)
+                ->whereNull('gestionnaire_id')
+                ->where(function ($query) {
+                    $query->where('status', 'En cours de traitement')
+                        ->orWhere('status', 'Livrée partiellement');
+                })
+                ->get();
+    
+            // Filter the demandes based on quantity restant and available quantity
+            $demandes = $demandes->filter(function ($demande) use ($depotArticles) {
+                if ($demande->status === 'Livrée partiellement') {
+                    // Filter demandeDetails with quantity_restant > 0 and stock quantity > 0
+                    $demande->demandeDetails = $demande->demandeDetails->filter(function ($detail) use ($depotArticles) {
+                        $availableQuantity = $depotArticles->get($detail->article_id)->quantity ?? 0;
+                        return $detail->quantity_restant > 0 && $availableQuantity > 0;
+                    });
+    
+                    // Include the demande only if it has any demandeDetails left
+                    return $demande->demandeDetails->isNotEmpty();
+                }
+    
+                // For 'En cours de traitement', filter details where stock quantity > 0
+                $demande->demandeDetails = $demande->demandeDetails->filter(function ($detail) use ($depotArticles) {
+                    $availableQuantity = $depotArticles->get($detail->article_id)->quantity ?? 0;
+                    return $availableQuantity > 0;
+                });
+    
+                // Include the demande only if it has any demandeDetails left
+                return $demande->demandeDetails->isNotEmpty();
+            });
+        } else {
+            // Fetch demandes with the specified criteria
+            $demandes = Demande::with('demandeDetails.article')
+                ->where('delivery_address', $deliveryAddress)
+                ->where(function ($query) {
+                    $query->where('status', 'En cours de traitement')
+                        ->orWhere('status', 'Livrée partiellement');
+                })
+                ->whereNull('admin_id')
+                ->get();
+    
+            // Filter the demandes based on quantity restant and available quantity
+            $demandes = $demandes->filter(function ($demande) use ($depotArticles) {
+                if ($demande->status === 'Livrée partiellement') {
+                    // Filter demandeDetails with quantity_restant > 0 and stock quantity > 0
+                    $demande->demandeDetails = $demande->demandeDetails->filter(function ($detail) use ($depotArticles) {
+                        $availableQuantity = $depotArticles->get($detail->article_id)->quantity ?? 0;
+                        return $detail->quantity_restant > 0 && $availableQuantity > 0;
+                    });
+    
+                    // Include the demande only if it has any demandeDetails left
+                    return $demande->demandeDetails->isNotEmpty();
+                }
+    
+                // For 'En cours de traitement', filter details where stock quantity > 0
+                $demande->demandeDetails = $demande->demandeDetails->filter(function ($detail) use ($depotArticles) {
+                    $availableQuantity = $depotArticles->get($detail->article_id)->quantity ?? 0;
+                    return $availableQuantity > 0;
+                });
+    
+                // Include the demande only if it has any demandeDetails left
+                return $demande->demandeDetails->isNotEmpty();
+            });
+        }
+    
+        // Load the view for the table content
+        return view('bons_de_livraison.partials.demandes_table', compact('demandes', 'depotArticles'));
     }
-
-    $depotArticles = DepotArticle::with('article')->get()->keyBy('article_id');
-
-    // Load the view for the table content
-    return view('bons_de_livraison.partials.demandes_table', compact('demandes','depotArticles'));
-   }
+    
 
    public function store(Request $request)
 {
     $user = Auth::user();
+    
     // Validate the incoming request data
     $validated = $request->validate([
-        'demande_id' => 'required',
+        'demandes' => 'required|array',
+        'demandes.*' => 'exists:demandes,id',
         'date_livraison' => 'required|date',
-        'demande' => 'nullable|exists:demandes,id'
     ]);
 
-    // Get the demande (request) based on the selected delivery address
-    $demande = Demande::findOrFail($validated['demande_id']);
+    $demandeIds = $validated['demandes'];
+    
     // Create the BonDeLivraison (Delivery Note)
     $bonDeLivraison = BonDeLivraison::create([
         'date_livraison' => $validated['date_livraison'],
         'user_id' => $user->id,
     ]);
-    // Iterate through the demande details and handle the articles
-    foreach ($demande->demandeDetails as $detail) {
-        $availableQuantity = DepotArticle::where('article_id', $detail->article_id)->sum('quantity');
-        $quantityToDeliver = min($availableQuantity, $detail->quantity);
+    foreach ($demandeIds as $demandeId) {
+        $demande = Demande::findOrFail($demandeId);
+        // Iterate through the demande details and handle the articles
+        foreach ($demande->demandeDetails as $detail) {
+            $availableQuantity = DepotArticle::where('depot_id', $user->depot_id)->where('article_id', $detail->article_id)->sum('quantity');
+            if(($detail->quantity_restant == 0)&&($detail->quantity_livree == 0)) {
+                $quantityToDeliver = min($availableQuantity, $detail->quantity);
+            }
+            else if (($detail->quantity_restant == 0)&&($detail->quantity_livree > 0)) {
+                continue;
+            }
+            else {
+                $quantityToDeliver = min($availableQuantity, $detail->quantity_restant);
+            }
+            
 
-        // Handle the quantity to deliver
-        if ($quantityToDeliver > 0) {
-            // Update the depot article stock
-            DepotArticle::where('article_id', $detail->article_id)
-                ->decrement('quantity', $quantityToDeliver);
-            // Create a record in the bon_de_livraison_details table
-            BonDeLivraisonDetail::create([
-                'bon_de_livraison_id' => $bonDeLivraison->id,
-                'demande_id' => $validated['demande'],
-            ]);
-
-            // Update the demande detail
-            $detail->quantity_livree += $quantityToDeliver;
-            $detail->quantity_restant = max(0, $detail->quantity - $quantityToDeliver);
-            $detail->save();
+            // Handle the quantity to deliver
+            if ($quantityToDeliver > 0) {
+                // Update the depot article stock
+                DepotArticle::where('depot_id', $user->depot_id)
+                    ->where('article_id', $detail->article_id)
+                    ->decrement('quantity', $quantityToDeliver);
+                // Create a record in the bon_de_livraison_details table
+                BonDeLivraisonDetail::create([
+                    'bon_de_livraison_id' => $bonDeLivraison->id,
+                    'demande_id' => $demandeId,
+                ]);
+                $detail->quantity_livree += $quantityToDeliver;
+                $detail->quantity_restant -= $quantityToDeliver;
+                $detail->save();
+            }
         }
 
-        // Handle the case where the requested quantity exceeds available stock
-        if ($quantityToDeliver < $detail->quantity) {
-            BonDeLivraisonDetail::create([
-                'bon_de_livraison_id' => $partialDelivery->id,
-                'demande_id' => $validated['demande'],
-            ]);
-            $detail->quantity_restant = $detail->quantity - $quantityToDeliver;
-            $detail->save();
-        }
+        // Update the status of the demande to indicate it has been delivered if fully delivered
+        $demande->status = $demande->demandeDetails->sum('quantity_restant') > 0 ? 'Livrée partiellement' : 'Livrée';
+        $demande->save();
     }
-
-    // Update the status of the demande to indicate it has been delivered if fully delivered
-    $demande->status = $demande->demandeDetails->sum('quantity_restant') > 0 ? 'Livrée partiellement' : 'Livrée';
-    $demande->save();
-
     // Redirect back with a success message
     return redirect()->route('bons_de_livraison.index')->with('message', [
         'type' => 'success',
