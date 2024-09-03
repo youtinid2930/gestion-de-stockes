@@ -5,9 +5,7 @@
                 <th>Numéro</th>
                 <th>Article</th>
                 <th>Quantité demandée</th>
-                @if($demandes->contains('status', 'Livrée partiellement'))
-                 <th>Quantité Restant</th>
-                @endif
+                <th>Quantité Restant</th>
                 <th>Quantité disponible</th>
                 <th>Action</th>
             </tr>
@@ -24,6 +22,8 @@
                     <td>{{ $firstDetail->quantity }}</td>
                     @if($demande->status === 'Livrée partiellement')
                     <td>{{ $firstDetail->quantity_restant }}</td>
+                    @else
+                    <td>{{ $firstDetail->quantity }}</td>
                     @endif
                     <td>{{ $availableQuantity }}</td>
                     <td rowspan="{{ $demande->demandeDetails->count() }}">

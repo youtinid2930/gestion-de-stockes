@@ -11,15 +11,17 @@ class StockMovement extends Model
 
     protected $fillable = [
         'article_id',
+        'type',
+        'quantity',
+        'date_mouvement',
         'user_id',
         'commande_id',
         'demande_id',
-        'quantity',
-        'type',
-        'date_movement',
         'notes',
     ];
-
+    
+    public $timestamps = true;
+    
     public function article()
     {
         return $this->belongsTo(Article::class);

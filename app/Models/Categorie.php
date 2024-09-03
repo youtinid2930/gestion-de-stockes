@@ -26,11 +26,11 @@ class Categorie extends Model
     // Relationship to articles
     public function articles()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Article::class, 'category_id');
     }
 
     public function caracteristiques() {
-        return $this->belongsToMany(Caracteristique::class, 'categorie_caracteristique', 'categorie_id', 'caracteristique_id');
+        return $this->belongsToMany(Caracteristique::class, 'categorie_caracteristique', 'category_id', 'caracteristique_id');
     }
     public function getFinalSubcategory()
     {

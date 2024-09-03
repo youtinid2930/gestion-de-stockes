@@ -7,7 +7,7 @@
     <div class="overview-boxes">
         @if(auth()->user()->hasRole('magasinier') || auth()->user()->hasRole('gestionnaire'))
         <div class="box" style="margin-right: 70%;"><h3>Mes demandes</h3></div>
-        <div class="box">
+        <div class="box" style="margin-buttom: 2%;">
             @if($Medemandes->isNotEmpty())
             <table>
                 <tr>
@@ -57,8 +57,6 @@
                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la demande"></i>
                         </button>
                        </form>
-                    @elseif($demande->status == "Livrée")
-                        <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la demande"></i></a>
                     @endif
                     <a href="{{ route('demande.show', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la demande">&#9660;</a>
                 </td>
@@ -119,9 +117,7 @@
                 <td>
                     <div style="display: flex; flex-direction: row;">
                     @if($demande->status == "En attente")
-                        <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-tachometer-alt" data-toggle="tooltip" title="traiter la demande"></i></a>
-                    @elseif($demande->status == "En cours de traitement")
-                        <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-truck" data-toggle="tooltip" title="livrer la demande"></i></a>
+                        <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-tachometer-alt" data-toggle="tooltip" title="traiter la demande"></i></a>  
                     @endif
                     <a href="{{ route('demande.show', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la demande">▼</a>
                     </div>

@@ -39,6 +39,9 @@
         
         
         <p><strong>Adresse de livraison:</strong> {{ $demande->delivery_address }}</p>
+
+        <h4>Status de la Demande</h4>
+        <p>{{ $demande->status }}</p>
         
         <h4>Articles demandés</h4>
         @foreach($demande->demandeDetails as $detail)
@@ -71,12 +74,19 @@
 
                 <label for="date_d_expiration">Date d'expiration</label>
                 <input type="text" name="date_d_expiration" id="date_d_expiration" value="{{ $detail->article->date_d_expiration ? $detail->article->date_d_expiration->format('d/m/Y H:i:s') : 'date non disponible' }}" readonly>
+                
+                @if($demande->status == "Livrée partiellement")
+                    <label for="quantity_livree">Quantité Livrée</label>
+                    <input type="number" name="quantity_livree" id="quantity_livree" value="{{ $detail->quantity_livree }}" readonly>
+                    <label for="quantity_restant">Quantité Restant</label>
+                    <input type="number" name="quantity_restant" id="quantity_restant" value="{{ $detail->quantity_restant }}" readonly>
+                @endif
 
         @endforeach
         
         
-        <h4>Status de la Demande</h4>
-        <p>{{ $demande->status }}</p>
+        
+        
         
         
         <button onclick="window.history.back()" class="btn">Retour</button>

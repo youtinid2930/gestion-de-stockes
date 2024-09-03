@@ -16,7 +16,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\DepotSettingsController;
-use App\Http\Controllers\FactureController;
+use App\Http\Controllers\FacteurController;
 
 
 
@@ -84,6 +84,7 @@ Route::get('/bons_de_livraison/{id}/edit', [BonDeLivraisonController::class, 'ed
 Route::put('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'update'])->name('bons_de_livraison.update');
 Route::delete('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'destroy'])->name('bons_de_livraison.destroy');
 Route::get('/get-demandes/{deliveryAddress}', [BonDeLivraisonController::class, 'getDemandes'])->name('get.demandes');
+Route::get('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'status'])->name('bons_de_livraison.status');
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
@@ -152,13 +153,15 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
     Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
-
-    Route::resource('factures', FactureController::class);
-    Route::delete('/factures/{id}', [FactureController::class, 'destroy']);
-    Route::get('/factures/{id}/edit', [FactureController::class, 'edit'])->name('factures.edit');
-    Route::put('/factures/{id}', [FactureController::class, 'update'])->name('factures.update');
-    Route::get('/factures/{id}/print', [FactureController::class, 'print'])->name('factures.print');
-    Route::get('/factures/{id}', [FactureController::class, 'show'])->name('factures.show');
+    
+    Route::get('/factures', [FacteurController::class, 'index'])->name('facteurs.index');
+    Route::delete('/factures/{id}', [FacteurController::class, 'destroy']);
+    Route::get('/factures/{id}/edit', [FacteurController::class, 'edit'])->name('factures.edit');
+    Route::put('/factures/{id}', [FacteurController::class, 'update'])->name('factures.update');
+    Route::get('/factures/{id}/print', [FacteurController::class, 'print'])->name('factures.print');
+    Route::get('/factures/{id}', [FacteurController::class, 'show'])->name('factures.show');
+    Route::get('/factures/create/{id}', [FacteurController::class, 'create'])->name('factures.create');
+    Route::post('/factures/{id}', [FacteurController::class, 'store'])->name('factures.store');
 
 
  

@@ -6,7 +6,9 @@ use App\Models\Commande;
 use App\Models\Fournisseur;
 use App\Models\Article;
 use App\Models\CommandeDetail;
+use App\Models\BonDeLivraisonDetail;
 use App\Models\BonDeLivraison;
+use App\Models\Facteur;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -14,7 +16,7 @@ class CommandeController extends Controller
 {
     public function index()
     {
-        $commandes = Commande::with('fournisseur', 'commandeDetails.article')->get();
+        $commandes = Commande::with('fournisseur', 'commandeDetails.article','factures')->get();
         $fournisseurs = Fournisseur::all();
 
         return view('commande.index', compact('commandes', 'fournisseurs'));
@@ -41,7 +43,9 @@ class CommandeController extends Controller
 
         // Ajout de l'admin_id dans les données validées
         $validated['admin_id'] = auth()->user()->id;
-
+        $commandeExist = Commande::where('fournisseur_id',$validated['id_fournisseur'])
+            ->where('status','En attente')
+            ->first();
         // Création de la commande
         $commande = new Commande();
         $commande->fournisseur_id = $validated['id_fournisseur'];
@@ -58,17 +62,29 @@ class CommandeController extends Controller
                 'prix' => $price,
             ]);
         }
+        
+        if($commandeExist) {
+            $bondelivraison = BonDeLivraisonDetail::where('commande_id',$commandeExist->id)
+                ->first();
+            
+            BonDeLivraisonDetail::create([
+                'bon_de_livraison_id' => $bondelivraison->bon_de_livraison_id,
+                'commande_id' => $commande->id,
+            ]);
+        }
+        else {
+            // Automatically create a BonDeLivraison
+            $bonDeLivraison = new BonDeLivraison();
+            $bonDeLivraison->date_livraison = now(); // Current date and time
+            $bonDeLivraison->user_id = auth()->user()->id; // Current authenticated user
+            $bonDeLivraison->save();
 
-        // Automatically create a BonDeLivraison
-        $bonDeLivraison = new BonDeLivraison();
-        $bonDeLivraison->date_livraison = now(); // Current date and time
-        $bonDeLivraison->user_id = auth()->user()->id; // Current authenticated user
-        $bonDeLivraison->save();
-
-        // Create BonDeLivraisonDetails for each article in the commande
-        $bonDeLivraison->bonDeLivraisonDetails()->create([
-            'commande_id' => $commande->id,
-        ]);
+            // Create BonDeLivraisonDetails for each article in the commande
+            $bonDeLivraison->bonDeLivraisonDetails()->create([
+                'commande_id' => $commande->id,
+            ]);
+        }
+        
 
         return redirect()->route('commande.index')->with('message', ['text' => 'Commande ajoutée avec succès', 'type' => 'success']);
     }
@@ -110,9 +126,14 @@ class CommandeController extends Controller
 
     public function destroy($id)
     {
-        $commande = Commande::findOrFail($id);
-        $commande->commandeDetails()->delete(); 
-        $commande->delete();
+        $commandes = Commande::with('commandeDetails','bonDeLivraisondetails')
+            ->where('id',$id)
+            ->get();
+        foreach ($commandes as $commande) {
+            $commande->commandeDetails()->delete();
+            $commande->bonDeLivraisondetails()->delete();
+            $commande->delete();  
+        }
 
         return redirect()->route('commande.index')->with('message', ['text' => 'Commande annulée avec succès', 'type' => 'success']);
     }

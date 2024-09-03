@@ -46,6 +46,10 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                    
+                                    @if($bon->status == "En attente")
+                                        <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -54,11 +58,18 @@
                             <tr>
                                 <td rowspan="">{{ $bon->numero }}</td>
                                 <td>
-                                    @foreach($bon->bonDeLivraisonDetails as $detail)
-                                        @if ($detail->demande)
-                                            <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a><br>
-                                        @endif
-                                    @endforeach
+                                @php
+                                    $displayedDemandes = [];
+                                @endphp
+
+                                @foreach($bon->bonDeLivraisonDetails as $detail)
+                                    @if ($detail->demande && !in_array($detail->demande->numero, $displayedDemandes))
+                                        <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a><br>
+                                    @php
+                                        $displayedDemandes[] = $detail->demande->numero;
+                                    @endphp
+                                    @endif
+                                @endforeach
                                 </td>
                                 <td rowspan="">
                                     {{ \Carbon\Carbon::parse($bon->date_livraison)->format('Y-m-d') }}
@@ -77,6 +88,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                    
                                 </td>
                             </tr>
                         @endforeach
@@ -86,21 +98,28 @@
                     @role('magasinier')
                         @foreach($meBonsDeLivraison as $bon)
                             <tr>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">{{ $bon->numero }}</td>
+                                <td >{{ $bon->numero }}</td>
                                 <td>
-                                    @foreach($bon->bonDeLivraisonDetails as $detail)
-                                        @if ($detail->demande)
-                                            <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a>
-                                        @endif
-                                    @endforeach
+                                @php
+                                    $displayedDemandes = [];
+                                @endphp
+
+                                @foreach($bon->bonDeLivraisonDetails as $detail)
+                                    @if ($detail->demande && !in_array($detail->demande->numero, $displayedDemandes))
+                                        <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a><br>
+                                    @php
+                                        $displayedDemandes[] = $detail->demande->numero;
+                                    @endphp
+                                    @endif
+                                @endforeach
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ \Carbon\Carbon::parse($bon->date_livraison)->format('Y-m-d') }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ $bon->status }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -117,21 +136,28 @@
 
                         @foreach($bonDeLivraisonrecus as $bon)
                             <tr>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">{{ $bon->numero }}</td>
+                                <td >{{ $bon->numero }}</td>
                                 <td>
-                                    @foreach($bon->bonDeLivraisonDetails as $detail)
-                                        @if ($detail->demande)
-                                            <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a>
-                                        @endif
-                                    @endforeach
+                                @php
+                                    $displayedDemandes = [];
+                                @endphp
+
+                                @foreach($bon->bonDeLivraisonDetails as $detail)
+                                    @if ($detail->demande && !in_array($detail->demande->numero, $displayedDemandes))
+                                        <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a><br>
+                                    @php
+                                        $displayedDemandes[] = $detail->demande->numero;
+                                    @endphp
+                                    @endif
+                                @endforeach
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ \Carbon\Carbon::parse($bon->date_livraison)->format('Y-m-d') }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ $bon->status }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -142,6 +168,9 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                    @if($bon->status == "Livrée")
+                                        <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -151,21 +180,28 @@
                     @unlessrole('admin|magasinier')
                         @foreach($bonDeLivraisonrecus as $bon)
                             <tr>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">{{ $bon->numero }}</td>
+                                <td >{{ $bon->numero }}</td>
                                 <td>
-                                    @foreach($bon->bonDeLivraisonDetails as $detail)
-                                        @if ($detail->demande)
-                                            <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a>
-                                        @endif
-                                    @endforeach
+                                @php
+                                    $displayedDemandes = [];
+                                @endphp
+
+                                @foreach($bon->bonDeLivraisonDetails as $detail)
+                                    @if ($detail->demande && !in_array($detail->demande->numero, $displayedDemandes))
+                                        <a href="{{ route('demande.show', $detail->demande->id) }}">{{ $detail->demande->numero }}</a><br>
+                                    @php
+                                        $displayedDemandes[] = $detail->demande->numero;
+                                    @endphp
+                                    @endif
+                                @endforeach
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ \Carbon\Carbon::parse($bon->date_livraison)->format('Y-m-d') }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     {{ $bon->status }}
                                 </td>
-                                <td rowspan="{{ $bon->bonDeLivraisonDetails->count() + 1 }}">
+                                <td >
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -176,6 +212,9 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                    @if($bon->status == "Livrée")
+                                        <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -183,6 +222,11 @@
                 
             </table>
         </div>
+        <button class="btn btn-primary" 
+                onclick="window.location.href='{{ route('bons_de_livraison.create') }}'" 
+                style="width: 200px; height: 50px; padding: 10px;">
+            Créer Bon de Livraison
+        </button>
     </div>
 </div>
 @endsection

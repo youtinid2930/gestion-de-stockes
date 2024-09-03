@@ -56,13 +56,17 @@ class Commande extends Model
 
     public function factures()
     {
-        return $this->hasMany(Facture::class);
+        return $this->hasMany(Facteur::class);
     }
 
 
     public function stockMovements()
     {
         return $this->hasMany(StockMovement::class);
+    }
+
+    public function bonDeLivraisondetails() {
+        return $this->hasMany(BonDeLivraisonDetail::class);
     }
 
 }

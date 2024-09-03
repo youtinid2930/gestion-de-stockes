@@ -7,6 +7,8 @@ use App\Models\BonDeLivraisonDetail;
 use App\Models\Demande;
 use Illuminate\Http\Request;
 use App\Models\DepotArticle;
+use App\Models\StockMovement;
+use App\Models\CommandeDetail;
 use Illuminate\Support\Facades\Auth;
 
 class BonDeLivraisonController extends Controller
@@ -181,6 +183,7 @@ class BonDeLivraisonController extends Controller
     $bonDeLivraison = BonDeLivraison::create([
         'date_livraison' => $validated['date_livraison'],
         'user_id' => $user->id,
+        'status' => 'Livrée',
     ]);
     foreach ($demandeIds as $demandeId) {
         $demande = Demande::findOrFail($demandeId);
@@ -209,8 +212,16 @@ class BonDeLivraisonController extends Controller
                     'bon_de_livraison_id' => $bonDeLivraison->id,
                     'demande_id' => $demandeId,
                 ]);
-                $detail->quantity_livree += $quantityToDeliver;
-                $detail->quantity_restant -= $quantityToDeliver;
+                
+                if(($detail->quantity_restant == 0)&&($detail->quantity_livree == 0)) {
+                    $detail->quantity_livree += $quantityToDeliver;
+                    $quantityToDeliver = min($availableQuantity, $detail->quantity);
+                    $detail->quantity_restant = max(0, $detail->quantity - $quantityToDeliver);
+                }
+                else {
+                    $detail->quantity_livree += $quantityToDeliver;
+                    $detail->quantity_restant -= $quantityToDeliver;
+                }
                 $detail->save();
             }
         }
@@ -257,5 +268,83 @@ class BonDeLivraisonController extends Controller
 
         return redirect()->route('bons_de_livraison.index')
                          ->with('message', ['type' => 'success', 'text' => 'Bon de livraison supprimé avec succès']);
+    }
+
+    public function status($id) {
+        // Find the BonDeLivraison by its ID
+        $bonDeLivraison = BonDeLivraison::findOrFail($id);
+        $user = Auth::user();
+
+        // Check if the current status is "Livrée"
+        if ($bonDeLivraison->status == "Livrée") {
+            // Update the status to "Valider" or another status you desire
+            $bonDeLivraison->status = "Terminée";
+            $bonDeLivraison->save();
+
+            $details = $bonDeLivraison->bonDeLivraisonDetails;
+
+            foreach ($details as $detail) {
+                // Check if the related Demande exists and its status is "Livrée"
+                if ($detail->demande && $detail->demande->status == "Livrée") {
+                    // Update the status of Demande to "Complétée"
+                    $detail->demande->status = "Complétée";
+                    $detail->demande->save();
+                }
+            }
+    
+            return redirect()->route('bons_de_livraison.index')->with('success', 'Bon de livraison validé avec succès.');
+       }else if ($bonDeLivraison->status == "En attente") {
+            $bonDeLivraison->status = "Terminée";
+            $bonDeLivraison->save();
+            
+
+            $details = $bonDeLivraison->bonDeLivraisonDetails;
+
+
+            foreach ($details as $detail) {
+                // Check if the related commande exists and its status is "En attente"
+                if ($detail->commande && $detail->commande->status == "En attente") {
+                    
+                    // Update the status of commande to "Complétée"
+                    $detail->commande->status = "Validée";
+                    $detail->commande->save();
+                    
+                    foreach($detail->commande->commandeDetails as $commandedetail) {
+                        // Add stock mouvement with type="Entrée" 
+                        $stockMouvement = new StockMovement();
+                        $stockMouvement->article_id = $commandedetail->article_id;
+                        $stockMouvement->type = "Entrée";
+                        $stockMouvement->quantity = $commandedetail->quantite; // assuming you have quantity in commande detail
+                        $stockMouvement->date_mouvement = now();
+                        $stockMouvement->user_id = $user->id;
+                        $stockMouvement->commande_id = $commandedetail->commande_id;
+                        $stockMouvement->demande_id = $commandedetail->demande_id;
+                        $stockMouvement->note = "Stock added after Bon de Livraison validation.";
+                        $stockMouvement->save();
+
+                        // Update depot_article quantities
+                        $depotArticle = DepotArticle::where('article_id', $commandedetail->article_id)->where('depot_id', $user->depot_id)->first();
+                        if ($depotArticle) {
+                            $depotArticle->quantity += $commandedetail->quantite;
+                            $depotArticle->save();
+                        } else {
+                            // If the article does not exist in the depot, create a new entry
+                            DepotArticle::create([
+                                'article_id' => $detail->article_id,
+                                'quantity' => $detail->quantity,
+                                'depot_id' => $user->depot_id, // assuming you have depot_id in BonDeLivraison
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            
+    
+            return redirect()->route('bons_de_livraison.index')->with('success', 'Bon de livraison validé avec succès.');
+
+       }
+      
+       return redirect()->route('bons_de_livraison.index')->with('error', 'Le bon de livraison ne peut pas être validé.');
     }
 }

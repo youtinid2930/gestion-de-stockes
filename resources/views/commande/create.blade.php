@@ -18,7 +18,7 @@
                 <select name="id_fournisseur" id="id_fournisseur">
                     @foreach ($fournisseurs as $fournisseur)
                         <option value="{{ $fournisseur->id }}" {{ old('id_fournisseur', $commande->fournisseur_id ?? '') == $fournisseur->id ? 'selected' : '' }}>
-                            {{ $fournisseur->name }}
+                            {{ $fournisseur->name }} {{$fournisseur->last_name}}
                         </option>
                     @endforeach
                 </select>

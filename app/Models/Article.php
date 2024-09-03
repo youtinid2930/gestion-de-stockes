@@ -59,10 +59,16 @@ class Article extends Model
     {
         return $this->belongsTo(Categorie::class);
     }
+    
+    public function articleCaracteristiques()
+    {
+        return $this->hasMany(ArticleCaracteristique::class, 'article_id');
+    }
 
+    
     public function characteristics()
     {
-        return $this->belongsToMany(Caracteristique::class, 'article_caracteristique')
+        return $this->belongsToMany(Caracteristique::class, 'article_caracteristiques')
                     ->withPivot('valeur');
     }
 

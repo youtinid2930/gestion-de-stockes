@@ -235,13 +235,29 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         $article = Article::with(['commandeDetails.commande', 'characteristics'])->findOrFail($id);
-        foreach ($article->commandeDetails as $detail) {
-            $detail->commande()->delete(); 
-            $detail->delete(); 
+
+    // Detach characteristics first
+    $article->characteristics()->detach();
+
+    // Iterate through commandeDetails and delete them
+    foreach ($article->commandeDetails as $detail) {
+        // Delete the detail
+        $detail->delete();
+    }
+
+    // If you want to delete the related commandes
+    foreach ($article->commandeDetails as $detail) {
+        $commande = $detail->commande;
+        // Check if the commande has no more details and delete it
+        if ($commande->commandeDetails()->count() === 0) {
+            $commande->delete();
         }
-        $article->characteristics()->detach();
-        $article->delete();
-        return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès.');
+    }
+
+    // Finally, delete the article
+    $article->delete();
+
+    return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès.');
     }
 
     private function collectFinalSubcategories($categorie, &$finalCategories)

@@ -5,20 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FactureDetail extends Model
+class FacteurDetails extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'facture_id',
-        'article',
+        'article_id',
         'quantite',
-        'prix_unitaire',
         'montant_total',
     ];
 
     public function facture()
     {
-        return $this->belongsTo(Facture::class);
+        return $this->belongsTo(Facteur::class);
     }
 }
