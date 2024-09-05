@@ -19,18 +19,18 @@ class Facteur extends Model
     
     public $timestamps = true;
 
-    
+    public function facteurDetails()
+    {
+        return $this->hasMany(FacteurDetails::class);
+    }
+
     public function fournisseur()
     {
         return $this->belongsTo(Fournisseur::class, 'fournisseur_id'); // Assurez-vous que 'fournisseur_id' est le nom correct de la colonne
     }
     
-public function commande()
-{
+    public function commande()
+    {
     return $this->belongsTo(Commande::class, 'commande_id');
-}
-
-
-
-
+    }
 }

@@ -1,67 +1,51 @@
 @extends('layouts.app')
 
-@section('title', 'Modifier Facture')
+@section('title', 'Modifier une Facture')
 
 @section('content')
 
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
-           <h1>Modifier Facture</h1>
+            <h1>Modifier la Facture</h1>
 
-        <!-- Affichage des messages de succès ou d'erreur -->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <!-- Formulaire de modification de facture -->
-        <form action="{{ route('factures.update', $facture->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label for="numero_facture">Numéro de Facture</label>
-                <input type="text" id="numero_facture" name="numero_facture" class="form-control" value="{{ old('numero_facture', $facture->numero_facture) }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="date_facture">Date</label>
-                <input type="date" id="date_facture" name="date_facture" class="form-control" value="{{ old('date_facture', $facture->date_facture->format('Y-m-d')) }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="montant_total">Montant Total</label>
-                <input type="number" id="montant_total" name="montant_total" class="form-control" value="{{ old('montant_total', $facture->montant_total) }}" step="0.01" required>
-            </div>
-
-            <div class="form-group">
-                <label for="fournisseur_id">Fournisseur</label>
-                <select name="fournisseur_id" id="fournisseur_id" class="form-control" required>
-                    <option value="">Sélectionner un Fournisseur</option>
-                    @foreach($fournisseurs as $fournisseur)
-                        <option value="{{ $fournisseur->id }}" {{ old('fournisseur_id', $facture->fournisseur_id) == $fournisseur->id ? 'selected' : '' }}>
-                            {{ $fournisseur->name }}
-                        </option>
-                    @endforeach
+            <form action="{{ route('factures.update', $facture->id) }}" method="POST">
+                @csrf
+                @method('PUT') <!-- This is important for updating the resource -->
+                
+                <label for="due_date">Date d'échéance</label>
+                <input type="date" name="due_date" id="due_date" value="{{ old('due_date', $facture->due_date) }}" required>
+                
+                <label for="amount_paid">Montant payé</label>
+                <input type="number" name="amount_paid" id="amount_paid" value="{{ old('amount_paid', $facture->amount_paid) }}" required>
+                
+                <label for="status">Statut</label>
+                <select name="status" id="status" required>
+                    <option value="">--Choisir le statut--</option>
+                    <option value="Payée" {{ old('status', $facture->status) == 'Payée' ? 'selected' : '' }}>Payée</option>
+                    <option value="Partiellement payée" {{ old('status', $facture->status) == 'Partiellement payée' ? 'selected' : '' }}>Partiellement payée</option>
+                    <option value="Échue" {{ old('status', $facture->status) == 'Échue' ? 'selected' : '' }}>Échue</option>
                 </select>
-            </div>
-
-            <div class="form-group">
+                
                 <label for="description">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="4" required>{{ old('description', $facture->description) }}</textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Mettre à jour</button>
-            <a href="{{ route('factures.index') }}" class="btn btn-secondary">Retour à la liste</a>
-        </form>
-    
+                <textarea name="description" id="description" class="form-control">{{ old('description', $facture->description) }}</textarea>
+                
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                
+                <a href="{{ route('commande.index') }}" class="btn btn-secondary">Annuler</a>
+            </form>
         </div>
     </div>
 </div>
+
 @endsection

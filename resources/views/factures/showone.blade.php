@@ -19,14 +19,14 @@
             text-align: center;
             border-bottom: 2px solid #000;
             padding-bottom: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .footer {
             border-top: 2px solid #000;
-            margin-top: 10px;
+            margin-top: 20px;
         }
         .details {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .details p {
             margin: 5px 0;
@@ -34,7 +34,7 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .table th, .table td {
             border: 1px solid #000;
@@ -51,18 +51,68 @@
             text-align: left;
         }
         .summary {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         .summary p {
             margin: 5px 0;
             text-align: right;
         }
-        
+        .header-icons {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .header-icons a {
+            color: #333;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: color 0.3s;
+        }
+        .header-icons a:hover {
+            color: #007bff;
+        }
+        .header-icons i {
+            font-size: 24px;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background 0.3s, color 0.3s;
+        }
+        .header-icons i:hover {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .return-button {
+            margin-top: 1%;
+            margin-bottom: 2%;
+            text-align: center;
+        }
+        .return-button a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .return-button a:hover {
+            background-color: #0056b3;
+        }
     </style>
+     <!-- Include FontAwesome for icons -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
 
 </head>
 <body>
     <div class="container">
+        <div class="header-icons">
+            <a href="#" onclick="window.print()"><i class="fas fa-print" title="Imprimer"></i></a>
+            <a href="{{ route('factures.download', $invoice->id) }}"><i class="fas fa-file-pdf" title="Télécharger PDF"></i></a>
+        </div>
         <!-- En-tête -->
         <div class="header">
             <h1>{{ $company->name }}</h1>
@@ -150,6 +200,10 @@
             <p><strong>Informations d'Enregistrement de l'Entreprise:</strong> {{ $company->registration_number }}</p>
         </div>
     </div>
+    <div class="return-button">
+        <a href="{{ route('factures.show', $invoice->commande_id) }}" class="btn btn-primary">Retour</a>
+    </div>
+    
 
 </body>
 </html>

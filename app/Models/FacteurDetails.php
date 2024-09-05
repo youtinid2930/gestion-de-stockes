@@ -18,6 +18,11 @@ class FacteurDetails extends Model
 
     public function facture()
     {
-        return $this->belongsTo(Facteur::class);
+        return $this->belongsTo(Facteur::class, 'facture_id');
+    }
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'article_id');
     }
 }

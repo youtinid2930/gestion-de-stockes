@@ -14,6 +14,7 @@ use App\Http\Controllers\BonDeLivraisonController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CompanySettingsController;
+use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\DepotSettingsController;
 use App\Http\Controllers\FacteurController;
@@ -41,7 +42,7 @@ Route::get('/', function () {
 
 
 // Routes pour la recherche
-Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+Route::get('/commande/search', [CommandeController::class, 'search'])->name('commande.search');
 Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
 Route::get('/utilisateurs/search', [UtilisateurController::class, 'search'])->name('utilisateurs.search');
 Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
@@ -53,7 +54,12 @@ Route::get('articles/create', [ArticleController::class, 'create'])->name('artic
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 
 
+
+
+// Routes for Login
 Auth::routes();
+
+
 /*
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 */
@@ -130,7 +136,7 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
 Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
-Route::get('/commandes/search', [CommandeController::class, 'search'])->name('commandes.search');
+
 
 // Route for Depot Settings
 Route::get('configuration/depot-settings', [DepotSettingsController::class, 'index'])->name('depot.settings');
@@ -153,24 +159,27 @@ Route::prefix('configuration')->group(function () {
     Route::post('/profile-settings', [ProfileSettingsController::class, 'store'])->name('profile.settings.store');
 });
 
-    Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
-    Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
-    Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
+Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
+Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
     
-    Route::get('/factures', [FacteurController::class, 'index'])->name('facteurs.index');
-    Route::delete('/factures/{id}', [FacteurController::class, 'destroy']);
-    Route::get('/factures/{id}/edit', [FacteurController::class, 'edit'])->name('factures.edit');
-    Route::put('/factures/{id}', [FacteurController::class, 'update'])->name('factures.update');
-    Route::get('/factures/{id}/print', [FacteurController::class, 'print'])->name('factures.print');
-    Route::get('/factures/{id}', [FacteurController::class, 'show'])->name('factures.show');
-    Route::get('/factures/create/{id}', [FacteurController::class, 'create'])->name('factures.create');
-    Route::post('/factures/{id}', [FacteurController::class, 'store'])->name('factures.store');
+Route::get('/factures', [FacteurController::class, 'index'])->name('facteurs.index');
+Route::delete('/factures/{id}', [FacteurController::class, 'destroy'])->name('facteurs.destroy');
+Route::get('/factures/{id}/edit', [FacteurController::class, 'edit'])->name('factures.edit');
+Route::put('/factures/{id}', [FacteurController::class, 'update'])->name('factures.update');
+Route::get('/factures/{id}/print', [FacteurController::class, 'print'])->name('factures.print');
+Route::get('/factures/{id}', [FacteurController::class, 'show'])->name('factures.show');
+Route::get('/factures/{id}/details', [FacteurController::class, 'showone'])->name('factures.showone');
+Route::get('/factures/create/{id}', [FacteurController::class, 'create'])->name('factures.create');
+Route::post('/factures/{id}', [FacteurController::class, 'store'])->name('factures.store');
+Route::get('/factures/{id}/download', [FacteurController::class, 'downloadPDF'])->name('factures.download');
+
 // Utilisateur
 Route::get('/utilisateurs/search', [UserController::class, 'search'])->name('utilisateurs.search');
 Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
 // Commande
 Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
-Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+
 
 // Fournisseur
 Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');

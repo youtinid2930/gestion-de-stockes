@@ -106,4 +106,9 @@ class Article extends Model
     {
     return $this->hasMany(DepotArticle::class);
     }
+
+    public function details()
+    {
+        return $this->hasMany(FacteurDetails::class, 'article_id');
+    }
 }

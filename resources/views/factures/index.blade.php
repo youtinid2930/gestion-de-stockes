@@ -9,6 +9,8 @@
         <div class="box">
             <h1>Liste des Factures</h1>
 
+            @if($facteurs)
+
             <table class="table">
                 <thead>
                     <tr>
@@ -35,7 +37,11 @@
                     @endforeach
                 </tbody>
             </table>
+            @else
+                {{ 'aucune facteur crée' }}
+            @endif
         </div>
+        <a href="{{ route('commandes.index') }}" class="btn" style="margin-right: 80%;">Retour</a>
     </div>
 </div>
 

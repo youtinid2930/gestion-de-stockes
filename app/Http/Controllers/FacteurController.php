@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Commande;
 use App\Models\Fournisseur;
+use App\Models\Company;
 use App\Models\Facteur;
+use Illuminate\Support\Facades\Auth;
 use App\Models\FacteurDetails;
 use App\Models\StockMovement;
 use Spatie\Permission\Models\Role;
@@ -40,7 +43,17 @@ class FacteurController extends Controller
         'status' => 'required|in:Payée,Partiellement payée,Échue',
         'description' => 'nullable|string',
     ]);
-   
+    $total_amount = 0;
+    $total_paid = 0;
+    $Facteurs = Facteur::where('commande_id',$id)->get();
+    $Facteur = null;
+    foreach($Facteurs as $facteur) {
+        $total_amount = $facteur->total_amount;
+        $total_paid += $facteur->amount_paid;
+        $Facteur = $facteur;
+    }
+    $total_paid += $request['amount_paid'];
+    if($total_amount>$total_paid) {
     // Récupération de la commande
     $commande = Commande::with('commandeDetails')->where('id', $id)->first();
 
@@ -85,7 +98,10 @@ class FacteurController extends Controller
         $facteurdetail->save();
     }
 
-    return redirect()->route('facteurs.index')->with('success', 'Facture créée avec succès.');
+    return redirect()->route('factures.show', $facteur->commande_id)->with('success', 'Facture créée avec succès.');
+    } else {
+        return redirect()->route('factures.show', $Facteur->commande_id)->with('error', 'le prix depasse le total a payée');
+    }
     }
 
         
@@ -94,74 +110,130 @@ class FacteurController extends Controller
         $Facteur = Facteur::find($id);
         if ($Facteur) {
             $Facteur->delete();
-            return redirect()->route('Facteurs.index')->with('success', 'Facteur supprimée avec succès.');
+            return redirect()->route('factures.show', $Facteur->commande_id)->with('success', 'Facteur supprimée avec succès.');
         }
-        return redirect()->route('Facteurs.index')->with('error', 'Facteur non trouvée.');
+        return redirect()->route('factures.show', $Facteur->commande_id)->with('error', 'Facteur non trouvée.');
     }
 
     public function edit($id)
     {
-        $Facteur = Facteur::find($id);
+        $facture = Facteur::find($id);
 
-        if ($Facteur) {
+        if ($facture) {
             $fournisseurs = Fournisseur::all(); // Récupérer tous les fournisseurs
-            return view('Facteurs.edit', compact('Facteur', 'fournisseurs'));
+            return view('factures.edit', compact('facture', 'fournisseurs'));
         }
-        return redirect()->route('Facteurs.index')->with('error', 'Facteur non trouvée.');
+        return redirect()->route('facteurs.index')->with('error', 'Facteur non trouvée.');
     }
 
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'numero_Facteur' => 'required|string|max:255',
-            'date_Facteur' => 'required|date',
-            'montant_total' => 'required|numeric',
-            'fournisseur' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        $Facteur = Facteur::find($id);
-
-        if ($Facteur) {
-            $Facteur->update([
-                'numero_Facteur' => $request->input('numero_Facteur'),
-                'date_Facteur' => $request->input('date_Facteur'),
-                'montant_total' => $request->input('montant_total'),
-                'fournisseur' => $request->input('fournisseur'),
-                'description' => $request->input('description'),
-            ]);
-
-            return redirect()->route('Facteurs.index')->with('success', 'Facteur mise à jour avec succès.');
-        }
-
-        return redirect()->route('Facteurs.index')->with('error', 'Facteur non trouvée.');
+        // Validate the request data
+    $request->validate([
+        'due_date' => 'required|date',
+        'amount_paid' => 'required|numeric|min:0',
+        'status' => 'required|string|in:Payée,Partiellement payée,Échue',
+        'description' => 'nullable|string|max:255',
+    ]);
+    // Find the facture by ID
+    $facture = Facteur::findOrFail($id);
+    $total_amount = 0;
+    $total_paid = 0;
+    $Facteurs = Facteur::where('commande_id',$facture->commande_id)->get();
+    $Facteur = null;
+    
+    foreach($Facteurs as $facteur) {
+        $total_amount = $facteur->total_amount;
+        $total_paid += $facteur->amount_paid;
+        $Facteur = $facteur;
     }
-    public function print($id)
-    {
-        // Trouver la Facteur par son ID
-        $Facteur = Facteur::find($id);
+    
+    $total_paid += $request['amount_paid'];
+    if($total_amount>$total_paid) {
+    
 
-        // Vérifier si la Facteur existe
-        if ($Facteur) {
-            $pdf = PDF::loadView('Facteurs.pdf', compact('Facteur'));
-            return $pdf->download('Facteur-' . $Facteur->numero_Facteur . '.pdf');
-        }
-        return redirect()->route('Facteurs.index')->with('error', 'Facteur non trouvée.');
+    // Update the facture with the new data
+    $facture->due_date = $request->input('due_date');
+    $facture->amount_paid = $request->input('amount_paid');
+    $facture->status = $request->input('status');
+    $facture->comments = $request->input('description');
+
+    // Save the changes to the database
+    $facture->save();
+
+    // Redirect back to a relevant page (e.g., factures index or a specific commande page)
+    return redirect()->route('facteurs.index')->with('success', 'Facture mise à jour avec succès.');
+    } else {
+    return redirect()->route('factures.show', $Facteur->commande_id)->with('error', 'le prix depasse le total a payée');
+    }
     }
     public function show($id)
     {
-        $Facteur = Facteur::findOrFail($id);
+        $total_paid = 0;
+        $Facteurs = Facteur::where('commande_id',$id)->get();
+        foreach($Facteurs as $facteur) {
+            $total_amount = $facteur->total_amount;
+            $total_paid += $facteur->amount_paid;
+        }
+        
 
-        // Récupérer la commande associée à la Facteur pour obtenir le fournisseur
-        $commande = $Facteur->commande;
-        $fournisseur = $commande ? $commande->fournisseur : null;
-
-        return view('Facteurs.show', compact('Facteur', 'fournisseur'));
+        return view('factures.show', compact('Facteurs','total_amount','total_paid','id'));
     }
 
+    public function showone($id) {
 
+        
+        // Retrieve the invoice by ID
+        $invoice = Facteur::with('fournisseur','facteurDetails.article')->where('id',$id)->first();
+        $subtotal = $invoice->amount_paid;
 
+        $taxes = $subtotal * 0.10;
 
+        $discounts = 5.00;
+
+        $totalAmount = $subtotal + $taxes - $discounts;
+        $admin = Auth::user();
+        $company = Company::first();
+
+        return view('factures.showone',compact('invoice','admin', 'company','subtotal', 'taxes', 'discounts', 'totalAmount'));
+    }
+
+    public function downloadPDF($id)
+    {
+        $invoice = Facteur::with('fournisseur','facteurDetails.article')->where('id',$id)->first();
+        $subtotal = $invoice->amount_paid;
+
+        $taxes = $subtotal * 0.10;
+
+        $discounts = 5.00;
+
+        $totalAmount = $subtotal + $taxes - $discounts;
+        $admin = Auth::user();
+        $company = Company::first();
+
+        // Preparing data to pass to the view
+        $data = [
+            'invoice' => $invoice,
+            'admin' => $admin,
+            'subtotal' => $invoice->facteurDetails->sum(function ($detail) {
+                return $detail->quantite * $detail->article->prix_unitaire;
+            }),
+            'taxes' => $invoice->facteurDetails->sum(function ($detail) {
+                return $detail->quantite * $detail->article->prix_unitaire * 0.10; // 10% tax
+            }),
+            'discounts' => 5.00, // Example: fixed discount, or you can calculate dynamically
+            'totalAmount' => $invoice->facteurDetails->sum(function ($detail) {
+                return $detail->quantite * $detail->article->prix_unitaire;
+            }) * 1.10 - 5.00, // Subtotal + 10% tax - discount
+            'company' => $company,
+        ];
+
+        // Load the view for the PDF with the data
+        $pdf = PDF::loadView('factures.pdf', $data);
+
+        // Download the PDF file
+        return $pdf->download('facture-'.$invoice->invoice_number.'.pdf');
+    }
 
 }

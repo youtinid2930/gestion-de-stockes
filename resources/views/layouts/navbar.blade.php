@@ -61,8 +61,8 @@
 
     /* Style for the fixed image */
     .image {
-        margin-left:1000px;
         position: fixed;
+        margin-left: 65%;
     }
 
     nav #searchForm {
