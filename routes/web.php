@@ -22,6 +22,7 @@ use App\Http\Controllers\FacteurController;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -91,6 +92,7 @@ Route::get('/configuration', [ConfigurationController::class, 'index'])->name('c
 
 // Report routes
 Route::get('/report', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
+Route::get('report/download', [ReportController::class, 'downloadReport'])->name('report.download');
 
 // route demande
 Route::get('/demandes', [DemandeController::class, 'index'])->name('demande.index')->middleware('auth');
@@ -135,20 +137,21 @@ Route::get('configuration/depot-settings', [DepotSettingsController::class, 'ind
 Route::post('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.store');
 Route::put('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.update');
 Route::group(['middleware' => ['auth','role:admin']], function () {
-    
-    // Utilisateur
-    Route::get('/utilisateurs/search', [UserController::class, 'search'])->name('utilisateurs.search');
-    Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
-    // Commande
-    Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
-    Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+    Route::get('configuration/company-info', [CompanyInfoController::class, 'index'])->name('company.info');
 
-    // Fournisseur
-    Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
-    // Articles
-    Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
-    Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+Route::prefix('configuration')->group(function () {
+    Route::get('/company-settings', [CompanySettingsController::class, 'index'])->name('company.settings');
+    Route::post('/company-settings', [CompanySettingsController::class, 'store'])->name('company.settings.store');
+    Route::put('/company-settings/{company}', [CompanySettingsController::class, 'update'])->name('company.settings.update');
     
+    Route::get('/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
+});
+
+// Routes pour les paramètres de profil
+Route::prefix('configuration')->group(function () {
+    Route::get('/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
+    Route::post('/profile-settings', [ProfileSettingsController::class, 'store'])->name('profile.settings.store');
+});
 
     Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
     Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
@@ -162,11 +165,28 @@ Route::group(['middleware' => ['auth','role:admin']], function () {
     Route::get('/factures/{id}', [FacteurController::class, 'show'])->name('factures.show');
     Route::get('/factures/create/{id}', [FacteurController::class, 'create'])->name('factures.create');
     Route::post('/factures/{id}', [FacteurController::class, 'store'])->name('factures.store');
+// Utilisateur
+Route::get('/utilisateurs/search', [UserController::class, 'search'])->name('utilisateurs.search');
+Route::resource('utilisateur', UserController::class)->parameters(['utilisateur' => 'id']);
+// Commande
+Route::resource('commande', CommandeController::class)->parameters(['commande' => 'id']);
+Route::get('/commande/search', [CommandeController::class, 'search'])->name('commandes.search');
+
+// Fournisseur
+Route::resource('fournisseur', FournisseurController::class)->parameters(['fournisseur' => 'id'])->middleware('auth');
+// Articles
+Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
 
 
- 
+Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::get('articles/caracteristiques/{category_id}', [ArticleController::class, 'getCaracteristiques'])->name('articles.caracteristiques');
+Route::get('/articles/search', [ArticleController::class, 'search'])->name('articles.search');
 
-    Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
+
+
+
+Route::get('/fournisseurs/search', [FournisseurController::class, 'search'])->name('fournisseurs.search');
 });
 
 Route::group(['middleware' => ['auth','role:magasinier']], function () {

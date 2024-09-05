@@ -15,63 +15,61 @@ use Illuminate\Support\Facades\Auth;
 class ArticleController extends Controller
 {
     public function index(Request $request)
-    {
-        $page = $request->get('page', 1);
-        $limit = 10; // Nombre d'articles par page
-        $offset = ($page - 1) * $limit;
+{
+    $page = $request->get('page', 1);
+    $limit = 10; // Nombre d'articles par page
+    $offset = ($page - 1) * $limit;
 
-        $categories = Categorie::all();
-        $finalCategories = collect();
+    $categories = Categorie::all();
+    $finalCategories = collect();
 
-        foreach ($categories as $categorie) {
-            $this->collectFinalSubcategories($categorie, $finalCategories);
-        }
+    foreach ($categories as $categorie) {
+        $this->collectFinalSubcategories($categorie, $finalCategories);
+    }
 
-        
+    $depotId = Auth::user()->depot_id;
 
-        $depotId = Auth::user()->depot_id;
-
-        $articlesQuery = Article::query()
+    $articlesQuery = Article::query()
         ->leftJoin('depot_articles', 'articles.id', '=', 'depot_articles.article_id')
         ->select(
-        'articles.id',
-        'articles.name',
-        'articles.description',
-        'articles.unit_price',
-        'articles.sku',
-        'articles.serial_number',
-        'articles.batch_number',
-        'articles.combined_code',
-        'articles.category_id',
-        DB::raw('SUM(CASE WHEN depot_articles.depot_id = ' . $depotId . ' THEN depot_articles.quantity ELSE 0 END) as total_quantity')
+            'articles.id',
+            'articles.name',
+            'articles.description',
+            'articles.unit_price',
+            'articles.sku',
+            'articles.serial_number',
+            'articles.batch_number',
+            'articles.combined_code',
+            'articles.category_id',
+            DB::raw('SUM(CASE WHEN depot_articles.depot_id = ? THEN depot_articles.quantity ELSE 0 END) as total_quantity')
         )
+        ->setBindings([$depotId], 'select')
         ->groupBy(
-        'articles.id',
-        'articles.name',
-        'articles.description',
-        'articles.unit_price',
-        'articles.sku',
-        'articles.serial_number',
-        'articles.batch_number',
-        'articles.combined_code',
-        'articles.category_id'
+            'articles.id',
+            'articles.name',
+            'articles.description',
+            'articles.unit_price',
+            'articles.sku',
+            'articles.serial_number',
+            'articles.batch_number',
+            'articles.combined_code',
+            'articles.category_id'
         );
 
-
-        if ($request->filled('name')) {
-            $articlesQuery->where('name', 'like', '%' . $request->input('name') . '%');
-        }
-        if ($request->filled('category_id')) {
-            $articlesQuery->where('category_id', $request->input('category_id'));
-        }
-
-        $total_articles = $articlesQuery->count();
-        $total_pages = ceil($total_articles / $limit);
-
-        $articles = $articlesQuery->skip($offset)->take($limit)->get();
-
-        return view('articles.index', compact('articles', 'categories', 'page', 'total_pages','depotId'));
+    if ($request->filled('name')) {
+        $articlesQuery->where('name', 'like', '%' . $request->input('name') . '%');
     }
+    if ($request->filled('category_id')) {
+        $articlesQuery->where('category_id', $request->input('category_id'));
+    }
+
+    $total_articles = $articlesQuery->count();
+    $total_pages = ceil($total_articles / $limit);
+
+    $articles = $articlesQuery->skip($offset)->take($limit)->get();
+
+    return view('articles.index', compact('articles', 'categories', 'page', 'total_pages', 'depotId'));
+}
 
     public function create()
     {

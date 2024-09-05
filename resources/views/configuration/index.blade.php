@@ -7,15 +7,23 @@
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
-        <a href="" class="list-group-item list-group-item-action">
-            Company Information
-        </a>
-        <a href="" class="list-group-item list-group-item-action">
-            Profile Settings
-        </a>
-        <a href="{{ route('depot.settings') }}" class="list-group-item list-group-item-action">
-            Depot Settings
-        </a>
+            <!-- Afficher le message de succès si présent -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Liens vers les paramètres -->
+            <a href="{{ route('company.settings') }}" class="list-group-item list-group-item-action">
+                Informations d'entreprise
+            </a>
+            <a href="{{ route('profile.settings') }}" class="list-group-item list-group-item-action">
+                Paramètres du Profile
+            </a>
+            <a href="{{ route('depot.settings') }}" class="list-group-item list-group-item-action">
+                Paramètres du dépôt
+            </a>
         </div>
     </div>
 </div>

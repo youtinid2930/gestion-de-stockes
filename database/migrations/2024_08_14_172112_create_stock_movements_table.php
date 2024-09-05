@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('stock_movements')) {
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('article_id')->constrained()->onDelete('cascade');
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+    }
 
     /**
      * Reverse the migrations.
@@ -34,6 +36,8 @@ return new class extends Migration
      */
     public function down()
     {
+        if (!Schema::hasTable('stock_movements')) {
         Schema::dropIfExists('stock_movements');
+        }
     }
 };

@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Configuration')
+@section('title', 'Depot Settings')
 
 @section('content')
 
 <div class="home-content">
     <div class="overview-boxes">
         <div class="box">
-            <form action="{{ isset($depot) ? route('depot.settings.update') : route('depot.settings.store') }}" method="POST">
+            <form action="{{ isset($depot) ? route('depot.settings.update', $depot->id) : route('depot.settings.store') }}" method="POST">
                 @csrf
                 @if (isset($depot))
                     @method('PUT')
@@ -18,6 +18,7 @@
                 @error('name')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
+
                 <label for="depot_type">Type de dépôt</label>
                 <select id="depot_type" name="type" class="form-control" required>
                     <option value="">Sélectionnez le type de dépôt</option>
@@ -28,9 +29,10 @@
                 @error('type')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
+
                 <label for="depot_address">Adresse du dépôt</label>
-                <input type="text" id="depot_address" name="addresse" class="form-control" value="{{ old('address', $depot->adresse ?? '') }}" required>
-                @error('addresse')
+                <input type="text" id="depot_address" name="address" class="form-control" value="{{ old('address', $depot->address ?? '') }}" required>
+                @error('address')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
 

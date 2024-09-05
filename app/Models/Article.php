@@ -10,7 +10,7 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'unit_price', 'sku', 'serial_number', 'batch_number', 'combined_code', 'category_id'
+        'name', 'description', 'unit_price', 'sku', 'serial_number', 'batch_number', 'combined_code', 'category_id', 'stock'
     ];
     
     protected $dates = ['date_de_fabrication', 'date_d_expiration'];
