@@ -119,19 +119,26 @@ class ArticleController extends Controller
     $article->batch_number = Article::generateBatchNumber();
     $article->combined_code = Article::generateCombinedCode($article);
     $article->save();
-
-    // Retrieve the depot_id from the authenticated user
-    $depotId = auth()->user()->depot_id;
-
+    
+    $user = Auth::user();
+    $depots = Depot::all();
+    foreach($depots as $depot) {
     // Handle depot_article creation
-    if ($depotId) {
+    if ($depot->id) {
+        if($depot->id == $user->depot_id) {
+            $quantity = $request->input('quantity');
+        }
+        else {
+            $quantity = 0;
+        }
         DepotArticle::updateOrCreate(
             [
                 'article_id' => $article->id,
-                'depot_id' => $depotId
+                'depot_id' => $depot->id
             ],
-            ['quantity' => $request->input('quantity')] // Use provided quantity
+            ['quantity' => $quantity] // Use provided quantity
         );
+    }
     }
 
     return redirect()->route('articles.index')->with('success', 'Article created successfully.');

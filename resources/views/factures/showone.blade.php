@@ -88,7 +88,7 @@
             margin-bottom: 2%;
             text-align: center;
         }
-        .return-button a {
+        .return-button button {
             text-decoration: none;
             color: #fff;
             background-color: #007bff;
@@ -97,7 +97,7 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        .return-button a:hover {
+        .return-button button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -201,7 +201,7 @@
         </div>
     </div>
     <div class="return-button">
-        <a href="{{ route('factures.show', $invoice->commande_id) }}" class="btn btn-primary">Retour</a>
+        <button onclick="window.history.back()" class="btn btn-primary">Retour</button>
     </div>
     
 

@@ -11,7 +11,7 @@
                 
                     <tr>
                         <th>Numéro de Livraison</th>
-                        <th>Numéro des Demandes<br>Commandes</th>
+                        <th>Numéro des Demandes/<br>Commandes</th>
                         <th>Date de Livraison</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -36,6 +36,7 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="">
+                                    @if($bon->status == "En attente")
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -46,9 +47,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
-                                    
-                                    @if($bon->status == "En attente")
-                                        <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
+                                    <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif
                                 </td>
                             </tr>
@@ -78,6 +77,7 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td rowspan="">
+                                    @if($bon->status == "En attente")
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -88,7 +88,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
-                                    
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -120,6 +120,7 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td >
+                                @if($bon->status == "En attente")
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -130,6 +131,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -158,6 +160,7 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td >
+                                @if($bon->status == "En attente")
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -168,6 +171,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                @endif
                                     @if($bon->status == "Livrée")
                                         <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif
@@ -202,6 +206,7 @@
                                     {{ $bon->status }}
                                 </td>
                                 <td >
+                                @if($bon->status == "En attente")
                                     <a href="{{ route('bons_de_livraison.edit', $bon->id) }}" class="btn btn-icon">
                                         <i class='bx bx-edit-alt' data-toggle="tooltip" title="Mettre à jour la commande"></i>
                                     </a>
@@ -212,6 +217,7 @@
                                             <i class='bx bx-trash' data-toggle="tooltip" title="Supprimer la commande"></i>
                                         </button>
                                     </form>
+                                @endif
                                     @if($bon->status == "Livrée")
                                         <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif

@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach($facteurs as $facteur)
                         <tr>
-                            <td>{{ $facteur->invoice_number }}</td>
+                            <td><a href="{{ route('factures.showone', $facteur->id) }}">{{ $facteur->invoice_number }}</a></td>
                             <td>{{ $facteur->issue_date->format('d-m-Y') }}</td>
                             <td>{{ $facteur->due_date->format('d-m-Y') }}</td>
                             <td>{{ $facteur->fournisseur->name }} {{$facteur->fournisseur->last_name}}</td>
@@ -41,7 +41,7 @@
                 {{ 'aucune facteur crée' }}
             @endif
         </div>
-        <a href="{{ route('commandes.index') }}" class="btn" style="margin-right: 80%;">Retour</a>
+        <button onclick="window.history.back()" class="btn">Retour</button>
     </div>
 </div>
 

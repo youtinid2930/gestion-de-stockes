@@ -43,19 +43,23 @@ class FacteurController extends Controller
         'status' => 'required|in:Payée,Partiellement payée,Échue',
         'description' => 'nullable|string',
     ]);
-    $total_amount = 0;
+    // Récupération de la commande
+    $commande = Commande::with('commandeDetails')->where('id', $id)->first();
+    $total_amount = $commande->commandeDetails->sum(function ($detail) {
+        return $detail->quantite * $detail->article->unit_price;
+    });
     $total_paid = 0;
     $Facteurs = Facteur::where('commande_id',$id)->get();
+ 
     $Facteur = null;
     foreach($Facteurs as $facteur) {
-        $total_amount = $facteur->total_amount;
         $total_paid += $facteur->amount_paid;
         $Facteur = $facteur;
     }
+    
     $total_paid += $request['amount_paid'];
     if($total_amount>$total_paid) {
-    // Récupération de la commande
-    $commande = Commande::with('commandeDetails')->where('id', $id)->first();
+    
 
     if (!$commande) {
         return redirect()->back()->withErrors(['error' => 'Commande non trouvée']);
@@ -170,6 +174,7 @@ class FacteurController extends Controller
     }
     public function show($id)
     {
+        $total_amount = 0;
         $total_paid = 0;
         $Facteurs = Facteur::where('commande_id',$id)->get();
         foreach($Facteurs as $facteur) {

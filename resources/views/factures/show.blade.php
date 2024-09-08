@@ -57,7 +57,7 @@
                     Ajouter un facteur
             </a>
             @endif
-            <a href="{{ route('commandes.index') }}" class="btn" style="margin-right: 80%; margin-top: 1%;">Retour</a>
+            <button onclick="window.history.back()" class="btn">Retour</button>
         </div>
         @if (session('error'))
         <div class="alert alert-danger">

@@ -42,7 +42,7 @@
                 
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
                 
-                <a href="{{ route('commande.index') }}" class="btn btn-secondary">Annuler</a>
+                <button onclick="window.history.back()" class="btn">Retour</button>
             </form>
         </div>
     </div>

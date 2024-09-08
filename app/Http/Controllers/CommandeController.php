@@ -18,7 +18,7 @@ class CommandeController extends Controller
     {
         $commandes = Commande::with('fournisseur', 'commandeDetails.article','factures')->get();
         $fournisseurs = Fournisseur::all();
-
+        
         return view('commande.index', compact('commandes', 'fournisseurs'));
     }
 

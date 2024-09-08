@@ -48,11 +48,21 @@
                                     </button>
                                 </form>
                                 @else
-                                    @if(!$commande->facteurs)
+                                    @php
+                                    $facteur = null;
+                                    foreach($commande->factures as $detail) {
+                                        $facteur = $detail;
+                                        $break;
+                                    }
+                                    @endphp
+                                    
+                                    @if($facteur)
+                                       
                                         <a href="{{ route('factures.show', $commande->id) }}" class="btn btn-icon">
                                             <i class="fas fa-file-invoice" aria-hidden="true" data-toggle="tooltip" title="Gérer la facteur"></i>
                                         </a>
-                                    @else      
+                                    @else  
+                                       
                                         <a href="{{ route('factures.create', $commande->id) }}" class="btn btn-icon">
                                             <i class="fas fa-file-invoice" aria-hidden="true" data-toggle="tooltip" title="Créer la facteur"></i>
                                         </a>

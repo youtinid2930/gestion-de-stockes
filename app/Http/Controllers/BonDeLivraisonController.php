@@ -60,6 +60,7 @@ class BonDeLivraisonController extends Controller
                     });
                 })
                 ->get();
+            
             return view('bons_de_livraison.index', compact('bonDeLivraisonrecus'));
         }
 
@@ -200,7 +201,19 @@ class BonDeLivraisonController extends Controller
                 $quantityToDeliver = min($availableQuantity, $detail->quantity_restant);
             }
             
-
+            if(auth()->user()->hasRole('magasinier')) {
+                // Add stock mouvement with type="Entrée" 
+                $stockMouvement = new StockMovement();
+                $stockMouvement->article_id = $detail->article_id;
+                $stockMouvement->type = "Sortie";
+                $stockMouvement->quantity = $detail->quantity; // assuming you have quantity in commande detail
+                $stockMouvement->date_mouvement = now();
+                $stockMouvement->user_id = $user->id;
+                $stockMouvement->commande_id = $detail->commande_id;
+                $stockMouvement->demande_id = $detail->demande_id;
+                $stockMouvement->note = "Stock added after Bon de Livraison validation.";
+                $stockMouvement->save();
+            }
             // Handle the quantity to deliver
             if ($quantityToDeliver > 0) {
                 // Update the depot article stock
@@ -284,11 +297,30 @@ class BonDeLivraisonController extends Controller
             $details = $bonDeLivraison->bonDeLivraisonDetails;
 
             foreach ($details as $detail) {
+                
                 // Check if the related Demande exists and its status is "Livrée"
                 if ($detail->demande && $detail->demande->status == "Livrée") {
                     // Update the status of Demande to "Complétée"
                     $detail->demande->status = "Complétée";
                     $detail->demande->save();
+                }
+                foreach($detail->demande->demandeDetails as $demandedetail) {
+                
+                // Update depot_article quantities
+                $depotArticle = DepotArticle::where('article_id', $demandedetail->article_id)->where('depot_id', $user->depot_id)->first();
+                
+                if ($depotArticle) {
+                    
+                    $depotArticle->quantity += $demandedetail->quantity_livree;
+                    $depotArticle->save();
+                } else {
+                        // If the article does not exist in the depot, create a new entry
+                        DepotArticle::create([
+                        'article_id' => $detail->article_id,
+                        'quantity' => $detail->quantity,
+                        'depot_id' => $user->depot_id, // assuming you have depot_id in BonDeLivraison
+                        ]);
+                }
                 }
             }
     

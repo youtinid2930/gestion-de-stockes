@@ -43,10 +43,12 @@
                         <div class="article-group">
                             <select name="articles[{{ $index }}][id_article]" class="article-select" data-index="{{ $index }}">
                                 <option value="">Choisir un article</option>
-                                @foreach ($allArticles as $value)
-                                    <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}" {{ $article['id_article'] == $value->id ? 'selected' : '' }}>
-                                        {{ $value->name }}
+                                @foreach($articles as $art )
+                                    @foreach($art as $detail)
+                                    <option value="{{ $detail->id }}" data-price="{{ $detail->unit_price }}" {{ $article['id_article'] == $detail->id ? 'selected' : '' }}>
+                                        {{ $detail->name }}
                                     </option>
+                                    @endforeach
                                 @endforeach
                             </select>
                             <label for="quantite">Quantité</label>
@@ -113,8 +115,12 @@
                 <div class="article-group">
                     <select name="articles[${articleCount}][id_article]" class="article-select" data-index="${articleCount}">
                         <option value="">Choisir un article</option>
-                        @foreach ($allArticles as $value)
-                            <option value="{{ $value->id }}" data-price="{{ $value->unit_price }}">{{ $value->name }}</option>
+                        @foreach($articles as $art )
+                            @foreach($art as $detail)
+                                <option value="{{ $detail->id }}" data-price="{{ $detail->unit_price }}" {{ $article['id_article'] == $detail->id ? 'selected' : '' }}>
+                                    {{ $detail->name }}
+                                </option>
+                            @endforeach
                         @endforeach
                     </select>
                     <label for="quantite">Quantité</label>

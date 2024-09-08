@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Demande;
 use App\Models\Article;
+use App\Models\DepotArticle;
 use App\Models\Depot;
 use App\Models\User;
 use App\Models\DemandeDetail;
@@ -35,8 +36,16 @@ class DemandeController extends Controller
     {
         // Get the currently authenticated user
         $user = auth()->user();
-        $allArticles = Article::all();
-
+        $depot_id = $user->depot_id;
+        $allArticles = DepotArticle::select('article_id')
+              ->where('depot_id', $depot_id)
+              ->get();
+        $articles = null;
+        $i = 0;
+        foreach($allArticles as $articleId) {
+            $articles[$i] = Article::findOrFail($articleId);
+            $i++;
+        }
         // Initialize variables for the data to be passed to the view
         $admins = [];
         $magasins = [];
@@ -52,7 +61,7 @@ class DemandeController extends Controller
         }
 
         // Pass the data to the view
-        return view('demandes.create', compact('admins', 'magasins','allArticles'));
+        return view('demandes.create', compact('admins', 'magasins','articles'));
     }
     
     public function getMagasiniers(Request $request)
