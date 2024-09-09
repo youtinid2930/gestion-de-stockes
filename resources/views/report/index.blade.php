@@ -23,16 +23,11 @@
                 @endforeach
             </select>
 
+            <label for="quantity">Quantité minimale :</label>
+            <input type="number" id="quantity" name="quantity" value="{{ request('quantity') }}" min="0">
+
             <button type="submit">Filtrer</button>
         </form>
-
-
-        <!-- Lien pour télécharger le rapport -->
-        <a href="{{ route('report.download', [
-            'start_date' => request('start_date'),
-            'end_date' => request('end_date'),
-            'category' => request('category')
-        ]) }}" class="btn btn-primary">Télécharger le rapport</a>
 
         <!-- Graphiques -->
         <div class="box">
@@ -45,9 +40,10 @@
 </div>
 
 <script>
+    // Graphique des niveaux de stock par catégorie
     const ctx = document.getElementById('stockChart').getContext('2d');
     const stockChart = new Chart(ctx, {
-        type: 'bar', // or 'pie', 'line', etc.
+        type: 'bar',
         data: {
             labels: @json($chartData['labels']),
             datasets: [{
@@ -67,7 +63,7 @@
         }
     });
 
-    // Article Chart
+    // Graphique des niveaux de stock par article
     const articleCtx = document.getElementById('articleStockChart').getContext('2d');
     new Chart(articleCtx, {
         type: 'bar',
@@ -90,4 +86,14 @@
         }
     });
 </script>
+
+<center><div class="mt-3 btns">
+    <a href="{{ route('report.download', [
+        'start_date' => request('start_date'),
+        'end_date' => request('end_date'),
+        'category' => request('category'),
+        'quantity' => request('quantity')
+    ]) }}" class="btn btn-primary">Télécharger le rapport</a>
+</center><br><br><br><br><br>
+
 @endsection

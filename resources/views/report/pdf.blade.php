@@ -39,7 +39,7 @@
             @forelse ($articles as $article)
                 <tr>
                     <td>{{ $article->name }}</td>
-                    <td>{{ $article->stock }}</td>
+                    <td>{{ $article->quantity }}</td>
                     <td>{{ $article->created_at }}</td>
                 </tr>
             @empty
