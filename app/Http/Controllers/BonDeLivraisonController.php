@@ -8,8 +8,11 @@ use App\Models\Demande;
 use Illuminate\Http\Request;
 use App\Models\DepotArticle;
 use App\Models\StockMovement;
+use App\Models\Company;
 use App\Models\CommandeDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class BonDeLivraisonController extends Controller
 {
@@ -81,11 +84,10 @@ class BonDeLivraisonController extends Controller
             ->get();
         }
 
+        // Create a unique list of demandes by delivery address
         $demandesUnique = $demandes->unique(function ($item) {
             return $item->delivery_address;
         });
-
-
         return view('bons_de_livraison.create', ['demandes' => $demandesUnique]);
     }
 
@@ -220,11 +222,13 @@ class BonDeLivraisonController extends Controller
                 DepotArticle::where('depot_id', $user->depot_id)
                     ->where('article_id', $detail->article_id)
                     ->decrement('quantity', $quantityToDeliver);
-                // Create a record in the bon_de_livraison_details table
-                BonDeLivraisonDetail::create([
-                    'bon_de_livraison_id' => $bonDeLivraison->id,
-                    'demande_id' => $demandeId,
-                ]);
+                
+                $bondelivraisondetail = new BonDeLivraisonDetail;
+                $bondelivraisondetail->bon_de_livraison_id = $bonDeLivraison->id;
+                $bondelivraisondetail->demande_id = (int) $demandeId;
+                $bondelivraisondetail->quantity_livree = (int) $quantityToDeliver;
+                $bondelivraisondetail->quantity_restant = (int) ($detail->quantity - $quantityToDeliver);
+                $bondelivraisondetail->save();
                 
                 if(($detail->quantity_restant == 0)&&($detail->quantity_livree == 0)) {
                     $detail->quantity_livree += $quantityToDeliver;
@@ -379,4 +383,39 @@ class BonDeLivraisonController extends Controller
       
        return redirect()->route('bons_de_livraison.index')->with('error', 'Le bon de livraison ne peut pas être validé.');
     }
+
+    public function showDocument($id) {
+        $bonDeLivraison = BonDeLivraison::with([
+            'bonDeLivraisonDetails.demande.demandeDetails.article', 'user'
+        ])->findOrFail($id);
+
+        $bonDeLivraisondetail = BonDeLivraisonDetail::where('bon_de_livraison_id', $bonDeLivraison->id)->first();
+    
+        // Retrieve the company information
+        $company = Company::first();
+    
+        // Pass the data to the view
+        return view('bons_de_livraison.document', [
+            'bonDeLivraison' => $bonDeLivraison,
+            'company' => $company,
+            'bonDeLivraisondetail' => $bonDeLivraisondetail,
+        ]);
+    }
+
+
+    public function pdfDownload($id) {
+        $bonDeLivraison = BonDeLivraison::with([
+            'bonDeLivraisonDetails.demande.demandeDetails.article', 'user'
+        ])->findOrFail($id);
+
+        $bonDeLivraisondetail = BonDeLivraisonDetail::where('bon_de_livraison_id', $bonDeLivraison->id)->first();
+    
+        // Retrieve the company information
+        $company = Company::first();
+
+        $pdf = PDF::loadView('bons_de_livraison.pdf', compact('bonDeLivraison','bonDeLivraisondetail','company'));
+
+        return $pdf->download('bon_de_livraison_' . $bonDeLivraison->numero . '.pdf');
+    }
 }
+

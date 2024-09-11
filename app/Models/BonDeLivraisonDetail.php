@@ -9,10 +9,16 @@ class BonDeLivraisonDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'bon_de_livraison_id', 'commande_id', 'demande_id'
-    ];
+    protected $table = 'bon_de_livraison_details';
 
+    protected $fillable = [
+        'bon_de_livraison_id', 'commande_id', 'demande_id','quantity_livree','quantity_restant'
+
+    ];
+    protected $casts = [
+        'quantity_livree' => 'integer',
+        'quantity_restant' => 'integer',
+    ];
     public $timestamps = true;
 
     public function bonDeLivraison()

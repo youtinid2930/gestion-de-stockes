@@ -9,8 +9,11 @@ use App\Models\Article;
 use App\Models\DepotArticle;
 use App\Models\Depot;
 use App\Models\User;
+use App\Models\Company;
+use App\Models\Employer;
 use App\Models\DemandeDetail;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class DemandeController extends Controller
 {
@@ -79,13 +82,28 @@ class DemandeController extends Controller
     {
         $user = Auth::user();
         // Validate the incoming request
-        $validatedData = $request->validate([
-            'admin' => 'nullable|exists:users,id', // Only if the user is a magasinier
-            'magasinier' => 'nullable|exists:users,id', // Only if the user is a gestionnaire
-            'articles.*.id_article' => 'required|exists:articles,id',
-            'articles.*.quantite' => 'required|integer|min:1',
-            'notes' => 'nullable|string',
-        ]);
+        if(auth()->user()->hasRole('gestionnaire')) {
+            $validatedData = $request->validate([
+                'admin' => 'nullable|exists:users,id', // Only if the user is a magasinier
+                'magasinier' => 'nullable|exists:users,id', // Only if the user is a gestionnaire
+                'articles.*.id_article' => 'required|exists:articles,id',
+                'articles.*.quantite' => 'required|integer|min:1',
+                'first_name' => 'required|string|max:255',
+                'second_name' => 'required|string|max:255',
+                'departement' => 'required|string|max:255',
+                'contact' => 'required|string|max:255',
+                'notes' => 'nullable|string',
+            ]);
+        }else {
+            $validatedData = $request->validate([
+                'admin' => 'nullable|exists:users,id', // Only if the user is a magasinier
+                'magasinier' => 'nullable|exists:users,id', // Only if the user is a gestionnaire
+                'articles.*.id_article' => 'required|exists:articles,id',
+                'articles.*.quantite' => 'required|integer|min:1',
+                'notes' => 'nullable|string',
+            ]);
+        }
+        
         $users = User::with('depot')->find($user->id);
         $delivery_address = $users->depot->adresse;
         // Create a new Demande
@@ -94,6 +112,16 @@ class DemandeController extends Controller
         $demande->admin_id = $request->admin; // Assign admin ID
         if(auth()->user()->hasRole('gestionnaire')) {
             $demande->gestionnaire_id = auth()->user()->id;
+
+            // Store the employer information in the employers table
+            $employer = new Employer();
+            $employer->first_name = $request->first_name;
+            $employer->second_name = $request->second_name;
+            $employer->department = $request->departement;
+            $employer->contact = $request->contact;
+            $employer->save();
+
+            $demande->employer_id = $employer->id;
         }
         if(auth()->user()->hasRole('magasinier')) {
             $demande->magasinier_id = auth()->user()->id;
@@ -211,7 +239,32 @@ class DemandeController extends Controller
     return view('demandes.show', compact('demande'));
    }
 
-   
+   public function showbondedemande($id) {
+        // Fetch the demande and its details
+        $demande = Demande::with('demandeDetails.article', 'gestionnaire')->findOrFail($id);
+
+        // Fetch the company and employer data
+        $company = Company::find(3); // Assuming you want the company with ID 1
+        $employer = Employer::find($demande->employer_id); // Assuming the gestionnaire is the employer
+
+        return view('demandes.bon_de_demande', [
+            'demande' => $demande,
+            'company' => $company,
+            'employer' => $employer,
+        ]);
+   }
+
+   public function pdfDownload($id) {
+    // Retrieve the demande by its ID
+    $demande = Demande::with('demandeDetails.article', 'magasinier', 'gestionnaire')->find($id);
+    $company = Company::find(3);
+    $employer = Employer::find($demande->employer_id);
+    // Pass the demande data to the view
+    $pdf = PDF::loadView('demandes.pdf', compact('demande','company','employer'));
+    
+    // Download the PDF
+    return $pdf->download('bon_de_demande_' . $demande->numero . '.pdf');
+   }
 
 }    
 

@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('commande_details')) {
         Schema::create('commande_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('commande_id')->constrained();
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->decimal('prix', 8, 2);
             $table->timestamps();
         });
+        }
     }
 
     /**

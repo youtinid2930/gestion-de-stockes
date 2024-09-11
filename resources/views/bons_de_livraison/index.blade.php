@@ -49,6 +49,7 @@
                                     </form>
                                     <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif
+                                    <a href="{{ route('bons_de_livraison.document',$bon->id) }}" class="btn btn-icon"><i class="fas fa-clipboard-check" data-toggle="tooltip" title="Voir bon de livraison"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -89,6 +90,7 @@
                                         </button>
                                     </form>
                                     @endif
+                                    <a href="{{ route('bons_de_livraison.document',$bon->id)}}" class="btn btn-icon"><i class="fas fa-clipboard-check" data-toggle="tooltip" title="Voir bon de livraison"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -132,6 +134,7 @@
                                         </button>
                                     </form>
                                 @endif
+                                <a href="{{ route('bons_de_livraison.document',$bon->id) }}" class="btn btn-icon"><i class="fas fa-clipboard-check" data-toggle="tooltip" title="Voir bon de livraison"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -175,6 +178,7 @@
                                     @if($bon->status == "Livrée")
                                         <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif
+                                    <a href="{{ route('bons_de_livraison.document',$bon->id) }}" class="btn btn-icon"><i class="fas fa-clipboard-check" data-toggle="tooltip" title="Voir bon de livraison"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -221,6 +225,7 @@
                                     @if($bon->status == "Livrée")
                                         <a href="{{ route('bons_de_livraison.status',$bon->id) }}" class="btn btn-icon"><i class="fa fa-check" data-toggle="tooltip" title="Valider la livrasion"></i></a>
                                     @endif
+                                    <a href="{{ route('bons_de_livraison.document',$bon->id) }}" class="btn btn-icon"><i class="fas fa-clipboard-check" data-toggle="tooltip" title="Voir bon de livraison"></i></a>
                                 </td>
                             </tr>
                         @endforeach

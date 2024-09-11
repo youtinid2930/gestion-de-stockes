@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('fournisseurs')) {
         Schema::create('fournisseurs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->timestamps();
         });
+       }
     }
 
     /**

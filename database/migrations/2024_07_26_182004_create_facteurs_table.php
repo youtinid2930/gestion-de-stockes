@@ -13,6 +13,7 @@ class CreateFacteursTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('facteurs')) {
         Schema::create('facteurs', function (Blueprint $table) {
             $table->bigIncrements('id'); // Unique invoice identifier
             $table->string('invoice_number')->unique(); // Unique invoice number
@@ -30,6 +31,7 @@ class CreateFacteursTable extends Migration
             $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('cascade');
             $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('set null');
         });
+        }
     }
 
     /**

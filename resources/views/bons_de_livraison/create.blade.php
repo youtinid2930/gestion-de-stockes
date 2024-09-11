@@ -12,7 +12,7 @@
 
                 <input type="hidden" name="date_livraison" value="{{ now()->format('Y-m-d') }}">
 
-                <label for="demande_id">Choisir le destinataire</label>
+                <label for="demande_id">Choisir le destination</label>
                 <select name="demande_id" id="demande_id" required>
                     <option value="">-- Sélectionner --</option>
                     @if(auth()->user()->hasRole('admin'))

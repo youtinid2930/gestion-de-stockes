@@ -13,6 +13,7 @@ class CreateBonDeLivraisonDetailsTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('bon_de_livraison_details')) {
         Schema::create('bon_de_livraison_details', function (Blueprint $table) {
             $table->bigIncrements('id'); // Primary key
             $table->unsignedBigInteger('bon_de_livraison_id'); // Reference to the bon de livraison
@@ -27,6 +28,7 @@ class CreateBonDeLivraisonDetailsTable extends Migration
             // Timestamps
             $table->timestamps();
         });
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('commandes')) {
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('admin_id');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('cascade');
         });
+    }
     }
 
     /**

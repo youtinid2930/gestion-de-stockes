@@ -59,6 +59,7 @@
                        </form>
                     @endif
                     <a href="{{ route('demande.show', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la demande">&#9660;</a>
+                    <a href="{{ route('demande.showbondedemande', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir le bon de demande"><i class="fas fa-clipboard-list"></i></a>
                 </td>
                 </tr>
                 @endforeach
@@ -120,6 +121,7 @@
                         <a href="{{ route('demande.status',$demande->id) }}" class="btn btn-icon"><i class="fa fa-tachometer-alt" data-toggle="tooltip" title="traiter la demande"></i></a>  
                     @endif
                     <a href="{{ route('demande.show', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir plus sur la demande">▼</a>
+                    <a href="{{ route('demande.showbondedemande', $demande->id) }}" class="btn btn-icon" data-toggle="tooltip" title="Voir le bon de demande"><i class="fas fa-clipboard-list"></i></a>
                     </div>
                 </td>
                 </tr>

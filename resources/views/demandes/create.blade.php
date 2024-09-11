@@ -35,6 +35,19 @@
                     <select name="magasinier" id="magasinier">
                         <option value="">--Choisir le magasinier--</option>
                     </select>
+                    <h4>Informaiton de demandeur</h4>
+                    <label for="first_name">Prénom</label>
+                    <input type="text" name="first_name" id="first_name" placeholder="Veuillez saisir le prénom">
+
+                    <label for="second_name">Nom</label>
+                    <input type="text" name="second_name" id="second_name" placeholder="Veuillez saisir le nom">
+
+                    <label for="departement">Département</label>
+                    <input type="text" name="departement" id="departement" placeholder="Veuillez saisir le département">
+
+                    <label for="contact">Telphone</label>
+                    <input type="text" name="contact" id="contact" placeholder="Veuillez saisir le numéro de téléphone">
+                    
                 @endif
 
                 <div id="articles">

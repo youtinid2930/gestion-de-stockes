@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('article_caracteristiques')) {
         Schema::create('article_caracteristiques', function (Blueprint $table) {
             $table->id();
             $table->foreignId('article_id')->constrained();
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('valeur');
             $table->timestamps();
         });
+        }
     }
 
     /**

@@ -27,13 +27,11 @@ return new class extends Migration
             $table->string('adresse')->nullable();
             $table->timestamp('derniere_login')->nullable();
             $table->string('location')->nullable();
+            $table->timestamps();
             /*
             $table->string('departement')->nullable();
             $table->string('warehouse_location')->nullable();
             */
-            $table->timestamps();
-
-            $table->foreign('id_role')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 

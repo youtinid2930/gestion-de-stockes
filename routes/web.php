@@ -92,6 +92,8 @@ Route::put('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'update'
 Route::delete('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'destroy'])->name('bons_de_livraison.destroy');
 Route::get('/get-demandes/{deliveryAddress}', [BonDeLivraisonController::class, 'getDemandes'])->name('get.demandes');
 Route::get('/bons_de_livraison/{id}', [BonDeLivraisonController::class, 'status'])->name('bons_de_livraison.status');
+Route::get('/bons_de_livraison/{id}/document', [BonDeLivraisonController::class, 'showDocument'])->name('bons_de_livraison.document');
+Route::get('/bons_de_livraison/{id}/bon de livraison/download', [BonDeLivraisonController::class, 'pdfDownload'])->name('bondelivraison.download');
 
 
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration')->middleware('auth');
@@ -111,6 +113,8 @@ Route::get('/demandes/table', [DemandeController::class, 'Table'])->name('demand
 Route::get('/demandes/magasiniers', [DemandeController::class, 'getMagasiniers'])->name('demande.getMagasiniers');
 Route::get('/demandes/status/{id}',[DemandeController::class, 'changeStatus'])->name('demande.status');
 Route::get('/demandes/{id}', [DemandeController::class, 'show'])->name('demande.show');
+Route::get('/demandes/{id}/bon de demande', [DemandeController::class, 'showbondedemande'])->name('demande.showbondedemande');
+Route::get('/demandes/{id}/bon de demande/download', [DemandeController::class, 'pdfDownload'])->name('bondedemande.download');
 
 
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -64,12 +65,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'last_name' => $data['last_name'],
-            'depot_id' => 0,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    // Create the user
+    $user = User::create([
+        'name' => $data['name'],
+        'last_name' => $data['last_name'],
+        'depot_id' => 1,
+        'email' => $data['email'],
+        'password' => Hash::make($data['password']),
+    ]);
+
+    // Assign the 'admin' role
+    $adminRole = Role::where('name', 'admin')->first();
+    if ($adminRole) {
+        $user->assignRole($adminRole);
+    }
+
+    return $user;
     }
 }
