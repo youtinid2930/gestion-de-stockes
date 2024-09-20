@@ -131,17 +131,25 @@
     </thead>
     <tbody>
         @foreach ($bonDeLivraison->bonDeLivraisonDetails as $bonDeLivraisondetail)
+                @if ($bonDeLivraisondetail->commande_id !== null)
+                @php
+                    // Assuming demandeDetails is a collection, we need to find the correct article
+                    $article = $bonDeLivraisondetail->commande->commandeDetails->first()->article;
+                @endphp
+                @else
                 @php
                     // Assuming demandeDetails is a collection, we need to find the correct article
                     $article = $bonDeLivraisondetail->demande->demandeDetails->first()->article;
                 @endphp
+                @endif
                 <tr>
                 <td>{{ $article->sku }}</td>
                 <td>{{ $article->description }}</td>
                 <td>{{ $bonDeLivraisondetail->quantity_livree }}</td>
                 @if ($bonDeLivraisondetail->commande_id !== null)
-                    <td>{{ number_format($bonDeLivraisondetail->article->unit_price, 2, ',', ' ') }} DH</td>
-                    <td>{{ number_format($bonDeLivraisondetail->quantity_livree * $bonDeLivraisondetail->article->unit_price, 2, ',', ' ') }} DH</td>
+                    
+                    <td>{{ number_format($article->unit_price, 2, ',', ' ') }} DH</td>
+                    <td>{{ number_format($bonDeLivraisondetail->quantity_livree * $article->unit_price, 2, ',', ' ') }} DH</td>
                 @else
                     <td>{{ number_format($bonDeLivraisondetail->quantity_restant, 0, ',', ' ') }}</td>
                 @endif
@@ -155,7 +163,6 @@
 
     <div class="signature">
         <p>Préparé par : {{$bonDeLivraison->user->name}} {{$bonDeLivraison->user->last_name}}    Date : {{$bonDeLivraison->updated_at}}</p>
-        <p>Reçu par : _______________________     Date : _______________</p>
     </div>
 
     <h3>Commentaires/Remarques :</h3>
