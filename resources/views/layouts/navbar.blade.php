@@ -7,6 +7,7 @@
     </div>
     <div class="search-box" id="searchBox">
         <div class="search-container">
+            
             <form id="searchForm" action="" method="GET">
                 <input type="text" id="searchInput" name="query" placeholder="Recherche..." required />
                 <button type="submit" style="border:none;background:none;">
@@ -15,7 +16,9 @@
             </form>
         </div>
     </div>
-    <img class='image' src="{{ asset('image/logo.jpeg') }}" alt="Logo">
+    <div class="logo-container">
+        <img src="{{ asset('image/logo.jpeg') }}" alt="Logo">
+    </div>
 </nav>
 
 <script>
@@ -50,6 +53,7 @@
     .hide-search {
         display: none;
     }
+
     .search-box {
         display: flex;
         align-items: center; /* Align items vertically */
@@ -59,17 +63,9 @@
         position: fixed;
     }
 
-    /* Style for the fixed image */
-    .image {
-        position: fixed;
-        margin-left: 65%;
-    }
-
     nav #searchForm {
-        
         display: flex;
         align-items: center; /* Align items vertically */
-        
     }
 
     nav #searchInput {
@@ -79,11 +75,25 @@
         margin-right: 5px; /* Space between input and button */
         width: 350px;
     }
+
     nav button {
         margin-right:300px;
     }
+    
     .bx-search{
         margin-right:290px;
     }
+    /* Section du logo */
+    .logo-container {
+        position: fixed;
+        right: 10px; /* Fixe le logo à droite de la barre */
+        top: 10px;   /* Ajustez cette valeur selon votre design */
+        z-index: 1000; /* S'assurer que le logo soit au-dessus de certains éléments */
+    }
 
+    .logo-container img {
+        width: 130px; /* Ajustez la taille du logo */
+        height: auto; /* Garde les proportions correctes */
+        object-fit: contain; /* Garde le logo bien ajusté dans le conteneur */
+    }
 </style>

@@ -56,6 +56,14 @@
         .return-button button:hover {
             background-color: #0056b3;
         }
+        .company-logo {
+            max-width: 150px; /* Ajustez la taille maximale du logo */
+            height: auto; /* Maintenir le ratio d'aspect */
+            display: block; /* S'assurer que l'image soit un élément de bloc */
+            margin-left: 900px; /* Centrer l'image horizontalement */
+
+        }
+
     </style>
 
     <!-- Include FontAwesome for icons -->
@@ -69,7 +77,11 @@
         <div class="header-icons">
             <a href="#" onclick="window.print()"><i class="fas fa-print" title="Imprimer"></i></a>
             <a href="{{ route('bondelivraison.download', $bonDeLivraison->id) }}"><i class="fas fa-file-pdf" title="Télécharger PDF"></i></a>
+            <div class="logo-container">
+                <img src="{{ asset('image/logo.jpeg') }}" alt="Logo" class="company-logo">
+            </div>
         </div>
+
     <div class="header">
         <h1>{{ $company->name }} </h1>
         <p>{{ $company->address }}</p>
