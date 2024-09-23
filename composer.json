@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-dompdf": "^2.2",
+        "beyondcode/laravel-er-diagram-generator": "^3.0",
         "doctrine/dbal": "^3.9",
         "dompdf/dompdf": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
