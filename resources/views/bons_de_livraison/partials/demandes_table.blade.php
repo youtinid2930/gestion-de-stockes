@@ -39,6 +39,8 @@
                         <td>{{ $detail->quantity }}</td>
                         @if($demande->status === 'Livrée partiellement')
                         <td>{{ $firstDetail->quantity_restant }}</td>
+                        @else
+                        <td>{{ $detail->quantity }}</td>
                         @endif
                         <td>{{ $availableQuantity }}</td>
                     </tr>

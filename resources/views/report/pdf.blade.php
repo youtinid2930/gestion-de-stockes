@@ -24,8 +24,10 @@
 <body>
     <h1>Rapport</h1>
     <p>Catégorie: {{ $category }}</p>
+    @if($startDate)
     <p>Date de début: {{ $startDate }}</p>
     <p>Date de fin: {{ $endDate }}</p>
+    @endif
 
     <table>
         <thead>

@@ -203,19 +203,19 @@ class BonDeLivraisonController extends Controller
                 $quantityToDeliver = min($availableQuantity, $detail->quantity_restant);
             }
             
-            if(auth()->user()->hasRole('magasinier')) {
-                // Add stock mouvement with type="Entrée" 
-                $stockMouvement = new StockMovement();
-                $stockMouvement->article_id = $detail->article_id;
-                $stockMouvement->type = "Sortie";
-                $stockMouvement->quantity = $detail->quantity; // assuming you have quantity in commande detail
-                $stockMouvement->date_mouvement = now();
-                $stockMouvement->user_id = $user->id;
-                $stockMouvement->commande_id = $detail->commande_id;
-                $stockMouvement->demande_id = $detail->demande_id;
-                $stockMouvement->note = "Stock added after Bon de Livraison validation.";
-                $stockMouvement->save();
-            }
+            
+            // Add stock mouvement with type="Entrée" 
+            $stockMouvement = new StockMovement();
+            $stockMouvement->article_id = $detail->article_id;
+            $stockMouvement->type = "Sortie";
+            $stockMouvement->quantity = $detail->quantity; // assuming you have quantity in commande detail
+            $stockMouvement->date_mouvement = now();
+            $stockMouvement->user_id = $user->id;
+            $stockMouvement->commande_id = $detail->commande_id;
+            $stockMouvement->demande_id = $detail->demande_id;
+            $stockMouvement->note = "Stock added after Bon de Livraison validation.";
+            $stockMouvement->save();
+            
             // Handle the quantity to deliver
             if ($quantityToDeliver > 0) {
                 // Update the depot article stock

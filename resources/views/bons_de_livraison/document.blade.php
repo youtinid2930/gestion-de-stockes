@@ -130,45 +130,39 @@
             <th>Code Article</th>
             <th>Description</th>
             <th>Quantité Livrée</th>
-            @foreach ($bonDeLivraison->bonDeLivraisonDetails as $bonDeLivraisondetail)
-                @if ($bonDeLivraisondetail->commande_id !== null)
-                    <th>Prix Unitaire (DH)</th>
-                    <th>Prix Total (DH)</th>
-                @else
-                    <th>Quantité Restante</th>
-                @endif
-                @break
-            @endforeach
+            @if ($bonDeLivraisondetail->commande_id !== null)
+                <th>Prix Unitaire (DH)</th>
+                <th>Prix Total (DH)</th>
+            @else
+                <th>Quantité Restante</th>
+            @endif
+             
         </tr>
     </thead>
-    <tbody>
+    
         @foreach ($bonDeLivraison->bonDeLivraisonDetails as $bonDeLivraisondetail)
-                @if ($bonDeLivraisondetail->commande_id !== null)
-                @php
-                    // Assuming demandeDetails is a collection, we need to find the correct article
-                    $article = $bonDeLivraisondetail->commande->commandeDetails->first()->article;
-                @endphp
-                @else
-                @php
-                    // Assuming demandeDetails is a collection, we need to find the correct article
-                    $article = $bonDeLivraisondetail->demande->demandeDetails->first()->article;
-                @endphp
-                @endif
-                <tr>
-                <td>{{ $article->sku }}</td>
-                <td>{{ $article->description }}</td>
-                <td>{{ $bonDeLivraisondetail->quantity_livree }}</td>
-                @if ($bonDeLivraisondetail->commande_id !== null)
+            @if ($bonDeLivraisondetail->commande_id !== null)
+                @foreach($bonDeLivraisondetail->commande->commandeDetails as $detail)
+                    <tbody>
+                        <td>{{ $detail->article->sku }}</td>
+                        <td>{{ $detail->article->description }}</td>
+                        <td>{{ $detail->quantite }}</td>
+                        <td>{{ number_format($detail->article->unit_price, 2, ',', ' ') }} DH</td>
+                        <td>{{ number_format($detail->quantite * $detail->article->unit_price, 2, ',', ' ') }} DH</td>
                     
-                    <td>{{ number_format($article->unit_price, 2, ',', ' ') }} DH</td>
-                    <td>{{ number_format($bonDeLivraisondetail->quantity_livree * $article->unit_price, 2, ',', ' ') }} DH</td>
-                @else
-                    <td>{{ number_format($bonDeLivraisondetail->quantity_restant, 0, ',', ' ') }}</td>
-                @endif
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+                @endforeach
+            @else
+                @foreach($bonDeLivraisondetail->demande->demandeDetails as $detail)
+                    <tbody>
+                        <td>{{ $detail->article->sku }}</td>
+                        <td>{{ $detail->article->description }}</td>
+                        <td>{{ $bonDeLivraisondetail->quantity_livree }}</td>
+                        <td>{{ number_format($bonDeLivraisondetail->quantity_restant, 0, ',', ' ') }}</td>
+                    </tbody>
+                @endforeach
+            @endif
+        @endforeach  
+    </table>
 
 
     
