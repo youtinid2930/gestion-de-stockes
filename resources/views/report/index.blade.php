@@ -163,18 +163,44 @@
     }
     
     });
-
+    document.getElementById('downloadReportBtn').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default action of the anchor tag
+        convertChartsToImages();
+    });
+    function convertChartsToImages() {
+        // Convert all charts to images
+        const stockChartImage = document.getElementById('stockChart').toDataURL('image/png');
+        const articleStockChartImage = document.getElementById('articleStockChart').toDataURL('image/png');
+        const stockMov1Image = document.getElementById('stockmov1').toDataURL('image/png');
+        const stockMov2Image = document.getElementById('stockmov2').toDataURL('image/png');
+        const stockMov3Image = document.getElementById('stockmov3').toDataURL('image/png');
+        // Store the base64 images in hidden inputs
+        document.getElementById('stockChartImage').value = stockChartImage;
+        document.getElementById('articleStockChartImage').value = articleStockChartImage;
+        document.getElementById('stockMov1Image').value = stockMov1Image;
+        document.getElementById('stockMov2Image').value = stockMov2Image;
+        document.getElementById('stockMov3Image').value = stockMov3Image;
+        // Submit the form
+        document.getElementById('chartForm').submit();
+    }
 });
 
-</script>
 
-<center><div class="mt-3 btns">
-    <a href="{{ route('report.download', [
-        'start_date' => request('start_date'),
-        'end_date' => request('end_date'),
-        'category' => request('category'),
-        'quantity' => request('quantity')
-    ]) }}" class="btn btn-primary">Télécharger le rapport</a>
-</center><br><br><br><br><br>
+</script>
+<form id="chartForm" action="{{ route('report.download') }}" method="POST" style="display: none;">
+    @csrf
+    <input type="hidden" name="stockChartImage" id="stockChartImage">
+    <input type="hidden" name="articleStockChartImage" id="articleStockChartImage">
+    <input type="hidden" name="stockMov1Image" id="stockMov1Image">
+    <input type="hidden" name="stockMov2Image" id="stockMov2Image">
+    <input type="hidden" name="stockMov3Image" id="stockMov3Image">
+
+    <!-- Pass the filter data to the report download action -->
+    <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+    <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+    <input type="hidden" name="category" value="{{ request('category') }}">
+    <input type="hidden" name="quantity" value="{{ request('quantity') }}">
+</form>
+<center><a href="#" id="downloadReportBtn" class="btn btn-primary">Télécharger le rapport</a></center>
 
 @endsection

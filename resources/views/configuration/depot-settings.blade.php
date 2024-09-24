@@ -40,6 +40,7 @@
                     {{ isset($depot) ? 'Update Settings' : 'Save Settings' }}
                 </button>
             </form>
+            <button onclick="window.history.back()" class="btn" style="margin-top: 2%; margin-bottom: 2%;">Retour</button>
         </div>
     </div>
 </div>

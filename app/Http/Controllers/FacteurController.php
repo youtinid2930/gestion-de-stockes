@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Facteur;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FacteurDetails;
+use Carbon\Carbon;
 use App\Models\StockMovement;
 use Spatie\Permission\Models\Role;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
@@ -40,7 +41,8 @@ class FacteurController extends Controller
     $request->validate([
         'due_date' => 'required|date',
         'amount_paid' => 'required|numeric',
-        'status' => 'required|in:Payée,Partiellement payée,Échue',
+        'tax_rate' => 'required|numeric',
+        'discount' => 'required|numeric',
         'description' => 'nullable|string',
     ]);
     // Récupération de la commande
@@ -75,7 +77,7 @@ class FacteurController extends Controller
     $total_amount = $commande->commandeDetails->sum(function ($detail) {
         return $detail->quantite * $detail->article->unit_price;
     });
-     
+    
 
     $facteur = new Facteur();
 
@@ -86,7 +88,15 @@ class FacteurController extends Controller
     $facteur->commande_id = $commande->id;
     $facteur->total_amount = $total_amount;
     $facteur->amount_paid = $request->input('amount_paid');
-    $facteur->status = $request->input('status');
+    if(Carbon::parse($request['due_date'])->isFuture()) {
+        $facteur->status = "Partiellement payée";
+    }
+    else{
+        $facteur->status = "Échue";
+    }
+    
+    $facteur->tax_rate = $request->input('tax_rate');
+    $facteur->discount = $request->input('discount');
     $facteur->comments = $request->input('description');
 
     $facteur->save();
@@ -193,15 +203,20 @@ class FacteurController extends Controller
         $invoice = Facteur::with('fournisseur','facteurDetails.article')->where('id',$id)->first();
         $subtotal = $invoice->amount_paid;
 
-        $taxes = $subtotal * 0.10;
-
-        $discounts = 5.00;
+        $taxes = $subtotal * $invoice->tax_rate * 0.01;
+        $Facteurs = Facteur::where('commande_id',$invoice->commande_id)->get();
+        $total_paid = 0;
+        foreach($Facteurs as $facteur) {
+            
+            $total_paid += $facteur->amount_paid;
+        }
+        $discounts = $invoice->discount;
 
         $totalAmount = $subtotal + $taxes - $discounts;
         $admin = Auth::user();
         $company = Company::first();
 
-        return view('factures.showone',compact('invoice','admin', 'company','subtotal', 'taxes', 'discounts', 'totalAmount'));
+        return view('factures.showone',compact('invoice','admin', 'company','subtotal', 'taxes', 'discounts', 'totalAmount','total_paid'));
     }
 
     public function downloadPDF($id)

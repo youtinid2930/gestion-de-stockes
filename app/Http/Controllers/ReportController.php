@@ -47,7 +47,7 @@ class ReportController extends Controller
         }
 
         $articles = $query->get();
-
+        
         // Filtrer et récupérer les catégories avec la somme des quantités d'articles par catégorie
         $categoryQuery = Categorie::query();
         $categoryQuery->select('categories.name', DB::raw('SUM(depot_articles.quantity) as total_quantity'))
@@ -82,7 +82,7 @@ class ReportController extends Controller
         $stockMovements = DB::table('stock_movements')
             ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
             ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
+            ->where('stock_movements.depot_id', $user->depot_id)
             ->select(
                 'articles.name', 
                 'stock_movements.type', 
@@ -91,7 +91,7 @@ class ReportController extends Controller
             )
             ->orderBy('stock_movements.date_mouvement', 'asc')
             ->get();
-
+        
         // Prepare data for the line chart (quantity over time for each article)
         $lineChartData = [];
         foreach ($stockMovements as $movement) {
@@ -211,100 +211,33 @@ class ReportController extends Controller
 
         // Calculer la quantité totale d'articles
         $totalQuantity = $articles->sum('quantity');
-        // Get stock movements for the user's depot
-        $stockMovements = DB::table('stock_movements')
-            ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
-            ->select(
-                'articles.name', 
-                'stock_movements.type', 
-                'stock_movements.quantity', 
-                'stock_movements.date_mouvement'
-            )
-            ->orderBy('stock_movements.date_mouvement', 'asc')
-            ->get();
-        // Prepare data for the line chart (quantity over time for each article)
-        $lineChartData = [];
-        foreach ($stockMovements as $movement) {
-            $lineChartData['labels'][] = $movement->date_mouvement;
-            $lineChartData['data'][$movement->name][] = $movement->quantity;
-        }
-
-        // Get stock movements filtered by depot
-        $stockMovements = DB::table('stock_movements')
-            ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
-            ->select('articles.name', 'stock_movements.type', DB::raw('SUM(stock_movements.quantity) as total_quantity'))
-            ->groupBy('articles.name', 'stock_movements.type')
-            ->get();
-
-        // Prepare data for the bar chart (dividing Entrée and Sortie)
-        $barChartData = [
-            'labels' => [],
-            'Entrée' => [],
-            'Sortie' => []
-        ];
         
-        foreach ($stockMovements as $movement) {
-            $barChartData['labels'][] = $movement->name;
-            if ($movement->type == 'Entrée') {
-                $barChartData['Entrée'][] = $movement->total_quantity;
-            } else {
-                $barChartData['Sortie'][] = $movement->total_quantity;
-            }
-        }
-        
-
-        // Get total Entrée and Sortie quantities for the depot
-        $stockMovements = DB::table('stock_movements')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
-            ->select('stock_movements.type', DB::raw('SUM(stock_movements.quantity) as total_quantity'))
-            ->groupBy('stock_movements.type')
-            ->get();
-
-        // Prepare data for the pie chart (percentage of Entrée vs Sortie)
-        $totalEntrée = 0;
-        $totalSortie = 0;
-        
-        foreach ($stockMovements as $movement) {
-            if ($movement->type == 'Entrée') {
-                $totalEntrée = $movement->total_quantity;
-            } else {
-                $totalSortie = $movement->total_quantity;
-            }
-        }
-        
-        $totalQuantity = $totalEntrée + $totalSortie;
-        
-        // Calculate percentages
-        $EntréePercentage = ($totalEntrée / $totalQuantity) * 100;
-        $SortiePercentage = ($totalSortie / $totalQuantity) * 100;
-        
-        $pieChartData = [
-            'labels' => ['Entrée', 'Sortie'],
-            'data' => [$EntréePercentage, $SortiePercentage]
-        ];
+        // Decode base64 images
+        $stockChartImage = $request->input('stockChartImage');
+        $articleStockChartImage = $request->input('articleStockChartImage');
+        $stockMov1Image = $request->input('stockMov1Image');
+        $stockMov2Image = $request->input('stockMov2Image');
+        $stockMov3Image = $request->input('stockMov3Image');
 
         // Préparer les données pour le PDF
         $data = [
             'articles' => $articles,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
             'category' => $categoryId ? Categorie::find($categoryId)->name : 'Toutes les catégories',
-            'totalQuantity' => $totalQuantity, // Ajouter la somme des quantités d'articles
-            'lineChartData' => $lineChartData,
-            'barChartData' => $barChartData,
-            'pieChartData' => $pieChartData
+            'quantity' => $minQuantity, // Ajouter la somme des quantités d'articles
+            'stockChartImage' => $stockChartImage,
+            'articleStockChartImage' => $articleStockChartImage,
+            'stockMov1Image' => $stockMov1Image,
+            'stockMov2Image' => $stockMov2Image,
+            'stockMov3Image' => $stockMov3Image,
         ];
         
         // Générer le PDF avec les données
         $pdf = \PDF::loadView('report.pdf', $data);
 
         // Télécharger le PDF
-        return $pdf->download('report.pdf');
+        return $pdf->download('rapport.pdf');
     }
 
     public function getChartData($articles)

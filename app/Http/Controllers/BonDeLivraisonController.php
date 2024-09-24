@@ -204,13 +204,14 @@ class BonDeLivraisonController extends Controller
             }
             
             
-            // Add stock mouvement with type="Entrée" 
+            // Add stock mouvement with type="Sortie" 
             $stockMouvement = new StockMovement();
             $stockMouvement->article_id = $detail->article_id;
             $stockMouvement->type = "Sortie";
             $stockMouvement->quantity = $detail->quantity; // assuming you have quantity in commande detail
             $stockMouvement->date_mouvement = now();
             $stockMouvement->user_id = $user->id;
+            $stockMouvement->depot_id = $depot->id;
             $stockMouvement->commande_id = $detail->commande_id;
             $stockMouvement->demande_id = $detail->demande_id;
             $stockMouvement->note = "Stock added after Bon de Livraison validation.";
@@ -309,27 +310,38 @@ class BonDeLivraisonController extends Controller
                     $detail->demande->save();
                 }
                 foreach($detail->demande->demandeDetails as $demandedetail) {
+                    // Add stock mouvement with type="Entrée" 
+                    $stockMouvement = new StockMovement();
+                    $stockMouvement->article_id = $demandedetail->article_id;
+                    $stockMouvement->type = "Entrée";
+                    $stockMouvement->quantity = $demandedetail->quantity;
+                    $stockMouvement->date_mouvement = now();
+                    $stockMouvement->user_id = $user->id;
+                    $stockMouvement->depot_id = $user->depot_id;
+                    $stockMouvement->demande_id = $demandedetail->demande_id;
+                    $stockMouvement->note = "Stock added after Bon de Livraison validation.";
+                    $stockMouvement->save();
                 
-                // Update depot_article quantities
-                $depotArticle = DepotArticle::where('article_id', $demandedetail->article_id)->where('depot_id', $user->depot_id)->first();
-                
-                if ($depotArticle) {
+                    // Update depot_article quantities
+                    $depotArticle = DepotArticle::where('article_id', $demandedetail->article_id)->where('depot_id', $user->depot_id)->first();
                     
-                    $depotArticle->quantity += $demandedetail->quantity_livree;
-                    $depotArticle->save();
-                } else {
-                        // If the article does not exist in the depot, create a new entry
-                        DepotArticle::create([
-                        'article_id' => $detail->article_id,
-                        'quantity' => $detail->quantity,
-                        'depot_id' => $user->depot_id, // assuming you have depot_id in BonDeLivraison
-                        ]);
-                }
+                    if ($depotArticle) {
+                        
+                        $depotArticle->quantity += $demandedetail->quantity_livree;
+                        $depotArticle->save();
+                    } else {
+                            // If the article does not exist in the depot, create a new entry
+                            DepotArticle::create([
+                            'article_id' => $detail->article_id,
+                            'quantity' => $detail->quantity,
+                            'depot_id' => $user->depot_id, // assuming you have depot_id in BonDeLivraison
+                            ]);
+                    }
                 }
             }
-    
+        
             return redirect()->route('bons_de_livraison.index')->with('success', 'Bon de livraison validé avec succès.');
-       }else if ($bonDeLivraison->status == "En attente") {
+        }else if ($bonDeLivraison->status == "En attente") {
             $bonDeLivraison->status = "Terminée";
             $bonDeLivraison->save();
             
@@ -353,6 +365,7 @@ class BonDeLivraisonController extends Controller
                         $stockMouvement->quantity = $commandedetail->quantite; // assuming you have quantity in commande detail
                         $stockMouvement->date_mouvement = now();
                         $stockMouvement->user_id = $user->id;
+                        $stockMouvement->depot_id = $user->depot_id;
                         $stockMouvement->commande_id = $commandedetail->commande_id;
                         $stockMouvement->demande_id = $commandedetail->demande_id;
                         $stockMouvement->note = "Stock added after Bon de Livraison validation.";

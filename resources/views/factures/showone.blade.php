@@ -154,9 +154,8 @@
                     <th>Code Article</th>
                     <th>Description</th>
                     <th>Quantité</th>
-                    <th>Montant Payé</th>
                     <th>Prix Unitaire (DH)</th>
-                    <th>Prix Total (DH)</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -165,9 +164,9 @@
                     <td>{{ $item->article->sku }}</td>
                     <td>{{ $item->article->description }}</td>
                     <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($invoice->amount_paid, 2, ',', ' ') }}</td>
+                    
                     <td>{{ number_format($item->article->unit_price, 2, ',', ' ') }}</td>
-                    <td>{{ number_format($invoice->total_amount, 2, ',', ' ') }}</td>
+                    
                 </tr>
                 @endforeach
             </tbody>
@@ -175,24 +174,27 @@
 
         <!-- Résumé -->
         <div class="summary">
+            <p>Montant Payé: {{ number_format($invoice->amount_paid, 2, ',', ' ') }} DH</p>
+            <p>Montant total paye : {{ number_format($total_paid, 2, ',', ' ')}} DH </p>
+            <p>Prix Total: {{ number_format($invoice->total_amount, 2, ',', ' ') }} DH</p>
             <p>Montant Total HT: {{ number_format($subtotal, 2, ',', ' ') }} DH</p>
             <p>Taxes ({{ $invoice->tax_rate }}%): {{ number_format($taxes, 2, ',', ' ') }} DH</p>
-            <p>Remises: {{ number_format($discounts, 2, ',', ' ') }} €</p>
+            <p>Remises: {{ number_format($discounts, 2, ',', ' ') }} DH</p>
             <p><strong>Montant Total TTC: {{ number_format($totalAmount, 2, ',', ' ') }} DH</strong></p>
         </div>
 
         <!-- Conditions de Paiement -->
         <div class="details">
-            <p><strong>Conditions de Paiement:</strong> {{ $invoice->payment_terms }}</p>
-            <p><strong>Détails Bancaires:</strong> {{ $invoice->bank_details }}</p>
-            <p><strong>Instructions de Paiement:</strong> {{ $invoice->payment_instructions }}</p>
+            <p><strong>Conditions de Paiement:</strong> {{ $company->payment_terms }}</p>
+            <p><strong>Détails Bancaires:</strong> {{ $company->bank_details }}</p>
+            <p><strong>Instructions de Paiement:</strong> {{ $company->payment_instructions }}</p>
             <p><strong>Status de facteur:</strong> {{ $invoice->status }} </p>
         </div>
 
         <!-- Termes et Conditions -->
         <div class="details">
             <p><strong>Termes et Conditions:</strong></p>
-            <p>{{ $invoice->terms_conditions }}</p>
+            <p>{{ $company->terms_conditions_commandes }}</p>
         </div>
 
         <!-- Informations d'Enregistrement de l'Entreprise -->

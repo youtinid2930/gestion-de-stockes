@@ -39,9 +39,17 @@
                 @endforeach
             </tbody>
         </table>
-
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <label for="urgence">urgence</label>
+        <select name="urgence" id="urgence">
+            <option value="">{{ $demande->urgence }}</option>
+            <option value="{{ 'Bas' }}">Bas</option>
+            <option value="{{ 'Moyen' }}">Moyen</option>
+            <option value="{{ 'Élevé' }}">Élevé</option>
+        </select>
+        
+        <button type="submit" class="btn">Mettre à jour</button>
     </form>
+    <button onclick="window.history.back()" class="btn">Retour</button>
 </div>
 </div>
 </div>

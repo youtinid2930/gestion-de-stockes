@@ -25,6 +25,7 @@ class CompanySettingsController extends Controller
             'address' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:20',
+            'registration_number' => 'required|string|max:40',
         ]);
 
         // Obtenir l'utilisateur authentifié actuel
@@ -37,6 +38,7 @@ class CompanySettingsController extends Controller
             'address' => $request->input('address'),
             'email' => $request->input('email'),
             'contact' => $request->input('contact'),
+            'registration_number' => $request->input('registration_number'),
         ]);
 
         // Ajouter un message de succès dans la session
@@ -54,6 +56,7 @@ class CompanySettingsController extends Controller
             'address' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:20',
+            'registration_number' => 'required|string|max:40',
         ]);
         
         // Mettre à jour les paramètres de l'entreprise
@@ -62,6 +65,7 @@ class CompanySettingsController extends Controller
             'address' => $request->input('address'),
             'email' => $request->input('email'),
             'contact' => $request->input('contact'),
+            'registration_number' => $request->input('registration_number'),
         ]);
        
 

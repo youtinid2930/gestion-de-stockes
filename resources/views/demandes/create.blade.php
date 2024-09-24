@@ -71,6 +71,13 @@
                         </div>
                     @endforeach
                 </div>
+                <label for="urgence">urgence</label>
+                <select name="urgence" id="urgence">
+                    <option value="">--Choisir le degrée d'urgence--</option>
+                    <option value="{{ 'Bas' }}">Bas</option>
+                    <option value="{{ 'Moyen' }}">Moyen</option>
+                    <option value="{{ 'Élevé' }}">Élevé</option>
+                </select>
                 <div>
                     <button type="button" id="add-article" class="btn" style="margin-bottom: 2%;">Ajouter article</button>
                 </div>

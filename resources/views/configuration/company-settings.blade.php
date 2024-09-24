@@ -37,10 +37,17 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
 
+                <label for="registration_number">numéro d'enregistrement</label>
+                <input type="text" id="registration_number" name="registration_number" class="form-control" value="{{ old('registration_number', $company->registration_number ?? '') }}" required>
+                @error('contact')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+
                 <button type="submit" class="btn" style="border-radius: 6px; margin-top: 2%; margin-bottom: 2%;">
                     {{ isset($company) ? 'Update Settings' : 'Save Settings' }}
                 </button>
             </form>
+            <button onclick="window.history.back()" class="btn" style="margin-top: 2%; margin-bottom: 2%;">Retour</button>
         </div>
     </div>
 </div>

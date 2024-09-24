@@ -92,6 +92,7 @@ class DemandeController extends Controller
                 'second_name' => 'required|string|max:255',
                 'departement' => 'required|string|max:255',
                 'contact' => 'required|string|max:255',
+                'urgence' => 'string|max:255',
                 'notes' => 'nullable|string',
             ]);
         }else {
@@ -100,6 +101,7 @@ class DemandeController extends Controller
                 'magasinier' => 'nullable|exists:users,id', // Only if the user is a gestionnaire
                 'articles.*.id_article' => 'required|exists:articles,id',
                 'articles.*.quantite' => 'required|integer|min:1',
+                'urgence' => 'string|max:255',
                 'notes' => 'nullable|string',
             ]);
         }
@@ -128,6 +130,7 @@ class DemandeController extends Controller
         }
         $demande->notes = $request->notes;
         $demande->delivery_address = $delivery_address;
+        $demande->urgence = $request->urgence;
         $demande->save(); // Save the demande first to get its ID
 
         // Loop through the articles and save them in DemandeDetails
@@ -157,16 +160,17 @@ class DemandeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'delivery_address' => 'required|string|max:255',
             'details.*.article_id' => 'required|exists:articles,id',
             'details.*.quantity' => 'required|integer|min:1',
+            'urgence' => 'string|max:255',
         ]);
     
         $demande = Demande::findOrFail($id);
+        
         $demande->update([
-            'delivery_address' => $request->input('delivery_address'),
+            'urgence' => $request->input('urgence'),
         ]);
-    
+        
         // Update demande details
         foreach ($request->input('details') as $detailData) {
             $demandeDetail = DemandeDetail::findOrFail($detailData['id']);

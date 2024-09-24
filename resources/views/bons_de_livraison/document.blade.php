@@ -171,13 +171,11 @@
         <p>Préparé par : {{$bonDeLivraison->user->name}} {{$bonDeLivraison->user->last_name}}    Date : {{$bonDeLivraison->updated_at}}</p>
     </div>
 
-    <h3>Commentaires/Remarques :</h3>
-    <p>[Remarques ou instructions supplémentaires]</p>
-
     <h3>Conditions Générales :</h3>
-    <p>[Conditions liées à la livraison]</p>
+    <p>{{$company->terms_conditions_livraison}}</p>
 
     <h3>Informations d'Enregistrement de l'Entreprise :</h3>
+    <h4>numéro d'enregistrement :</h4>
     <p>{{ $company->registration_number }}</p>
 </div>
     <div class="return-button">

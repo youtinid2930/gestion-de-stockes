@@ -18,6 +18,10 @@ use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\DepotSettingsController;
 use App\Http\Controllers\FacteurController;
+use App\Http\Controllers\FacteurSettingController;
+use App\Http\Controllers\BonDeDemandeSettingController;
+use App\Http\Controllers\BonDeLivraisonSettingController;
+
 
 
 
@@ -100,7 +104,7 @@ Route::get('/configuration', [ConfigurationController::class, 'index'])->name('c
 
 // Report routes
 Route::get('/report', [ReportController::class, 'index'])->name('report.index')->middleware('auth');
-Route::get('report/download', [ReportController::class, 'downloadReport'])->name('report.download');
+Route::post('report/download', [ReportController::class, 'downloadReport'])->name('report.download');
 
 // route demande
 Route::get('/demandes', [DemandeController::class, 'index'])->name('demande.index')->middleware('auth');
@@ -129,38 +133,45 @@ Route::put('articles/{id}', [ArticleController::class, 'update'])->name('article
 
 
 
-
+// route principale to configuration
 Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
-// Route for Company Information settings
-Route::get('configuration/company-settings', [CompanySettingsController::class, 'index'])->name('company.settings');
 
-// Route for Profile Settings
-Route::get('configuration/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
+
+
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
 Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
 
-
+// Route for Profile Information settings
+Route::get('configuration/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
+Route::post('configuration/profile-settings', [ProfileSettingsController::class, 'store'])->name('profile.settings.store');
 // Route for Depot Settings
 Route::get('configuration/depot-settings', [DepotSettingsController::class, 'index'])->name('depot.settings');
 Route::post('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.store');
 Route::put('configuration/depot-settings', [DepotSettingsController::class, 'store'])->name('depot.settings.update');
+
 Route::group(['middleware' => ['auth','role:admin']], function () {
-    Route::get('configuration/company-info', [CompanyInfoController::class, 'index'])->name('company.info');
+Route::get('configuration/company-info', [CompanyInfoController::class, 'index'])->name('company.info');
 
 Route::prefix('configuration')->group(function () {
+    // Route for Company Information settings
     Route::get('/company-settings', [CompanySettingsController::class, 'index'])->name('company.settings');
     Route::post('/company-settings', [CompanySettingsController::class, 'store'])->name('company.settings.store');
     Route::put('/company-settings/{company}', [CompanySettingsController::class, 'update'])->name('company.settings.update');
     
-    Route::get('/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
-});
-
-// Routes pour les paramètres de profil
-Route::prefix('configuration')->group(function () {
-    Route::get('/profile-settings', [ProfileSettingsController::class, 'index'])->name('profile.settings');
-    Route::post('/profile-settings', [ProfileSettingsController::class, 'store'])->name('profile.settings.store');
+    // Routes pour les paramètres de facteur
+    Route::get('/facteur-settings', [FacteurSettingController::class, 'index'])->name('facteur.settings');
+    Route::post('/facteur-settings', [FacteurSettingController::class, 'store'])->name('facteur.settings.store');
+    Route::put('/facteur-settings/{facteur}', [FacteurSettingController::class, 'update'])->name('facteur.settings.update');
+    // Route pour les paramètres de bon de demande
+    Route::get('/bon de demande-settings', [BonDeDemandeSettingController::class, 'index'])->name('bon_de_demande.settings');
+    Route::post('/bon de demande-settings', [BonDeDemandeSettingController::class, 'store'])->name('bon_de_demande.settings.store');
+    Route::put('/bon de demande-settings/{bondedemande}', [BonDeDemandeSettingController::class, 'update'])->name('bon_de_demande.settings.update');
+    // Routes pour les paramètres de bon de livraison
+    Route::get('/bon de livraison-settings', [BonDeLivraisonSettingController::class, 'index'])->name('bon_de_livraison.settings');
+    Route::post('/bon de livraisonr-settings', [BonDeLivraisonSettingController::class, 'store'])->name('bon_de_livraison.settings.store');
+    Route::put('/bon de livraison-settings/{bondelivraison}', [BonDeLivraisonSettingController::class, 'update'])->name('bon_de_livraison.settings.update');
 });
 
 Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');

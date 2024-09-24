@@ -183,14 +183,14 @@
         @endif
         <p>Motif de la Demande : {{ $demande->notes }}</p>
         <p>Statut : {{ $demande->status }}</p>
-        <p>Niveau d'Urgence : [Élevé/Moyen/Bas]</p>
-        <p>Commentaires/Remarques : [Remarques supplémentaires ou instructions]</p>
+        <p>Niveau d'Urgence : {{$demande->urgence}}</p>
+        <p>Commentaires/Remarques : {{$demande->note}}</p>
 
         <p>Approuvé Par : _______________________    Date : _______________</p>
 
         <div class="footer">
-            <p>Conditions Générales : [Conditions générales liées à la demande]</p>
-            <p>Informations de l'Entreprise : [Numéro d'enregistrement de l'entreprise]</p>
+            <p>Conditions Générales : {{ $company->terms_conditions_demandes }}</p>
+            <p>Informations de l'Entreprise : {{$company->registration_number}}</p>
         </div>
     </div>
     <div class="return-button">

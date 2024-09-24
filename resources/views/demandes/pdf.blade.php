@@ -124,8 +124,8 @@
         <p>Approuvé Par : _______________________    Date : _______________</p>
 
         <div class="footer">
-            <p>Conditions Générales : [Conditions générales liées à la demande]</p>
-            <p>Informations de l'Entreprise : [Numéro d'enregistrement de l'entreprise]</p>
+            <p>Conditions Générales : {{$company->terms_conditions_demandes}}</p>
+            <p>Informations de l'Entreprise : {{$company->registration_number}}</p>
         </div>
     </div>
 </body>

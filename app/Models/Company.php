@@ -15,6 +15,13 @@ class Company extends Model
         'address',
         'email',
         'contact',
+        'registration_number',
+        'terms_conditions_demandes',
+        'terms_conditions_demandes', 
+        'payment_instructions', 
+        'bank_details', 
+        'payment_terms',
+        'terms_conditions_livraison'
     ];
 
     // Define the relationship with the User model if necessary

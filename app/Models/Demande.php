@@ -11,7 +11,7 @@ class Demande extends Model
     use HasFactory;
 
     protected $fillable = [
-        'numero','gestionnaire_id', 'magasinier_id', 'admin_id', 'employer_id', 'quantity', 'notes', 'status', 'delivery_address'
+        'numero','gestionnaire_id', 'magasinier_id', 'admin_id', 'employer_id', 'quantity', 'notes', 'status', 'delivery_address','urgence'
     ];
     
     public $timestamps = true;
