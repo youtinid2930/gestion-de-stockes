@@ -233,11 +233,13 @@
                 
             </table>
         </div>
+        @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('magasinier'))
         <button class="btn btn-primary" 
                 onclick="window.location.href='{{ route('bons_de_livraison.create') }}'" 
                 style="width: 200px; height: 50px; padding: 10px;">
             Créer Bon de Livraison
         </button>
+        @endif
     </div>
 </div>
 @endsection

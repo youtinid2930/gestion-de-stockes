@@ -211,7 +211,7 @@ class BonDeLivraisonController extends Controller
             $stockMouvement->quantity = $detail->quantity; // assuming you have quantity in commande detail
             $stockMouvement->date_mouvement = now();
             $stockMouvement->user_id = $user->id;
-            $stockMouvement->depot_id = $depot->id;
+            $stockMouvement->depot_id = $user->depot->id;
             $stockMouvement->commande_id = $detail->commande_id;
             $stockMouvement->demande_id = $detail->demande_id;
             $stockMouvement->note = "Stock added after Bon de Livraison validation.";

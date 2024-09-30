@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Article;
 use App\Models\Categorie;
+use Illuminate\Support\Facades\Log;
 use PDF; // Assurez-vous que cette ligne est incluse en haut du fichier
 
 class ReportController extends Controller
@@ -81,7 +82,6 @@ class ReportController extends Controller
         // Get stock movements for the user's depot
         $stockMovements = DB::table('stock_movements')
             ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
             ->where('stock_movements.depot_id', $user->depot_id)
             ->select(
                 'articles.name', 
@@ -93,17 +93,49 @@ class ReportController extends Controller
             ->get();
         
         // Prepare data for the line chart (quantity over time for each article)
-        $lineChartData = [];
+        $lineChartData = [
+            'labels' => [], // Initialize labels array
+            'data' => []    // Initialize data array
+        ];
+        
         foreach ($stockMovements as $movement) {
-            $lineChartData['labels'][] = $movement->date_mouvement;
-            $lineChartData['data'][$movement->name][] = $movement->quantity;
+            Log::info('Processing movement: ', [
+                'article' => $movement->name,
+                'date_mouvement' => $movement->date_mouvement,
+                'quantity' => $movement->quantity,
+            ]);
+        
+            // Add new date to labels if not already present
+            if (!in_array($movement->date_mouvement, $lineChartData['labels'])) {
+                $lineChartData['labels'][] = $movement->date_mouvement;
+                Log::info('Added new date to labels: ' . $movement->date_mouvement);
+            }
+        
+            // Initialize the article's data if not already set
+            if (!isset($lineChartData['data'][$movement->name])) {
+                $lineChartData['data'][$movement->name] = [];
+            }
+        
+            // Check if there is a previous quantity for this article, default to 0 if none
+            $previousQuantity = end($lineChartData['data'][$movement->name]) ?? 0;
+        
+            // Update quantity based on the movement type (Entrée or Sortie)
+            if ($movement->type == "Entrée") {
+                $newQuantity = $previousQuantity + $movement->quantity;
+            } else { // Sortie
+                $newQuantity = $previousQuantity - $movement->quantity;
+            }
+        
+            // Append the new calculated quantity to the data array
+            $lineChartData['data'][$movement->name][] = $newQuantity;
+        
+            Log::info('Appended quantity: ' . $newQuantity . ' for article: ' . $movement->name);
         }
-
+        
         // Get stock movements filtered by depot
         $stockMovements = DB::table('stock_movements')
             ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
+            ->where('stock_movements.depot_id', $user->depot_id)
             ->select('articles.name', 'stock_movements.type', DB::raw('SUM(stock_movements.quantity) as total_quantity'))
             ->groupBy('articles.name', 'stock_movements.type')
             ->get();
@@ -116,7 +148,10 @@ class ReportController extends Controller
         ];
         
         foreach ($stockMovements as $movement) {
-            $barChartData['labels'][] = $movement->name;
+            if (!in_array($movement->name, $addedLabels)) {
+                $barChartData['labels'][] = $movement->name;
+                $addedLabels[] = $movement->name;  // Add to tracking array to avoid duplication
+            }
             if ($movement->type == 'Entrée') {
                 $barChartData['Entrée'][] = $movement->total_quantity;
             } else {
@@ -127,8 +162,8 @@ class ReportController extends Controller
 
         // Get total Entrée and Sortie quantities for the depot
         $stockMovements = DB::table('stock_movements')
-            ->join('depot_articles', 'stock_movements.article_id', '=', 'depot_articles.article_id')
-            ->where('depot_articles.depot_id', $user->depot_id)
+            ->join('articles', 'stock_movements.article_id', '=', 'articles.id')
+            ->where('stock_movements.depot_id', $user->depot_id)
             ->select('stock_movements.type', DB::raw('SUM(stock_movements.quantity) as total_quantity'))
             ->groupBy('stock_movements.type')
             ->get();
@@ -148,8 +183,8 @@ class ReportController extends Controller
         $totalQuantity = $totalEntrée + $totalSortie;
         
         // Calculate percentages
-        $EntréePercentage = ($totalEntrée / $totalQuantity) * 100;
-        $SortiePercentage = ($totalSortie / $totalQuantity) * 100;
+        $EntréePercentage = $totalQuantity ? ($totalEntrée / $totalQuantity) * 100: 0;
+        $SortiePercentage = $totalQuantity ? ($totalSortie / $totalQuantity) * 100: 0;
         
         $pieChartData = [
             'labels' => ['Entrée', 'Sortie'],
