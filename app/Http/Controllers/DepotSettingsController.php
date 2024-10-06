@@ -32,6 +32,7 @@ class DepotSettingsController extends Controller
 
     public function store(Request $request)
     {
+        
         // Validate the request
         $request->validate([
             'name' => 'required|string|max:255',
@@ -41,9 +42,10 @@ class DepotSettingsController extends Controller
 
         // Get the current authenticated user
         $user = Auth::user();
-
+        
         // Check if the depot already exists
         if ($user->depot_id && $user->depot_id != 0) {
+            
             // Update existing depot
             $depot = Depot::find($user->depot_id);
             if ($depot) {
@@ -60,7 +62,7 @@ class DepotSettingsController extends Controller
                 'adresse' => $request->input('addresse'),
                 'type' => $request->input('type'),
             ]);
-
+            
             // Update user's depot_id
             $user->depot_id = $depot->id;
             $user->save();

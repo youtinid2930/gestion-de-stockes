@@ -31,7 +31,7 @@
                 @enderror
 
                 <label for="depot_address">Adresse du dépôt</label>
-                <input type="text" id="depot_address" name="address" class="form-control" value="{{ old('address', $depot->address ?? '') }}" required>
+                <input type="text" id="depot_address" name="addresse" class="form-control" value="{{ old('adresse', $depot->adresse ?? '') }}" required>
                 @error('address')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
