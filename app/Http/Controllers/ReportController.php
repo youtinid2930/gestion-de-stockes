@@ -148,6 +148,7 @@ class ReportController extends Controller
         ];
         
         foreach ($stockMovements as $movement) {
+            $addedLabels = [];
             if (!in_array($movement->name, $addedLabels)) {
                 $barChartData['labels'][] = $movement->name;
                 $addedLabels[] = $movement->name;  // Add to tracking array to avoid duplication

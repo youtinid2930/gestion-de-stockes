@@ -89,11 +89,13 @@
         right: 10px; /* Fixe le logo à droite de la barre */
         top: 10px;   /* Ajustez cette valeur selon votre design */
         z-index: 1000; /* S'assurer que le logo soit au-dessus de certains éléments */
+       
     }
 
     .logo-container img {
         width: 130px; /* Ajustez la taille du logo */
         height: auto; /* Garde les proportions correctes */
         object-fit: contain; /* Garde le logo bien ajusté dans le conteneur */
-    }
+        background-color: transparent;
+    }
 </style>
